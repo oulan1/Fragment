@@ -1,7 +1,8 @@
 {
   "name": "Fragment",
   "short_name": "Fragment",
-  "start_url": ".",
+  "start_url": "https://oulan1.github.io/Fragment/",
+  "scope": "https://oulan1.github.io/Fragment/",
   "display": "standalone",
   "background_color": "#0a0a0a",
   "theme_color": "#0a0a0a",
