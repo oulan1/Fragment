@@ -830,7 +830,7 @@ const translations={
 };
 let currentLang='en',devModeClicks=0,devModeTimeout=null;
 const accounts = [
-    {uid: 1001, login: "oulan", password: "oulan2008", nickname: "oulan", avatar: "https://i-mg24.ru/images/122025214036-rix6n.gif", frame: "https://upload-os-bbs.hoyolab.com/upload/2023/08/17/250252732/5d90f7c6c6eb09aba0bcd51f46f378e0_2588282090405532990.gif", badge: "https://i-mg24.ru/images/122025220553-so5hj.png", badgeText: "Creator of Fragment", telegram: "https://t.me/oulan1", created: "2025-12-10", exp: 2500, prime: 1},
+    {uid: 1001, login: "oulan", password: "oulan2008", nickname: "oulan", avatar: "https://i-mg24.ru/images/122025214036-rix6n.gif", frame: "https://upload-os-bbs.hoyolab.com/upload/2023/08/17/250252732/5d90f7c6c6eb09aba0bcd51f46f378e0_2588282090405532990.gif", badge: "https://i-mg24.ru/images/122025220553-so5hj.png", badgeText: "Creator of Fragment", telegram: "https://t.me/oulan1", created: "2025-12-10", exp: 50, prime: 1},
     {uid: 1002, login: "d1sqw", password: "test123", nickname: "M", avatar: "https://i-mg24.ru/images/122125103126-s3pjz.jpg", badge: "https://img.icons8.com/emoji/48/fire.png", badgeText: "Early Tester", telegram: "https://t.me/d1sqw", created: "2025-12-21", exp: 50, prime: 0},
     {uid: 1003, login: "user2", password: "user2pass", nickname: "CasualPlayer", avatar: "https://i.pravatar.cc/150?img=3", badge: "", badgeText: "", telegram: "", created: "2024-06-10", exp: 0, prime: 0}
 ];
@@ -854,6 +854,7 @@ let deferredPrompt; // Stash for PWA install event
 window.addEventListener('visibilitychange', () => {
     if(document.visibilityState === 'visible') {
         loadData(); // Re-read storage when app comes to foreground
+        checkForRemoteUpdates(); // Check for GitHub updates
     }
 });
 
@@ -885,6 +886,45 @@ async function installPWA() {
 if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
     // Already in app mode, ensure banner is hidden (CSS hides it by default, but just in case logic changes)
 }
+
+// FULL AUTO UPDATE LOGIC
+// Checks entire index.html content hash, not just accounts
+function getHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash.toString();
+}
+
+async function checkForRemoteUpdates() {
+    try {
+        // Fetch current file with cache busting to get "Live" version
+        const r = await fetch(window.location.href.split('#')[0] + '?nocache=' + Date.now());
+        if (!r.ok) return;
+        
+        const txt = await r.text();
+        const remoteHash = getHash(txt);
+        const localHash = localStorage.getItem('appVersionHash');
+
+        if (!localHash) {
+            // First run, save hash and continue
+            localStorage.setItem('appVersionHash', remoteHash);
+        } else if (localHash !== remoteHash) {
+            console.log("Update detected! Reloading...");
+            localStorage.setItem('appVersionHash', remoteHash);
+            location.reload(true); // Force reload from server
+        }
+    } catch (e) { console.error("Update check failed", e); }
+}
+
+// Start polling for updates every 30 seconds
+setInterval(checkForRemoteUpdates, 30000);
+// Check immediately on load (just in case)
+setTimeout(checkForRemoteUpdates, 2000);
+
 
 window.addEventListener('popstate', function(event) {
     if (event.state) {
