@@ -114,7 +114,7 @@ body {
     position: absolute; 
     top: 50%; 
     left: 50%; 
-    width: 180%; /* Increased for header */
+    width: 180%; 
     height: 180%; 
     transform: translate(-50%, -50%); 
     pointer-events: none; 
@@ -142,7 +142,7 @@ body {
     position: absolute; 
     top: 50%; 
     left: 50%; 
-    width: 130%; /* Reverted to 130% */
+    width: 130%; 
     height: 130%; 
     transform: translate(-50%, -50%); 
     pointer-events: none; 
@@ -278,9 +278,9 @@ body {
     position: absolute; 
     top: 50%; 
     left: 50%; 
-    width: 130%; /* Reverted to 130% */
+    width: 130%; 
     height: 130%; 
-    transform: translate(-50%, -50%); /* Centered */
+    transform: translate(-50%, -50%); 
     pointer-events: none; 
     z-index: 5; 
     object-fit: contain; 
@@ -350,6 +350,33 @@ body {
 .version-info{margin-top:40px;padding:25px;background:rgba(108,99,255,.12);border-radius:18px}
 .avatar-viewer{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);z-index:3000;justify-content:center;align-items:center;cursor:pointer}
 .avatar-viewer img{max-width:80vw;max-height:80vh;min-width:400px;min-height:400px;border-radius:24px;object-fit:contain}
+
+/* PWA Install Banner */
+.pwa-banner {
+    background: linear-gradient(90deg, #ff9800, #f57c00);
+    color: white;
+    padding: 8px 20px;
+    display: none; /* Hidden by default, toggled via JS */
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    z-index: 2001;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.pwa-btn {
+    background: white;
+    color: #f57c00;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 13px;
+    transition: transform 0.2s;
+}
+.pwa-btn:hover { transform: scale(1.05); }
+
 @media (max-width:768px){.mobile-warning{display:flex!important}.header,.main-content,.sidebar{display:none!important}}
 @media (max-width:900px){.launch-methods{grid-template-columns:1fr}}
 </style>
@@ -357,6 +384,10 @@ body {
 </head>
 <body class="font-default">
 <div class="mobile-warning"><div><h1>Access Denied</h1><p>Fragment Launcher is optimized for PC only. Please open on a computer.</p></div></div>
+<div id="pwaBanner" class="pwa-banner">
+    <span id="pwaText">Install App for better experience</span>
+    <button class="pwa-btn" id="pwaBtn" onclick="installPWA()">Install</button>
+</div>
 <div class="header">
 <button class="menu-btn" onclick="playSound('click'); toggleSidebar()">☰</button>
 <div class="logo" onclick="playSound('click'); navigateTo('main')">Fragment</div>
@@ -794,8 +825,8 @@ function playSound(type) {
 }
 
 const translations={
-    en:{main:"Main",library:"Library",profile:"Profile",settings:"Settings",chat:"Chat",faq:"FAQ",search:"Search games & accounts...",login:"Login",password:"Password",loginBtn:"Login",logout:"Logout",theme:"Theme",dark:"Dark",light:"Light",neon:"Neon (Beta)",liquid:"Liquid Glass (New)",interfaceStyle:"Interface Style",standard:"Standard",cosmic:"Cosmic Style",fontFamily:"Font Family",default:"Default",monospace:"Monospace",rounded:"Rounded",interfaceSize:"Interface Size",compact:"Compact",normal:"Normal",large:"Large",titleStyle:"Game Title Style",outlined:"White with Black Outline",gradient:"Gradient",customColor:"Custom Color",customTitleColor:"Custom Title Color",backup:"Backup & Restore",backupDesc:"Save all your data securely",export:"Export",import:"Import",addToLibrary:"Add to Library",removeFromLibrary:"Remove",download:"Download",launch:"Launch",launchInstructions:"Launch Instructions",launchStep1:"1. Open Command Prompt (Win + R, type 'cmd')",launchStep2:"2. Copy the command below:",launchStep3:"3. Paste it into Command Prompt and press Enter",copyCommand:"Copy Command",commandCopied:"Command copied!",description:"Description",screenshots:"Screenshots",systemReq:"System Requirements",minimum:"Minimum",recommended:"Recommended",reviews:"Reviews",hoursPlayed:"hours played",addTime:"Add Time",removeTime:"Remove Time",launchSetup:"Launch Setup",desktopShortcut:"Desktop Shortcut",manualPath:"Manual Path",desktopStep1:"Right-click Desktop",desktopStep2:"New → Shortcut",desktopStep3:"Browse for .exe",desktopStep4:"Name it and done!",manualStep1:"Open File Explorer",manualStep2:"Find game folder",manualStep3:"Shift + Right-click .exe",manualStep4:'"Copy as path"',manualStep5:"Paste below",gamePath:"Game Path:",cancel:"Cancel",save:"Save",minutes:"Minutes",loggedIn:"Logged in!",loggedOut:"Logged out",invalid:"Invalid!",saved:"Saved!",exported:"Exported!",imported:"Imported! Reloading...",invalidFile:"Invalid file!",empty:"Empty",nothingFound:"Nothing found",game:"Game",account:"Account",created:"Created",userProfile:"User Profile",contact:"Contact",totalPlaytime:"Total Playtime",devModeOn:"You activated developer mode",devModeOff:"You deactivated developer mode",randomGame:"Random Game",changeAvatar:"Change Avatar",changeAvatarDesc:"Click the button below to change your avatar via bot",openBot:"Open Avatar Bot",soundVolume:"Sound Volume",libraryStats:"{count} Games in Library",chartTitle:"Activity (Last 14 Days)",recentTitle:"Recent Activity",notesTitle:"Game Notes",notesPlaceholder:"Write your strategies, keys, or thoughts here...",saveNote:"Save Note",lastPlayed:"Last played: {date}",needLogin:"You need to login"},
-    ru:{main:"Главная",library:"Библиотека",profile:"Профиль",settings:"Настройки",chat:"Чат",faq:"FAQ",search:"Поиск игр и аккаунтов...",login:"Логин",password:"Пароль",loginBtn:"Войти",logout:"Выйти",theme:"Тема",dark:"Темная",light:"Светлая",neon:"Неон (Бета)",liquid:"Жидкое Стекло (New)",interfaceStyle:"Стиль интерфейса",standard:"Стандартный",cosmic:"Космический стиль",fontFamily:"Шрифт",default:"По умолчанию",monospace:"Моноширинный",rounded:"Округлый",interfaceSize:"Размер интерфейса",compact:"Компактный",normal:"Обычный",large:"Большой",titleStyle:"Стиль названия игр",outlined:"Белый с черным контуром",gradient:"Градиент",customColor:"Свой цвет",customTitleColor:"Свой цвет названия",backup:"Резервное копирование",backupDesc:"Безопасно сохраните данные",export:"Экспорт",import:"Импорт",addToLibrary:"Добавить в библиотеку",removeFromLibrary:"Удалить",download:"Скачать",launch:"Запустить",launchInstructions:"Инструкция по запуску",launchStep1:"1. Откройте командную строку (Win + R, введите 'cmd')",launchStep2:"2. Скопируйте команду ниже:",launchStep3:"3. Вставьте в командную строку и нажмите Enter",copyCommand:"Копировать команду",commandCopied:"Команда скопирована!",description:"Описание",screenshots:"Скриншоты",systemReq:"Системные требования",minimum:"Минимальные",recommended:"Рекомендуемые",reviews:"Отзывы",hoursPlayed:"часов сыграно",addTime:"Добавить время",removeTime:"Убрать время",launchSetup:"Настройка запуска",desktopShortcut:"Ярлык на рабочем столе",manualPath:"Ручной путь",desktopStep1:"ПКМ на рабочем столе",desktopStep2:"Создать → Ярлык",desktopStep3:"Обзор для .exe",desktopStep4:"Назовите и готово!",manualStep1:"Откройте проводник",manualStep2:"Найдите папку игры",manualStep3:"Shift + ПКМ на .exe",manualStep4:'"Копировать как путь"',manualStep5:"Вставьте ниже",gamePath:"Путь к игре:",cancel:"Отмена",save:"Сохранить",minutes:"Минуты",loggedIn:"Вход выполнен!",loggedOut:"Выход выполнен",invalid:"Неверно!",saved:"Сохранено!",exported:"Экспортировано!",imported:"Импортировано! Перезагрузка...",invalidFile:"Неверный файл!",empty:"Пусто",nothingFound:"Ничего не найдено",game:"Игра",account:"Аккаунт",created:"Создан",userProfile:"Профиль пользователя",contact:"Связаться",totalPlaytime:"Всего наиграно",devModeOn:"Вы активировали режим разработчика",devModeOff:"Вы отключили режим разработчика",randomGame:"Случайная игра",changeAvatar:"Изменить аватарку",changeAvatarDesc:"Нажмите кнопку ниже чтобы изменить аватарку через бота",openBot:"Открыть бота",soundVolume:"Громкость звука",libraryStats:"{count} игр в библиотеке",chartTitle:"Активность (14 дней)",recentTitle:"Недавняя активность",notesTitle:"Заметки к игре",notesPlaceholder:"Напишите здесь свои стратегии, ключи или мысли...",saveNote:"Сохранить заметку",lastPlayed:"Последний запуск: {date}",needLogin:"Вам нужно войти"}
+    en:{main:"Main",library:"Library",profile:"Profile",settings:"Settings",chat:"Chat",faq:"FAQ",search:"Search games & accounts...",login:"Login",password:"Password",loginBtn:"Login",logout:"Logout",theme:"Theme",dark:"Dark",light:"Light",neon:"Neon (Beta)",liquid:"Liquid Glass (New)",interfaceStyle:"Interface Style",standard:"Standard",cosmic:"Cosmic Style",fontFamily:"Font Family",default:"Default",monospace:"Monospace",rounded:"Rounded",interfaceSize:"Interface Size",compact:"Compact",normal:"Normal",large:"Large",titleStyle:"Game Title Style",outlined:"White with Black Outline",gradient:"Gradient",customColor:"Custom Color",customTitleColor:"Custom Title Color",backup:"Backup & Restore",backupDesc:"Save all your data securely",export:"Export",import:"Import",addToLibrary:"Add to Library",removeFromLibrary:"Remove",download:"Download",launch:"Launch",launchInstructions:"Launch Instructions",launchStep1:"1. Open Command Prompt (Win + R, type 'cmd')",launchStep2:"2. Copy the command below:",launchStep3:"3. Paste it into Command Prompt and press Enter",copyCommand:"Copy Command",commandCopied:"Command copied!",description:"Description",screenshots:"Screenshots",systemReq:"System Requirements",minimum:"Minimum",recommended:"Recommended",reviews:"Reviews",hoursPlayed:"hours played",addTime:"Add Time",removeTime:"Remove Time",launchSetup:"Launch Setup",desktopShortcut:"Desktop Shortcut",manualPath:"Manual Path",desktopStep1:"Right-click Desktop",desktopStep2:"New → Shortcut",desktopStep3:"Browse for .exe",desktopStep4:"Name it and done!",manualStep1:"Open File Explorer",manualStep2:"Find game folder",manualStep3:"Shift + Right-click .exe",manualStep4:'"Copy as path"',manualStep5:"Paste below",gamePath:"Game Path:",cancel:"Cancel",save:"Save",minutes:"Minutes",loggedIn:"Logged in!",loggedOut:"Logged out",invalid:"Invalid!",saved:"Saved!",exported:"Exported!",imported:"Imported! Reloading...",invalidFile:"Invalid file!",empty:"Empty",nothingFound:"Nothing found",game:"Game",account:"Account",created:"Created",userProfile:"User Profile",contact:"Contact",totalPlaytime:"Total Playtime",devModeOn:"You activated developer mode",devModeOff:"You deactivated developer mode",randomGame:"Random Game",changeAvatar:"Change Avatar",changeAvatarDesc:"Click the button below to change your avatar via bot",openBot:"Open Avatar Bot",soundVolume:"Sound Volume",libraryStats:"{count} Games in Library",chartTitle:"Activity (Last 14 Days)",recentTitle:"Recent Activity",notesTitle:"Game Notes",notesPlaceholder:"Write your strategies, keys, or thoughts here...",saveNote:"Save Note",lastPlayed:"Last played: {date}",needLogin:"You need to login",installApp:"Install App",install:"Install"},
+    ru:{main:"Главная",library:"Библиотека",profile:"Профиль",settings:"Настройки",chat:"Чат",faq:"FAQ",search:"Поиск игр и аккаунтов...",login:"Логин",password:"Пароль",loginBtn:"Войти",logout:"Выйти",theme:"Тема",dark:"Темная",light:"Светлая",neon:"Неон (Бета)",liquid:"Жидкое Стекло (New)",interfaceStyle:"Стиль интерфейса",standard:"Стандартный",cosmic:"Космический стиль",fontFamily:"Шрифт",default:"По умолчанию",monospace:"Моноширинный",rounded:"Округлый",interfaceSize:"Размер интерфейса",compact:"Компактный",normal:"Обычный",large:"Большой",titleStyle:"Стиль названия игр",outlined:"Белый с черным контуром",gradient:"Градиент",customColor:"Свой цвет",customTitleColor:"Свой цвет названия",backup:"Резервное копирование",backupDesc:"Безопасно сохраните данные",export:"Экспорт",import:"Импорт",addToLibrary:"Добавить в библиотеку",removeFromLibrary:"Удалить",download:"Скачать",launch:"Запустить",launchInstructions:"Инструкция по запуску",launchStep1:"1. Откройте командную строку (Win + R, введите 'cmd')",launchStep2:"2. Скопируйте команду ниже:",launchStep3:"3. Вставьте в командную строку и нажмите Enter",copyCommand:"Копировать команду",commandCopied:"Команда скопирована!",description:"Описание",screenshots:"Скриншоты",systemReq:"Системные требования",minimum:"Минимальные",recommended:"Рекомендуемые",reviews:"Отзывы",hoursPlayed:"часов сыграно",addTime:"Добавить время",removeTime:"Убрать время",launchSetup:"Настройка запуска",desktopShortcut:"Ярлык на рабочем столе",manualPath:"Ручной путь",desktopStep1:"ПКМ на рабочем столе",desktopStep2:"Создать → Ярлык",desktopStep3:"Обзор для .exe",desktopStep4:"Назовите и готово!",manualStep1:"Откройте проводник",manualStep2:"Найдите папку игры",manualStep3:"Shift + ПКМ на .exe",manualStep4:'"Копировать как путь"',manualStep5:"Вставьте ниже",gamePath:"Путь к игре:",cancel:"Отмена",save:"Сохранить",minutes:"Минуты",loggedIn:"Вход выполнен!",loggedOut:"Выход выполнен",invalid:"Неверно!",saved:"Сохранено!",exported:"Экспортировано!",imported:"Импортировано! Перезагрузка...",invalidFile:"Неверный файл!",empty:"Пусто",nothingFound:"Ничего не найдено",game:"Игра",account:"Аккаунт",created:"Создан",userProfile:"Профиль пользователя",contact:"Связаться",totalPlaytime:"Всего наиграно",devModeOn:"Вы активировали режим разработчика",devModeOff:"Вы отключили режим разработчика",randomGame:"Случайная игра",changeAvatar:"Изменить аватарку",changeAvatarDesc:"Нажмите кнопку ниже чтобы изменить аватарку через бота",openBot:"Открыть бота",soundVolume:"Громкость звука",libraryStats:"{count} игр в библиотеке",chartTitle:"Активность (14 дней)",recentTitle:"Недавняя активность",notesTitle:"Заметки к игре",notesPlaceholder:"Напишите здесь свои стратегии, ключи или мысли...",saveNote:"Сохранить заметку",lastPlayed:"Последний запуск: {date}",needLogin:"Вам нужно войти",installApp:"Установить приложение",install:"Установить"}
 };
 let currentLang='en',devModeClicks=0,devModeTimeout=null;
 const accounts = [
@@ -817,6 +848,7 @@ const faqItems = [
 
 let currentGame = null;
 let currentViewAccount = null;
+let deferredPrompt; // Stash for PWA install event
 
 // Auto Refresh Logic
 window.addEventListener('visibilitychange', () => {
@@ -824,6 +856,35 @@ window.addEventListener('visibilitychange', () => {
         loadData(); // Re-read storage when app comes to foreground
     }
 });
+
+// PWA Install Logic
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('pwaBanner').style.display = 'flex';
+});
+
+window.addEventListener('appinstalled', () => {
+    document.getElementById('pwaBanner').style.display = 'none';
+    deferredPrompt = null;
+});
+
+async function installPWA() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            console.log('User accepted the install prompt');
+        }
+        deferredPrompt = null;
+        document.getElementById('pwaBanner').style.display = 'none';
+    }
+}
+
+// Check standalone mode on load
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+    // Already in app mode, ensure banner is hidden (CSS hides it by default, but just in case logic changes)
+}
 
 window.addEventListener('popstate', function(event) {
     if (event.state) {
@@ -930,6 +991,7 @@ function updateSettingsLabels(){
 function updateUI(){const t=translations[currentLang];document.querySelectorAll('.sidebar-item')[0].textContent=t.main;document.querySelectorAll('.sidebar-item')[1].textContent=t.library;document.querySelectorAll('.sidebar-item')[2].textContent=t.profile;document.querySelectorAll('.sidebar-item')[3].textContent=t.faq;document.querySelectorAll('.sidebar-item')[4].textContent=t.settings;document.querySelectorAll('.sidebar-item')[5].textContent=t.chat;document.getElementById('searchInput').placeholder=t.search;document.querySelector('.random-game-btn').innerHTML=`🎲 ${t.randomGame}`;updateSettingsLabels();const logoutBtn=document.querySelector('#logoutGroup .btn');if(logoutBtn)logoutBtn.textContent=t.logout;document.querySelector('.backup-title').textContent=`💾 ${t.backup}`;document.querySelector('.backup-section p').textContent=t.backupDesc;const backupBtns=document.querySelectorAll('.backup-btn');if(backupBtns[0])backupBtns[0].innerHTML=`📥 ${t.export}`;if(backupBtns[1])backupBtns[1].innerHTML=`📤 ${t.import}`;document.getElementById('exeModalTitle').textContent=t.launchSetup;document.getElementById('method1Title').textContent=`🖥️ ${t.desktopShortcut}`;document.getElementById('method2Title').textContent=`📂 ${t.manualPath}`;document.getElementById('exePathLabel').textContent=t.gamePath;document.getElementById('exeCancelBtn').textContent=t.cancel;document.getElementById('exeSaveBtn').textContent=t.save;
 document.getElementById('desktopStep1').textContent=t.desktopStep1;document.getElementById('desktopStep2').textContent=t.desktopStep2;document.getElementById('desktopStep3').textContent=t.desktopStep3;document.getElementById('desktopStep4').textContent=t.desktopStep4;document.getElementById('manualStep1').textContent=t.manualStep1;document.getElementById('manualStep2').textContent=t.manualStep2;document.getElementById('manualStep3').textContent=t.manualStep3;document.getElementById('manualStep4').textContent=t.manualStep4;document.getElementById('manualStep5').textContent=t.manualStep5;
 document.getElementById('chartTitle').textContent=t.chartTitle;document.getElementById('recentTitle').textContent=t.recentTitle;document.getElementById('profTitle').textContent=t.profile;document.getElementById('libTitle').textContent=t.library;document.getElementById('settTitle').textContent=t.settings;document.getElementById('notesTitle').textContent=t.notesTitle;document.getElementById('gameNotesInput').placeholder=t.notesPlaceholder;document.getElementById('saveNoteBtn').textContent=t.saveNote;document.getElementById('descTitle').textContent=t.description;document.getElementById('screenTitle').textContent=t.screenshots;document.getElementById('reqTitle').textContent=t.systemReq;document.getElementById('reviewsTitle').textContent=t.reviews;document.getElementById('needLoginTitle').textContent=t.needLogin;
+document.getElementById('pwaText').textContent=t.installApp;document.getElementById('pwaBtn').textContent=t.install;
 }
 
 function calculateLevel(exp) {
