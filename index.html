@@ -10,6 +10,11 @@
 <style>
 /* Core & Reset */
 *{margin:0;padding:0;box-sizing:border-box}
+
+/* Hide Scrollbar Globally but keep functionality */
+::-webkit-scrollbar { width: 0px; height: 0px; display: none; }
+* { -ms-overflow-style: none; scrollbar-width: none; }
+
 :root{--bg-primary:#0a0a0a;--bg-secondary:#1a1a1a;--glass-bg:rgba(30,30,35,.65);--glass-border:rgba(255,255,255,.12);--text-primary:#e0e0e0;--text-secondary:#b0b0b0;--accent:#6c63ff;--card-padding:20px;--font-size-base:15px;--card-size:280px}
 body.light-theme{--bg-primary:#f5f5f5;--bg-secondary:#fff;--glass-bg:rgba(255,255,255,.65);--glass-border:rgba(0,0,0,.12);--text-primary:#1a1a1a;--text-secondary:#666}
 body.neon-theme{--bg-primary:#0a0014;--glass-bg:rgba(138,43,226,.15);--glass-border:rgba(255,0,255,.4);--text-primary:#fff;--text-secondary:#d0b3ff;--accent:#f0f;background:radial-gradient(circle at 20% 50%,rgba(138,43,226,.2) 0,transparent 50%),radial-gradient(circle at 80% 50%,rgba(255,0,255,.2) 0,transparent 50%),linear-gradient(135deg,#0a0014 0,#0f001f 50%,#14002b 100%)}
@@ -19,14 +24,14 @@ body.cosmic-theme{--bg-primary:#0a0a1e;--glass-bg:rgba(20,20,50,.7);--glass-bord
 body.cosmic-theme .glass{background:rgba(20,20,50,.75);border:1px solid rgba(100,149,237,.4);position:relative;z-index:10}
 
 /* Liquid Glass Style */
-body.style-liquid .glass, body.style-liquid .game-card, body.style-liquid .section, body.style-liquid .modal-content, body.style-liquid .sidebar {
+body.style-liquid .glass, body.style-liquid .game-card, body.style-liquid .section, body.style-liquid .modal-content, body.style-liquid .sidebar, body.style-liquid .notif-dropdown {
     background: rgba(var(--bg-secondary), 0.3) !important;
     backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
     border-radius: 24px;
 }
-body.style-liquid .btn, body.style-liquid .menu-btn, body.style-liquid .account-btn, body.style-liquid .backup-btn, body.style-liquid .req-btn.active, body.style-liquid .tab-btn.active {
+body.style-liquid .btn, body.style-liquid .menu-btn, body.style-liquid .account-btn, body.style-liquid .backup-btn, body.style-liquid .req-btn.active, body.style-liquid .tab-btn.active, body.style-liquid .notif-btn {
     background: rgba(255, 255, 255, 0.1) !important;
     border: 1px solid rgba(255, 255, 255, 0.3) !important;
     color: var(--text-primary) !important;
@@ -36,7 +41,7 @@ body.style-liquid .btn, body.style-liquid .menu-btn, body.style-liquid .account-
     overflow: hidden;
     transition: all 0.3s ease;
 }
-body.style-liquid .btn:hover, body.style-liquid .menu-btn:hover {
+body.style-liquid .btn:hover, body.style-liquid .menu-btn:hover, body.style-liquid .notif-btn:hover {
     background: rgba(255, 255, 255, 0.2) !important;
     transform: translateY(-2px);
     box-shadow: 0 0 15px var(--accent);
@@ -65,7 +70,7 @@ body {
     user-select: none; /* No selection by default */
 }
 /* Allowed Copy Areas */
-.game-title, .section p, .review-text, .mod-desc, .friend-name, input, textarea, .faq-answer {
+.game-title, .section p, .review-text, .mod-desc, .friend-name, input, textarea, .faq-answer, .notif-content, .tooltip-text {
     user-select: text;
 }
 
@@ -88,7 +93,7 @@ body {
 .search-input:focus{outline:0;border-color:var(--accent);width:400px}
 
 /* Header Avatar */
-.account-btn{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--accent) 0,#5a52d5 100%);border:none;color:#fff;font-size:24px;cursor:pointer;transition:all .4s ease;display:flex;align-items:center;justify-content:center; overflow: hidden;}
+.account-btn{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--accent) 0,#5a52d5 100%);border:none;color:#fff;font-size:24px;cursor:pointer;transition:all .4s ease;display:flex;align-items:center;justify-content:center; overflow: hidden; margin-left: 10px;}
 .account-btn:hover{transform:translateY(-3px)}
 .account-btn.logged-in{background:0 0;padding:0;overflow:visible!important;} 
 .account-btn.logged-in img{width:100%;height:100%;object-fit:cover}
@@ -96,6 +101,39 @@ body {
 .header-avatar-wrapper { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
 .header-avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 .header-avatar-frame { position: absolute; top: 50%; left: 50%; width: 180%; height: 180%; transform: translate(-50%, -50%); pointer-events: none; z-index: 10; object-fit: contain; }
+
+/* Notifications */
+.notif-container { position: relative; }
+.notif-btn { background: rgba(45,45,50,.6); border: 1px solid var(--glass-border); color: #fff; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 18px; display: none; align-items: center; justify-content: center; transition: all 0.3s ease; overflow: visible !important; }
+.notif-btn:hover { background: rgba(108,99,255,0.3); border-color: var(--accent); }
+.notif-badge { position: absolute; top: -5px; right: -5px; background: #9c27b0; color: white; font-size: 10px; padding: 3px 6px; border-radius: 10px; font-weight: bold; border: 2px solid var(--bg-primary); display: none; z-index: 20; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+.notif-dropdown { position: absolute; top: 120%; right: 0; width: 300px; background: rgba(28,28,32,0.95); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 16px; padding: 10px; display: none; flex-direction: column; gap: 5px; z-index: 1500; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+.notif-item { padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.05); cursor: pointer; transition: all 0.2s; position: relative; }
+.notif-item:hover { background: rgba(108,99,255,0.15); }
+.notif-item.unread { border-left: 3px solid var(--accent); }
+.notif-item-title { font-weight: bold; font-size: 14px; margin-bottom: 3px; }
+.notif-item-date { font-size: 10px; color: var(--text-secondary); }
+.notif-pagination { display: flex; justify-content: space-between; margin-top: 10px; padding: 0 5px; }
+.notif-page-btn { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 12px; font-weight: bold; }
+.notif-page-btn:disabled { color: var(--text-secondary); opacity: 0.5; cursor: default; }
+
+/* Achievements */
+.achievements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 15px; margin-top: 15px; }
+.achievement-item { width: 80px; height: 80px; background: rgba(0,0,0,0.3); border-radius: 12px; overflow: hidden; border: 1px solid var(--glass-border); position: relative; cursor: help; transition: transform 0.2s; }
+.achievement-item:hover { transform: scale(1.1); border-color: var(--accent); z-index: 100; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+.achievement-img { width: 100%; height: 100%; object-fit: cover; }
+.achievement-item:hover::after { content: attr(title); position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); color: #fff; padding: 5px 10px; border-radius: 6px; font-size: 11px; white-space: nowrap; z-index: 101; pointer-events: none; border: 1px solid var(--glass-border); }
+
+/* View Profile Layout */
+.view-profile-layout { display: flex; gap: 25px; margin-top: 20px; }
+.view-profile-left { flex: 2; }
+.view-profile-right { flex: 1; border-left: 1px solid var(--glass-border); padding-left: 20px; display: flex; flex-direction: column; }
+.view-friends-list { display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto; padding-right: 5px; }
+.view-friend-mini { display: flex; align-items: center; gap: 10px; background: rgba(45,45,50,0.3); padding: 8px; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+.view-friend-mini:hover { background: rgba(45,45,50,0.6); transform: translateX(5px); }
+.view-friend-mini img { width: 30px; height: 30px; border-radius: 50%; }
+.view-achievements-row { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--glass-border); }
+.view-achievements-list { display: flex; gap: 10px; overflow-x: auto; padding: 15px 10px; /* Padding prevents clipping on hover scale */ }
 
 .search-results{position:absolute;top:110%;left:0;right:0;background:rgba(35,35,40,.95);backdrop-filter:blur(25px);border-radius:18px;max-height:400px;overflow-y:auto;display:none;box-shadow:0 8px 32px rgba(0,0,0,.5); z-index: 1000;}
 .search-result-item{padding:15px;cursor:pointer;display:flex;gap:15px;align-items:center;transition:all .3s ease}
@@ -296,6 +334,39 @@ body {
 .friend-name { font-weight: bold; font-size: 16px; }
 .friend-level { font-size: 12px; color: var(--text-secondary); }
 
+/* Notifications */
+.notif-container { position: relative; }
+.notif-btn { background: rgba(45,45,50,.6); border: 1px solid var(--glass-border); color: #fff; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 18px; display: none; align-items: center; justify-content: center; transition: all 0.3s ease; overflow: visible !important; }
+.notif-btn:hover { background: rgba(108,99,255,0.3); border-color: var(--accent); }
+.notif-badge { position: absolute; top: -5px; right: -5px; background: #9c27b0; color: white; font-size: 10px; padding: 3px 6px; border-radius: 10px; font-weight: bold; border: 2px solid var(--bg-primary); display: none; z-index: 20; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+.notif-dropdown { position: absolute; top: 120%; right: 0; width: 300px; background: rgba(28,28,32,0.95); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 16px; padding: 10px; display: none; flex-direction: column; gap: 5px; z-index: 1500; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+.notif-item { padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.05); cursor: pointer; transition: all 0.2s; position: relative; }
+.notif-item:hover { background: rgba(108,99,255,0.15); }
+.notif-item.unread { border-left: 3px solid var(--accent); }
+.notif-item-title { font-weight: bold; font-size: 14px; margin-bottom: 3px; }
+.notif-item-date { font-size: 10px; color: var(--text-secondary); }
+.notif-pagination { display: flex; justify-content: space-between; margin-top: 10px; padding: 0 5px; }
+.notif-page-btn { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 12px; font-weight: bold; }
+.notif-page-btn:disabled { color: var(--text-secondary); opacity: 0.5; cursor: default; }
+
+/* Achievements */
+.achievements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 15px; margin-top: 15px; }
+.achievement-item { width: 80px; height: 80px; background: rgba(0,0,0,0.3); border-radius: 12px; overflow: hidden; border: 1px solid var(--glass-border); position: relative; cursor: help; transition: transform 0.2s; }
+.achievement-item:hover { transform: scale(1.1); border-color: var(--accent); z-index: 100; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+.achievement-img { width: 100%; height: 100%; object-fit: cover; }
+.achievement-item:hover::after { content: attr(title); position: absolute; bottom: 110%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); color: #fff; padding: 5px 10px; border-radius: 6px; font-size: 11px; white-space: nowrap; z-index: 101; pointer-events: none; border: 1px solid var(--glass-border); }
+
+/* View Profile Layout */
+.view-profile-layout { display: flex; gap: 25px; margin-top: 20px; }
+.view-profile-left { flex: 2; }
+.view-profile-right { flex: 1; border-left: 1px solid var(--glass-border); padding-left: 20px; display: flex; flex-direction: column; }
+.view-friends-list { display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto; padding-right: 5px; }
+.view-friend-mini { display: flex; align-items: center; gap: 10px; background: rgba(45,45,50,0.3); padding: 8px; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+.view-friend-mini:hover { background: rgba(45,45,50,0.6); transform: translateX(5px); }
+.view-friend-mini img { width: 30px; height: 30px; border-radius: 50%; }
+.view-achievements-row { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--glass-border); }
+.view-achievements-list { display: flex; gap: 10px; overflow-x: auto; padding: 15px 10px; }
+
 @media (max-width:768px){.mobile-warning{display:flex!important}.header,.main-content,.sidebar{display:none!important}}
 @media (max-width:900px){.launch-methods{grid-template-columns:1fr}}
 </style>
@@ -313,6 +384,19 @@ body {
 <div class="search-container">
 <input type="text" class="search-input" id="searchInput" placeholder="Search games & accounts..." oninput="search()">
 <div class="search-results" id="searchResults"></div>
+</div>
+<div class="notif-container">
+    <button class="notif-btn" id="notifBtn" onclick="toggleNotifications()">
+        <i class="fas fa-bell"></i>
+        <div class="notif-badge" id="notifBadge">0</div>
+    </button>
+    <div class="notif-dropdown" id="notifDropdown">
+        <div id="notifList"></div>
+        <div class="notif-pagination">
+            <button class="notif-page-btn" id="notifPrev" onclick="prevNotifPage()">< Prev</button>
+            <button class="notif-page-btn" id="notifNext" onclick="nextNotifPage()">Next ></button>
+        </div>
+    </div>
 </div>
 <button class="account-btn" id="accountBtn" onclick="playSound('click'); openAccountModal()">+</button>
 </div>
@@ -411,7 +495,7 @@ body {
             <span id="reviewsLabel">Reviews</span>
             <span class="average-rating" id="avgRating"></span>
         </div>
-        <button class="btn write-review-btn" onclick="playSound('click'); openReviewLink()">Write Review</button>
+        <button class="btn write-review-btn" onclick="playSound('click'); openReviewLink()" id="writeReviewBtn">Write Review</button>
     </div>
     <div class="reviews-section" id="reviewsSection"></div>
     </div>
@@ -420,11 +504,11 @@ body {
 <!-- Mods Content Tab -->
 <div id="gameModsContent" class="game-tab-content">
     <div class="section">
-        <div class="section-title">How to install mods</div>
+        <div class="section-title" id="installModsTitle">How to install mods</div>
         <p id="modInstructionsText" style="line-height:1.6; color:var(--text-secondary)"></p>
     </div>
     <div class="section">
-        <div class="section-title">Available Mods</div>
+        <div class="section-title" id="availableModsTitle">Available Mods</div>
         <div id="modsList"></div>
     </div>
 </div>
@@ -458,6 +542,16 @@ body {
 <button class="profile-telegram" id="profileTelegram" onclick="playSound('click'); openTelegram()" style="display:none"><span>📱</span><span>Telegram</span></button>
 </div>
 </div>
+
+<div class="section" id="achievementsSection" style="display:none">
+    <div class="section-title" id="achievementsTitle">Achievements</div>
+    <div class="achievements-grid" id="achievementsList"></div>
+    <div class="notif-pagination" style="margin-top:15px">
+        <button class="notif-page-btn" id="achPrev" onclick="prevAchPage()">< Prev</button>
+        <button class="notif-page-btn" id="achNext" onclick="nextAchPage()">Next ></button>
+    </div>
+</div>
+
 <div class="section">
     <div class="section-title" id="chartTitle">Activity (Last 14 Days)</div>
     <div class="chart-wrapper">
@@ -472,7 +566,7 @@ body {
 </div>
 
 <div class="section">
-    <div class="section-title">Friends</div>
+    <div class="section-title" id="friendsTitle">Friends</div>
     <div class="friends-grid" id="friendsList"></div>
 </div>
 
@@ -601,25 +695,50 @@ body {
 </div>
 </div>
 
+<!-- Notification Detail Modal -->
+<div class="modal" id="notifModal">
+    <div class="modal-content" style="max-width:500px">
+        <button class="modal-close" onclick="closeNotifModal()">×</button>
+        <div class="modal-title" id="notifModalTitle"></div>
+        <div id="notifModalDate" style="font-size:12px;color:var(--text-secondary);margin-bottom:15px"></div>
+        <p id="notifModalContent" style="line-height:1.6;color:var(--text-primary)"></p>
+    </div>
+</div>
+
 <div class="modal" id="accountViewModal">
-<div class="modal-content">
+<div class="modal-content" style="width: 800px; max-width: 90%;">
 <button class="modal-close" onclick="closeAccountViewModal()">×</button>
-<div class="modal-title">User Profile</div>
-<div class="account-profile" style="margin:0">
-<div class="profile-avatar-wrapper">
-<img class="profile-avatar" id="viewProfileAvatar" src="" onclick="viewAvatar(this.src)">
-<img class="profile-avatar-frame" id="viewProfileFrame" src="" style="display:none">
+<div class="modal-title" id="userProfileTitle">User Profile</div>
+<div class="view-profile-layout">
+    <div class="view-profile-left">
+        <div class="account-profile" style="margin:0; flex-direction: column; align-items: flex-start;">
+            <div style="display:flex; gap:20px; align-items:center; width:100%;">
+                <div class="profile-avatar-wrapper">
+                    <img class="profile-avatar" id="viewProfileAvatar" src="" onclick="viewAvatar(this.src)">
+                    <img class="profile-avatar-frame" id="viewProfileFrame" src="" style="display:none">
+                </div>
+                <div style="flex:1">
+                    <div class="profile-name"><span id="viewProfileName"></span></div>
+                    <div class="level-container" id="viewLevelContainer" style="margin-bottom:10px"></div>
+                    <div class="profile-created" id="viewProfileCreated"></div>
+                    <div class="profile-uid" id="viewProfileUid" style="text-align:left;margin-top:5px;display:none"></div>
+                    <button class="profile-telegram" id="viewProfileTelegram" onclick="openViewTelegram()" style="display:none"><span>📱</span><span>Contact</span></button>
+                </div>
+            </div>
+        </div>
+        <div class="view-achievements-row" id="viewAchievementsRow" style="display:none;">
+            <h4 style="margin-bottom:10px" id="viewAchTitle">Achievements</h4>
+            <div class="view-achievements-list" id="viewAchievementsList"></div>
+        </div>
+    </div>
+    <div class="view-profile-right">
+        <h4 style="margin-bottom:15px" id="viewFriendsTitle">Friends</h4>
+        <div class="view-friends-list" id="viewFriendsList"></div>
+    </div>
 </div>
-<div style="flex:1">
-<div class="profile-name"><span id="viewProfileName"></span></div>
-<div class="level-container" id="viewLevelContainer" style="margin-bottom:10px"></div>
-<div class="profile-created" id="viewProfileCreated"></div>
-<div class="profile-uid" id="viewProfileUid" style="text-align:left;margin-top:5px;display:none"></div>
-<button class="profile-telegram" id="viewProfileTelegram" onclick="openViewTelegram()" style="display:none"><span>📱</span><span>Contact</span></button>
 </div>
 </div>
-</div>
-</div>
+
 <div class="modal" id="avatarChangeModal">
 <div class="modal-content" style="max-width:500px">
 <button class="modal-close" onclick="closeAvatarChangeModal()">×</button>
@@ -689,6 +808,7 @@ body {
 </div>
 <button class="btn" onclick="playSound('click'); copyLaunchCommand()" style="width:100%;margin-bottom:10px" id="copyCommandBtn">Copy Command</button>
 <p id="launchStep3">3. Paste it into Command Prompt and press Enter</p>
+<p style="margin-top:15px;font-size:12px;color:var(--accent);font-style:italic">⏳ Playtime is tracking automatically...</p>
 </div>
 <button class="btn btn-secondary" onclick="closeLaunchModal()" style="width:100%">Close</button>
 </div>
@@ -696,16 +816,16 @@ body {
 <div class="modal" id="updateModal">
     <div class="modal-content" style="max-width:600px">
         <button class="modal-close" onclick="closeUpdateModal()">×</button>
-        <div class="modal-title">Update v0.1.3 (Fixed)</div>
+        <div class="modal-title">Update v0.1.4</div>
         <div style="margin-bottom:20px">
             <h3 style="color:var(--accent);margin-bottom:10px">Changes / Изменения</h3>
             <ul style="line-height:1.6;padding-left:20px">
-                <li>🛠️ <b>Fixed Critical Bug:</b> Fixed crash that hid buttons and reviews. / Исправлен критический баг скрывающий кнопки.</li>
-                <li>✨ <b>Reviews 2.0:</b> Auto-filled profiles, clickable avatars, fair ratings. / Умные отзывы, кликабельные аватарки.</li>
-                <li>🔧 <b>Mods:</b> Mod support for games (check People Playground). / Поддержка модов.</li>
-                <li>👥 <b>Friends:</b> Added friends list to profile. / Список друзей в профиле.</li>
-                <li>📊 <b>Stats:</b> Launcher statistics in Dev Mode. / Статистика лаунчера.</li>
-                <li>🔒 <b>Protection:</b> Improved copy protection text. / Улучшена защита текста.</li>
+                <li>🔔 <b>Notifications:</b> Inbox system for user messages. / Система уведомлений.</li>
+                <li>🏆 <b>Achievements:</b> Display trophies in profile. / Достижения в профиле.</li>
+                <li>⏱️ <b>Auto Playtime:</b> Time tracks automatically when launch window is open. / Автоматический подсчет времени.</li>
+                <li>📋 <b>Expanded Data:</b> More detailed system requirements. / Детальные системные требования.</li>
+                <li>👤 <b>Profile View:</b> See friends and achievements of others. / Просмотр друзей и достижений других.</li>
+                <li>🇷🇺 <b>Translation:</b> Full Russian translation added. / Полный перевод на русский.</li>
             </ul>
         </div>
         <button class="btn" onclick="closeUpdateModal()" style="width:100%">Got it!</button>
@@ -717,18 +837,148 @@ body {
 <script>
 // --- CORE DATA (Embedded for Stability) ---
 const accounts = [
-    {uid: 1001, login: "oulan", password: "oulan2008", nickname: "oulan", avatar: "https://i-mg24.ru/images/122025214036-rix6n.gif", frame: "https://upload-os-bbs.hoyolab.com/upload/2023/08/17/250252732/5d90f7c6c6eb09aba0bcd51f46f378e0_2588282090405532990.gif", badge: "https://i-mg24.ru/images/122025220553-so5hj.png", badgeText: "Creator of Fragment", telegram: "https://t.me/oulan1", created: "2025-12-10", exp: 50000, prime: 1, friends: ["M", "Frikokid"]},
-    {uid: 1002, login: "d1sqw", password: "test123", nickname: "M", avatar: "https://i-mg24.ru/images/122125103126-s3pjz.jpg", badge: "https://img.icons8.com/emoji/48/fire.png", badgeText: "Early Tester", telegram: "https://t.me/d1sqw", created: "2025-12-21", exp: 50, prime: 0, friends: ["oulan"]},
-    {uid: 1003, login: "user2", password: "user2pass", nickname: "CasualPlayer", avatar: "https://i.pravatar.cc/150?img=3", badge: "", badgeText: "", telegram: "", created: "2024-06-10", exp: 0, prime: 0, friends: []},
-    {uid: 1004, login: "Frikokid", password: "131208god", nickname: "Frikokid", avatar: "https://i-mg24.ru/images/010626133057-8c4lp.jpg", badge: "", badgeText: "", telegram: "https://t.me/Frikokid", created: "2026-01-06", exp: 5, prime: 1, friends: ["oulan"]}
-];
-const games = [
-    {id: 1, title: "People Playground", shortDesc: "18+ sandbox", description: "Стреляйте, протыкайте, сжигайте, отравляйте, разрывайте, испаряйте, или давите рэгдоллы на большом и открытом пространстве.", banner: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1118200/header.jpg?t=1763123186", avatar: "https://gfn.am/en/games/media/images/art_im_wa7r9Xc.2e16d0ba.fill-308x308.format-webp.webpquality-50.webp", gallery: ["https://gfn.am/en/games/media/images/scree_x68WEwr.2e16d0ba.fill-1152x648.format-webp.webpquality-50.webp", "https://gfn.am/en/games/media/images/scree_gJ8zkub.2e16d0ba.fill-1152x648.format-webp.webpquality-50.webp"], downloadUrl: "https://drive.usercontent.google.com/download?id=18YF3N5yyZS6g8M8ZPxkACm2_kPDZVz7V&export=download&authuser=0", minReq: "OS: Windows 7 SP2+<br>CPU: 2 GHz<br>RAM: 4GB", recReq: "OS: Windows 10<br>CPU: 3 GHz<br>RAM: 8GB", update: 1, updateDate: "2025-12-21", updateVersion: "27.3", reviews: [{author: "oulan", rating: 5, date: "2026-01-06", text: "Убивать ыы"}], hasMods: 1, modInstructions: "1. Скачайте мод <br>2. Перенесите мод в папку Mods которая находится в папке с игрой  <br>3. Активируйте мод в игре во вкладке mods", mods: [{name: "Chainsaw Man Mod", desc: "Этот мод добавляет полностью функционирующие контракты, гибридов, НАСТОЯЩЕГО человека с бензопилой и многое другое, большинство способностей объясняется либо в контракте, либо в описании персонажей.", img: "https://top-mods.ru/upload/000/u1/c/a/chainsaw-man-mod-photo-mods-main.jpg", url: "https://modsfire.com/739Zdera4k1SS62"}, {name: "", desc: "", img: "", url: ""}]},
-    {id: 2, title: "The Witcher 3", shortDesc: "Fantasy RPG", description: "Monster hunter adventure", banner: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1200", avatar: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300", gallery: ["https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400"], downloadUrl: "https://example.com", minReq: "OS: Win7<br>CPU: i5", recReq: "OS: Win10<br>CPU: i7", update: 0, updateDate: "", updateVersion: "", reviews: [], hasMods: 0},
-    {id: 3, title: "Elden Ring", shortDesc: "Dark fantasy", description: "Explore the Lands Between", banner: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=1200", avatar: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=300", gallery: ["https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400"], downloadUrl: "https://example.com", minReq: "OS: Win10<br>CPU: i5", recReq: "OS: Win10<br>CPU: i7", update: 1, updateDate: "2024-12-05", updateVersion: "1.10", reviews: [], hasMods: 0}
+    {
+        uid: 1001,
+        login: "oulan",
+        password: "oulan2008",
+        nickname: "oulan",
+        avatar: "https://i-mg24.ru/images/122025214036-rix6n.gif",
+        frame: "https://upload-os-bbs.hoyolab.com/upload/2023/08/17/250252732/5d90f7c6c6eb09aba0bcd51f46f378e0_2588282090405532990.gif",
+        badge: "https://i-mg24.ru/images/122025220553-so5hj.png",
+        badgeText: "Creator of Fragment",
+        telegram: "https://t.me/oulan1",
+        created: "2025-12-10",
+        exp: 50000,
+        prime: 1,
+        friends: ["M", "Frikokid"],
+        notifications: [
+            {id: 1, title: "Welcome to 0.1.4", content: "Enjoy the new features!", date: "2026-02-15"}
+        ],
+        achievements: [
+            {img: "https://img.icons8.com/emoji/48/star-emoji.png", title: "Founder"},
+            {img: "https://img.icons8.com/emoji/48/rocket-emoji.png", title: "Early Adopter"}
+        ]
+    },
+    {
+        uid: 1002,
+        login: "d1sqw",
+        password: "test123",
+        nickname: "M",
+        avatar: "https://i-mg24.ru/images/122125103126-s3pjz.jpg",
+        badge: "https://img.icons8.com/emoji/48/fire.png",
+        badgeText: "Early Tester",
+        telegram: "https://t.me/d1sqw",
+        created: "2025-12-21",
+        exp: 50,
+        prime: 0,
+        friends: ["oulan"],
+        notifications: [],
+        achievements: [
+            {img: "https://img.icons8.com/emoji/48/fire.png", title: "Hot Streak"}
+        ]
+    },
+    {
+        uid: 1003,
+        login: "user2",
+        password: "user2pass",
+        nickname: "CasualPlayer",
+        avatar: "https://i.pravatar.cc/150?img=3",
+        badge: "",
+        badgeText: "",
+        telegram: "",
+        created: "2024-06-10",
+        exp: 0,
+        prime: 0,
+        friends: [],
+        notifications: [],
+        achievements: []
+    },
+    {
+        uid: 1004,
+        login: "Frikokid",
+        password: "131208god",
+        nickname: "Frikokid",
+        avatar: "https://i-mg24.ru/images/010626133057-8c4lp.jpg",
+        badge: "",
+        badgeText: "",
+        telegram: "https://t.me/Frikokid",
+        created: "2026-01-06",
+        exp: 5,
+        prime: 1,
+        friends: ["oulan"],
+        notifications: [],
+        achievements: []
+    }
 ];
 
-const CURRENT_VERSION = '0.1.3';
+const games = [
+    {
+        id: 1,
+        title: "People Playground",
+        shortDesc: "18+ sandbox",
+        description: "Стреляйте, протыкайте, сжигайте, отравляйте, разрывайте, испаряйте, или давите рэгдоллы на большом и открытом пространстве.",
+        banner: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1118200/header.jpg?t=1763123186",
+        avatar: "https://gfn.am/en/games/media/images/art_im_wa7r9Xc.2e16d0ba.fill-308x308.format-webp.webpquality-50.webp",
+        gallery: [
+            "https://gfn.am/en/games/media/images/scree_x68WEwr.2e16d0ba.fill-1152x648.format-webp.webpquality-50.webp",
+            "https://gfn.am/en/games/media/images/scree_gJ8zkub.2e16d0ba.fill-1152x648.format-webp.webpquality-50.webp"
+        ],
+        downloadUrl: "https://drive.usercontent.google.com/download?id=18YF3N5yyZS6g8M8ZPxkACm2_kPDZVz7V&export=download&authuser=0",
+        minReq: "OS: Windows 7 SP2+<br>CPU: 2 GHz<br>RAM: 4GB<br>GPU: NVIDIA GT 630 / AMD HD 6570",
+        recReq: "OS: Windows 10<br>CPU: 3 GHz<br>RAM: 8GB<br>GPU: NVIDIA GTX 1050 / AMD RX 560",
+        update: 1,
+        updateDate: "2025-12-21",
+        updateVersion: "27.3",
+        reviews: [
+            {author: "oulan", rating: 5, date: "2026-01-06", text: "Убивать ыы"}
+        ],
+        hasMods: 1,
+        modInstructions: "1. Скачайте мод <br>2. Перенесите мод в папку Mods которая находится в папке с игрой <br>3. Активируйте мод в игре во вкладке mods",
+        mods: [
+            {name: "Chainsaw Man Mod", desc: "Этот мод добавляет полностью функционирующие контракты, гибридов, НАСТОЯЩЕГО человека с бензопилой и многое другое.", img: "https://top-mods.ru/upload/000/u1/c/a/chainsaw-man-mod-photo-mods-main.jpg", url: "https://modsfire.com/739Zdera4k1SS62"}
+        ]
+    },
+    {
+        id: 2,
+        title: "Schedule I",
+        shortDesc: "Schedule I — это популярный инди-симулятор наркобизнеса.",
+        description: "Schedule I — это криминальный симулятор, где вы начинаете путь с уличного дилера и развиваетесь до главы наркоимперии. Производите и распространяйте различные наркотики по мрачному городу Hyland Point. В этой версии 0.4.1f13 предустановлен руссификатор на текст и текстуры.",
+        banner: "https://i-mg24.ru/images/010926080338-wip0c.jpg",
+        avatar: "https://i-mg24.ru/images/010926080148-ui4lx.jpg",
+        gallery: [
+            "https://i-mg24.ru/images/011026191545-wkb4r.webp", "https://i-mg24.ru/images/011026191601-cx3a7.jpg", "https://i-mg24.ru/images/011026191614-uhqwv.jpg",
+        ],
+        downloadUrl: "https://drive.usercontent.google.com/download?id=1Zf4uvnAw-ND2MgtHGTOd9mWEiPR-Rxi7&export=download&authuser=0",
+        minReq: "OS: Windows 10<br>CPU: 3 GHz<br>RAM: 8GB<br>GPU: GTX 960",
+        recReq: "OS: Windows 10<br>CPU: 3.5 GHz<br>RAM: 16GB<br>GPU: GTX 1060 6GB",
+        update: 0,
+        updateDate: "",
+        updateVersion: "",
+        reviews: [],
+        hasMods: 0
+    },
+    {
+        id: 3,
+        title: "Elden Ring",
+        shortDesc: "Dark fantasy",
+        description: "Explore the Lands Between",
+        banner: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=1200",
+        avatar: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=300",
+        gallery: [
+            "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400"
+        ],
+        downloadUrl: "https://example.com",
+        minReq: "OS: Win10<br>CPU: i5<br>RAM: 12GB<br>GPU: GTX 1060 3GB",
+        recReq: "OS: Win10<br>CPU: i7<br>RAM: 16GB<br>GPU: GTX 1070 8GB",
+        update: 1,
+        updateDate: "2024-12-05",
+        updateVersion: "1.10",
+        reviews: [],
+        hasMods: 0
+    }
+];
+
+const CURRENT_VERSION = '0.1.4';
 let currentLang='en',devModeClicks=0,devModeTimeout=null;
 let currentGame = null;
 let currentViewAccount = null;
@@ -736,10 +986,13 @@ let deferredPrompt;
 let audioContext = null;
 let masterVolume = 1;
 let currentSoundType = 'standard';
+let notifPage = 0;
+let achPage = 0;
+let launchTimer = null;
 
 const translations={
-    en:{main:"Main",library:"Library",profile:"Profile",settings:"Settings",chat:"Chat",faq:"FAQ",search:"Search games & accounts...",login:"Login",password:"Password",loginBtn:"Login",logout:"Logout",theme:"Theme",dark:"Dark",light:"Light",neon:"Neon (Beta)",liquid:"Liquid Glass (New)",interfaceStyle:"Interface Style",standard:"Standard",cosmic:"Cosmic Style",fontFamily:"Font Family",default:"Default",monospace:"Monospace",rounded:"Rounded",interfaceSize:"Interface Size",compact:"Compact",normal:"Normal",large:"Large",titleStyle:"Game Title Style",outlined:"White with Black Outline",gradient:"Gradient",customColor:"Custom Color",customTitleColor:"Custom Title Color",backup:"Backup & Restore",backupDesc:"Save all your data securely",export:"Export",import:"Import",addToLibrary:"Add to Library",removeFromLibrary:"Remove",download:"Download",launch:"Launch",launchInstructions:"Launch Instructions",launchStep1:"1. Open Command Prompt (Win + R, type 'cmd')",launchStep2:"2. Copy the command below:",launchStep3:"3. Paste it into Command Prompt and press Enter",copyCommand:"Copy Command",commandCopied:"Command copied!",description:"Description",screenshots:"Screenshots",systemReq:"System Requirements",minimum:"Minimum",recommended:"Recommended",reviews:"Reviews",hoursPlayed:"hours played",addTime:"Add Time",removeTime:"Remove Time",launchSetup:"Launch Setup",desktopShortcut:"Desktop Shortcut",manualPath:"Manual Path",desktopStep1:"Right-click Desktop",desktopStep2:"New → Shortcut",desktopStep3:"Browse for .exe",desktopStep4:"Name it and done!",manualStep1:"Open File Explorer",manualStep2:"Find game folder",manualStep3:"Shift + Right-click .exe",manualStep4:'"Copy as path"',manualStep5:"Paste below",gamePath:"Game Path:",cancel:"Cancel",save:"Save",minutes:"Minutes",loggedIn:"Logged in!",loggedOut:"Logged out",invalid:"Invalid!",saved:"Saved!",exported:"Exported!",imported:"Imported! Reloading...",invalidFile:"Invalid file!",empty:"Empty",nothingFound:"Nothing found",game:"Game",account:"Account",created:"Created",userProfile:"User Profile",contact:"Contact",totalPlaytime:"Total Playtime",devModeOn:"You activated developer mode",devModeOff:"You deactivated developer mode",randomGame:"Random Game",changeAvatar:"Change Avatar",changeAvatarDesc:"Click the button below to change your avatar via bot",openBot:"Open Avatar Bot",soundVolume:"Sound Volume",libraryStats:"{count} Games in Library",chartTitle:"Activity (Last 14 Days)",recentTitle:"Recent Activity",notesTitle:"Game Notes",notesPlaceholder:"Write your strategies, keys, or thoughts here...",saveNote:"Save Note",lastPlayed:"Last played: {date}",needLogin:"You need to login",installApp:"Install App",install:"Install", launcherStats: "Launcher Stats", statsMsg: "Games: {g}\nAccounts: {a}\nReviews: {r}", mods: "Mods", main: "Main", installMods: "How to install mods", availableMods: "Available Mods"},
-    ru:{main:"Главная",library:"Библиотека",profile:"Профиль",settings:"Настройки",chat:"Чат",faq:"FAQ",search:"Поиск игр и аккаунтов...",login:"Логин",password:"Пароль",loginBtn:"Войти",logout:"Выйти",theme:"Тема",dark:"Темная",light:"Светлая",neon:"Неон (Бета)",liquid:"Жидкое Стекло (New)",interfaceStyle:"Стиль интерфейса",standard:"Стандартный",cosmic:"Космический стиль",fontFamily:"Шрифт",default:"По умолчанию",monospace:"Моноширинный",rounded:"Округлый",interfaceSize:"Размер интерфейса",compact:"Компактный",normal:"Обычный",large:"Большой",titleStyle:"Стиль названия игр",outlined:"Белый с черным контуром",gradient:"Градиент",customColor:"Свой цвет",customTitleColor:"Свой цвет названия",backup:"Резервное копирование",backupDesc:"Безопасно сохраните данные",export:"Экспорт",import:"Импорт",addToLibrary:"Добавить в библиотеку",removeFromLibrary:"Удалить",download:"Скачать",launch:"Запустить",launchInstructions:"Инструкция по запуску",launchStep1:"1. Откройте командную строку (Win + R, введите 'cmd')",launchStep2:"2. Скопируйте команду ниже:",launchStep3:"3. Вставьте в командную строку и нажмите Enter",copyCommand:"Копировать команду",commandCopied:"Команда скопирована!",description:"Описание",screenshots:"Скриншоты",systemReq:"Системные требования",minimum:"Минимальные",recommended:"Рекомендуемые",reviews:"Отзывы",hoursPlayed:"часов сыграно",addTime:"Добавить время",removeTime:"Убрать время",launchSetup:"Настройка запуска",desktopShortcut:"Ярлык на рабочем столе",manualPath:"Ручной путь",desktopStep1:"ПКМ на рабочем столе",desktopStep2:"Создать → Ярлык",desktopStep3:"Обзор для .exe",desktopStep4:"Назовите и готово!",manualStep1:"Откройте проводник",manualStep2:"Найдите папку игры",manualStep3:"Shift + ПКМ на .exe",manualStep4:'"Копировать как путь"',manualStep5:"Вставьте ниже",gamePath:"Путь к игре:",cancel:"Отмена",save:"Сохранить",minutes:"Минуты",loggedIn:"Вход выполнен!",loggedOut:"Выход выполнен",invalid:"Неверно!",saved:"Сохранено!",exported:"Экспортировано!",imported:"Импортировано! Перезагрузка...",invalidFile:"Неверный файл!",empty:"Пусто",nothingFound:"Ничего не найдено",game:"Игра",account:"Аккаунт",created:"Создан",userProfile:"Профиль пользователя",contact:"Связаться",totalPlaytime:"Всего наиграно",devModeOn:"Вы активировали режим разработчика",devModeOff:"Вы отключили режим разработчика",randomGame:"Случайная игра",changeAvatar:"Изменить аватарку",changeAvatarDesc:"Нажмите кнопку ниже чтобы изменить аватарку через бота",openBot:"Открыть бота",soundVolume:"Громкость звука",libraryStats:"{count} игр в библиотеке",chartTitle:"Активность (14 дней)",recentTitle:"Недавняя активность",notesTitle:"Заметки к игре",notesPlaceholder:"Напишите здесь свои стратегии, ключи или мысли...",saveNote:"Сохранить заметку",lastPlayed:"Последний запуск: {date}",needLogin:"Вам нужно войти",installApp:"Установить приложение",install:"Установить", launcherStats: "Статистика лаунчера", statsMsg: "Игр: {g}\nАккаунтов: {a}\nОтзывов: {r}", mods: "Моды", main: "Главная", installMods: "Как установить моды", availableMods: "Доступные моды"}
+    en:{main:"Main",library:"Library",profile:"Profile",settings:"Settings",chat:"Chat",faq:"FAQ",search:"Search games & accounts...",login:"Login",password:"Password",loginBtn:"Login",logout:"Logout",theme:"Theme",dark:"Dark",light:"Light",neon:"Neon (Beta)",liquid:"Liquid Glass (New)",interfaceStyle:"Interface Style",standard:"Standard",cosmic:"Cosmic Style",fontFamily:"Font Family",default:"Default",monospace:"Monospace",rounded:"Rounded",interfaceSize:"Interface Size",compact:"Compact",normal:"Normal",large:"Large",titleStyle:"Game Title Style",outlined:"White with Black Outline",gradient:"Gradient",customColor:"Custom Color",customTitleColor:"Custom Title Color",backup:"Backup & Restore",backupDesc:"Save all your data securely",export:"Export",import:"Import",addToLibrary:"Add to Library",removeFromLibrary:"Remove",download:"Download",launch:"Launch",launchInstructions:"Launch Instructions",launchStep1:"1. Open Command Prompt (Win + R, type 'cmd')",launchStep2:"2. Copy the command below:",launchStep3:"3. Paste it into Command Prompt and press Enter",copyCommand:"Copy Command",commandCopied:"Command copied!",description:"Description",screenshots:"Screenshots",systemReq:"System Requirements",minimum:"Minimum",recommended:"Recommended",reviews:"Reviews",hoursPlayed:"hours played",addTime:"Add Time",removeTime:"Remove Time",launchSetup:"Launch Setup",desktopShortcut:"Desktop Shortcut",manualPath:"Manual Path",desktopStep1:"Right-click Desktop",desktopStep2:"New → Shortcut",desktopStep3:"Browse for .exe",desktopStep4:"Name it and done!",manualStep1:"Open File Explorer",manualStep2:"Find game folder",manualStep3:"Shift + Right-click .exe",manualStep4:'"Copy as path"',manualStep5:"Paste below",gamePath:"Game Path:",cancel:"Cancel",save:"Save",minutes:"Minutes",loggedIn:"Logged in!",loggedOut:"Logged out",invalid:"Invalid!",saved:"Saved!",exported:"Exported!",imported:"Imported! Reloading...",invalidFile:"Invalid file!",empty:"Empty",nothingFound:"Nothing found",game:"Game",account:"Account",created:"Created",userProfile:"User Profile",contact:"Contact",totalPlaytime:"Total Playtime",devModeOn:"You activated developer mode",devModeOff:"You deactivated developer mode",randomGame:"Random Game",changeAvatar:"Change Avatar",changeAvatarDesc:"Click the button below to change your avatar via bot",openBot:"Open Avatar Bot",soundVolume:"Sound Volume",libraryStats:"{count} Games in Library",chartTitle:"Activity (Last 14 Days)",recentTitle:"Recent Activity",notesTitle:"Game Notes",notesPlaceholder:"Write your strategies, keys, or thoughts here...",saveNote:"Save Note",lastPlayed:"Last played: {date}",needLogin:"You need to login",installApp:"Install App",install:"Install", launcherStats: "Launcher Stats", statsMsg: "Games: {g}\nAccounts: {a}\nReviews: {r}", mods: "Mods", main: "Main", installMods: "How to install mods", availableMods: "Available Mods", writeReview: "Write Review", friends: "Friends", achievements: "Achievements", noNotifs: "No notifications", inbox: "Inbox", markRead: "Mark as read"},
+    ru:{main:"Главная",library:"Библиотека",profile:"Профиль",settings:"Настройки",chat:"Чат",faq:"FAQ",search:"Поиск игр и аккаунтов...",login:"Логин",password:"Пароль",loginBtn:"Войти",logout:"Выйти",theme:"Тема",dark:"Темная",light:"Светлая",neon:"Неон (Бета)",liquid:"Жидкое Стекло (New)",interfaceStyle:"Стиль интерфейса",standard:"Стандартный",cosmic:"Космический стиль",fontFamily:"Шрифт",default:"По умолчанию",monospace:"Моноширинный",rounded:"Округлый",interfaceSize:"Размер интерфейса",compact:"Компактный",normal:"Обычный",large:"Большой",titleStyle:"Стиль названия игр",outlined:"Белый с черным контуром",gradient:"Градиент",customColor:"Свой цвет",customTitleColor:"Свой цвет названия",backup:"Резервное копирование",backupDesc:"Безопасно сохраните данные",export:"Экспорт",import:"Импорт",addToLibrary:"Добавить в библиотеку",removeFromLibrary:"Удалить",download:"Скачать",launch:"Запустить",launchInstructions:"Инструкция по запуску",launchStep1:"1. Откройте командную строку (Win + R, введите 'cmd')",launchStep2:"2. Скопируйте команду ниже:",launchStep3:"3. Вставьте в командную строку и нажмите Enter",copyCommand:"Копировать команду",commandCopied:"Команда скопирована!",description:"Описание",screenshots:"Скриншоты",systemReq:"Системные требования",minimum:"Минимальные",recommended:"Рекомендуемые",reviews:"Отзывы",hoursPlayed:"часов сыграно",addTime:"Добавить время",removeTime:"Убрать время",launchSetup:"Настройка запуска",desktopShortcut:"Ярлык на рабочем столе",manualPath:"Ручной путь",desktopStep1:"ПКМ на рабочем столе",desktopStep2:"Создать → Ярлык",desktopStep3:"Обзор для .exe",desktopStep4:"Назовите и готово!",manualStep1:"Откройте проводник",manualStep2:"Найдите папку игры",manualStep3:"Shift + ПКМ на .exe",manualStep4:'"Копировать как путь"',manualStep5:"Вставьте ниже",gamePath:"Путь к игре:",cancel:"Отмена",save:"Сохранить",minutes:"Минуты",loggedIn:"Вход выполнен!",loggedOut:"Выход выполнен",invalid:"Неверно!",saved:"Сохранено!",exported:"Экспортировано!",imported:"Импортировано! Перезагрузка...",invalidFile:"Неверный файл!",empty:"Пусто",nothingFound:"Ничего не найдено",game:"Игра",account:"Аккаунт",created:"Создан",userProfile:"Профиль пользователя",contact:"Связаться",totalPlaytime:"Всего наиграно",devModeOn:"Вы активировали режим разработчика",devModeOff:"Вы отключили режим разработчика",randomGame:"Случайная игра",changeAvatar:"Изменить аватарку",changeAvatarDesc:"Нажмите кнопку ниже чтобы изменить аватарку через бота",openBot:"Открыть бота",soundVolume:"Громкость звука",libraryStats:"{count} игр в библиотеке",chartTitle:"Активность (14 дней)",recentTitle:"Недавняя активность",notesTitle:"Заметки к игре",notesPlaceholder:"Напишите здесь свои стратегии, ключи или мысли...",saveNote:"Сохранить заметку",lastPlayed:"Последний запуск: {date}",needLogin:"Вам нужно войти",installApp:"Установить приложение",install:"Установить", launcherStats: "Статистика лаунчера", statsMsg: "Игр: {g}\nАккаунтов: {a}\nОтзывов: {r}", mods: "Моды", main: "Главная", installMods: "Как установить моды", availableMods: "Доступные моды", writeReview: "Написать отзыв", friends: "Друзья", achievements: "Достижения", noNotifs: "Нет уведомлений", inbox: "Ящик", markRead: "Прочитано"}
 };
 
 const faqItems = [
@@ -814,6 +1067,7 @@ function loadData(){
         if(!localStorage.getItem('gameNotes')) localStorage.setItem('gameNotes',JSON.stringify({}));
         if(!localStorage.getItem('dailyPlaytime')) localStorage.setItem('dailyPlaytime',JSON.stringify({}));
         if(!localStorage.getItem('recentGames')) localStorage.setItem('recentGames',JSON.stringify([]));
+        if(!localStorage.getItem('readNotifs')) localStorage.setItem('readNotifs',JSON.stringify({}));
 
         currentLang = localStorage.getItem('language')||'en';
         masterVolume = parseInt(localStorage.getItem('soundVolume') || '100') / 100;
@@ -871,6 +1125,7 @@ function checkAuth(){
         document.getElementById('profileAvatar').src=u.avatar;
         document.getElementById('profileName').textContent=u.nickname;
         document.getElementById('profileName').className = u.prime ? 'profile-name prime-user' : 'profile-name';
+        document.getElementById('notifBtn').style.display = 'flex';
         
         if(u.frame) {
             document.getElementById('profileFrame').src = u.frame;
@@ -934,13 +1189,128 @@ function checkAuth(){
             friendsList.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-secondary)">No friends yet</div>`;
         }
 
+        // Render Achievements
+        const achList = document.getElementById('achievementsList');
+        const achSection = document.getElementById('achievementsSection');
+        achList.innerHTML = '';
+        if (u.achievements && u.achievements.length > 0) {
+            achSection.style.display = 'block';
+            renderAchievements(u.achievements);
+        } else {
+            achSection.style.display = 'none';
+        }
+
+        updateNotifications(u);
         renderChart();
         renderRecent();
     } else {
         document.getElementById('profileSection').style.display='none';
         document.getElementById('profileLoginPrompt').style.display='block';
         document.getElementById('logoutGroup').style.display='none';
+        document.getElementById('notifBtn').style.display = 'none';
     }
+}
+
+function renderAchievements(achievements) {
+    const list = document.getElementById('achievementsList');
+    list.innerHTML = '';
+    const start = achPage * 5;
+    const end = start + 5;
+    const pageItems = achievements.slice(start, end);
+    
+    pageItems.forEach(ach => {
+        const div = document.createElement('div');
+        div.className = 'achievement-item';
+        div.title = ach.title; // Tooltip handled by CSS
+        div.innerHTML = `<img src="${ach.img}" class="achievement-img">`;
+        list.appendChild(div);
+    });
+
+    document.getElementById('achPrev').disabled = achPage === 0;
+    document.getElementById('achNext').disabled = end >= achievements.length;
+}
+
+function prevAchPage() { if(achPage > 0) { achPage--; checkAuth(); } }
+function nextAchPage() { achPage++; checkAuth(); }
+
+function updateNotifications(user) {
+    const readStore = safeGet('readNotifs', {});
+    const userReadIds = readStore[user.uid] || [];
+    const notifs = user.notifications || [];
+    
+    // Calculate unread
+    const unreadCount = notifs.filter(n => !userReadIds.includes(n.id)).length;
+    const badge = document.getElementById('notifBadge');
+    if(unreadCount > 0) {
+        badge.style.display = 'block';
+        badge.textContent = unreadCount;
+    } else {
+        badge.style.display = 'none';
+    }
+    
+    renderNotifList(notifs, userReadIds);
+}
+
+function renderNotifList(notifs, readIds) {
+    const list = document.getElementById('notifList');
+    list.innerHTML = '';
+    const sorted = [...notifs].reverse(); // Newest first
+    const start = notifPage * 5;
+    const end = start + 5;
+    const pageItems = sorted.slice(start, end);
+    const t = translations[currentLang] || translations['en'];
+
+    if(pageItems.length === 0) {
+        list.innerHTML = `<div style="text-align:center;padding:10px;color:var(--text-secondary)">${t.noNotifs}</div>`;
+    } else {
+        pageItems.forEach(n => {
+            const isRead = readIds.includes(n.id);
+            const item = document.createElement('div');
+            item.className = `notif-item ${isRead ? '' : 'unread'}`;
+            item.onclick = () => openNotifModal(n);
+            item.innerHTML = `
+                <div class="notif-item-title">${n.title}</div>
+                <div class="notif-item-date">${n.date}</div>
+            `;
+            list.appendChild(item);
+        });
+    }
+    
+    document.getElementById('notifPrev').disabled = notifPage === 0;
+    document.getElementById('notifNext').disabled = end >= sorted.length;
+}
+
+function toggleNotifications() {
+    const dd = document.getElementById('notifDropdown');
+    const display = dd.style.display;
+    dd.style.display = display === 'flex' ? 'none' : 'flex';
+}
+
+function prevNotifPage() { if(notifPage > 0) { notifPage--; checkAuth(); } }
+function nextNotifPage() { notifPage++; checkAuth(); }
+
+function openNotifModal(notif) {
+    document.getElementById('notifModalTitle').textContent = notif.title;
+    document.getElementById('notifModalDate').textContent = notif.date;
+    document.getElementById('notifModalContent').textContent = notif.content;
+    document.getElementById('notifModal').style.display = 'flex';
+    document.getElementById('notifDropdown').style.display = 'none'; // Close dropdown
+    
+    // Mark as read
+    const u = safeGet('currentUser', null);
+    if(u) {
+        const readStore = safeGet('readNotifs', {});
+        if(!readStore[u.uid]) readStore[u.uid] = [];
+        if(!readStore[u.uid].includes(notif.id)) {
+            readStore[u.uid].push(notif.id);
+            localStorage.setItem('readNotifs', JSON.stringify(readStore));
+            checkAuth(); // Update badge
+        }
+    }
+}
+
+function closeNotifModal() {
+    document.getElementById('notifModal').style.display = 'none';
 }
 
 function renderGames(){
@@ -1218,13 +1588,65 @@ function getLevelClass(level) {
 function downloadGame(){updateLastPlayed();window.open(games.find(g=>g.id===currentGame).downloadUrl,'_blank');}
 function addPlaytime(){document.getElementById('playtimeModal').style.display='flex'}
 function closePlaytimeModal(){document.getElementById('playtimeModal').style.display='none'}
-function savePlaytime(){const m=parseInt(document.getElementById('playtimeInput').value)||0;if(m>0){const pt=safeGet('playtime', {});pt[currentGame]=(pt[currentGame]||0)+m;localStorage.setItem('playtime',JSON.stringify(pt));const daily=safeGet('dailyPlaytime', {});const key=new Date().toISOString().split('T')[0];daily[key]=(daily[key]||0)+m;localStorage.setItem('dailyPlaytime',JSON.stringify(daily));closePlaytimeModal();showGame(currentGame, false);checkAuth();}}
+function savePlaytime(minutesToAdd = null){
+    const m = minutesToAdd !== null ? minutesToAdd : (parseInt(document.getElementById('playtimeInput').value)||0);
+    
+    if(m>0){
+        const pt=safeGet('playtime', {});
+        pt[currentGame]=(pt[currentGame]||0)+m;
+        localStorage.setItem('playtime',JSON.stringify(pt));
+        const daily=safeGet('dailyPlaytime', {});
+        const key=new Date().toISOString().split('T')[0];
+        daily[key]=(daily[key]||0)+m;
+        localStorage.setItem('dailyPlaytime',JSON.stringify(daily));
+        
+        if (minutesToAdd === null) {
+            closePlaytimeModal();
+            showGame(currentGame, false);
+            checkAuth();
+        } else {
+            // Update UI silently if modal open
+            const t = translations[currentLang] || translations['en'];
+            const playtimeHours = ((pt[currentGame]||0)/60).toFixed(1);
+            const disp = document.getElementById('playtimeDisplay');
+            if(disp && currentGame) disp.innerHTML=`<span>${playtimeHours} ${t.hoursPlayed}</span>`;
+        }
+    }
+}
 function removePlaytime(){const pt=safeGet('playtime', {});const currentTime=pt[currentGame]||0;if(currentTime>0){const removeAmount=prompt((translations[currentLang]||translations['en']).minutes+':','30');if(removeAmount!==null){const minutes=parseInt(removeAmount)||0;if(minutes>0){pt[currentGame]=Math.max(0,currentTime-minutes);localStorage.setItem('playtime',JSON.stringify(pt));showGame(currentGame, false);checkAuth();}}}}
 function openExeSettings(){const p=safeGet('exePaths', {})[currentGame]||'';document.getElementById('exePath').value=p;document.getElementById('exeModal').style.display='flex'}
 function closeExeModal(){document.getElementById('exeModal').style.display='none'}
 function saveExePath(){const p=document.getElementById('exePath').value;const paths=safeGet('exePaths', {});p?paths[currentGame]=p:delete paths[currentGame];localStorage.setItem('exePaths',JSON.stringify(paths));closeExeModal();alert((translations[currentLang]||translations['en']).saved);showGame(currentGame, false)}
-function openLaunchModal(isLaunch = false){const paths=safeGet('exePaths', {});let path=paths[currentGame]||'';if(path&&!path.startsWith('"')&&!path.endsWith('"')){path=`"${path}"`}const t=translations[currentLang]||translations['en'];document.getElementById('launchModalTitle').textContent=t.launchInstructions;document.getElementById('launchStep1').textContent=t.launchStep1;document.getElementById('launchStep2').textContent=t.launchStep2;document.getElementById('launchStep3').textContent=t.launchStep3;document.getElementById('copyCommandBtn').textContent=t.copyCommand;document.getElementById('launchCommand').textContent=`start "" ${path}`;document.getElementById('launchModal').style.display='flex';if(isLaunch) updateLastPlayed();}
-function closeLaunchModal(){document.getElementById('launchModal').style.display='none'}
+function openLaunchModal(isLaunch = false){
+    const paths=safeGet('exePaths', {});
+    let path=paths[currentGame]||'';
+    if(path&&!path.startsWith('"')&&!path.endsWith('"')){path=`"${path}"`}
+    const t=translations[currentLang]||translations['en'];
+    document.getElementById('launchModalTitle').textContent=t.launchInstructions;
+    document.getElementById('launchStep1').textContent=t.launchStep1;
+    document.getElementById('launchStep2').textContent=t.launchStep2;
+    document.getElementById('launchStep3').textContent=t.launchStep3;
+    document.getElementById('copyCommandBtn').textContent=t.copyCommand;
+    document.getElementById('launchCommand').textContent=`start "" ${path}`;
+    document.getElementById('launchModal').style.display='flex';
+    
+    if(isLaunch) {
+        updateLastPlayed();
+        if(launchTimer) clearInterval(launchTimer);
+        // Add 1 minute every 60 seconds
+        launchTimer = setInterval(() => {
+            savePlaytime(1);
+        }, 60000);
+    }
+}
+function closeLaunchModal(){
+    document.getElementById('launchModal').style.display='none';
+    if(launchTimer) {
+        clearInterval(launchTimer);
+        launchTimer = null;
+        checkAuth(); // Refresh stats
+    }
+}
 function copyLaunchCommand(){const command=document.getElementById('launchCommand').textContent;navigator.clipboard.writeText(command).then(()=>{const btn=document.getElementById('copyCommandBtn');const originalText=btn.textContent;btn.textContent=(translations[currentLang]||translations['en']).commandCopied;setTimeout(()=>{btn.textContent=originalText},2000)})}
 function openNotes() {const notes = safeGet('gameNotes', {});document.getElementById('gameNotesInput').value = notes[currentGame] || '';document.getElementById('notesModal').style.display = 'flex';}
 function closeNotesModal() { document.getElementById('notesModal').style.display = 'none'; }
@@ -1233,16 +1655,92 @@ function toggleRequirements(t){document.querySelectorAll('.req-btn').forEach(b=>
 function showPage(p, pushHistory = true){document.querySelectorAll('.game-page').forEach(el=>el.style.display='none');document.getElementById('mainPage').style.display='none';if(pushHistory) history.pushState({page: p}, '', `#${p}`);if(p==='main')document.getElementById('mainPage').style.display='block';else if(p==='library'){document.getElementById('libraryPage').style.display='block';renderLibrary()}else if(p==='profile'){document.getElementById('profilePage').style.display='block';checkAuth()}else if(p==='settings')document.getElementById('settingsPage').style.display='block';else if(p==='faq'){document.getElementById('faqPage').style.display='block';renderFAQ();}else if(p==='chat'){document.getElementById('chatPage').style.display='block';}if(document.getElementById('sidebar').classList.contains('open'))toggleSidebar()}
 function renderLibrary(){const lib=safeGet('library', []);const g=document.getElementById('libraryGrid');const t=translations[currentLang]||translations['en'];g.innerHTML=lib.length===0?`<p style="grid-column:1/-1;text-align:center;color:var(--text-secondary)">${t.empty}</p>`:'';lib.forEach(id=>{const game=games.find(x=>x.id===id);if(!game)return;const c=document.createElement('div');c.className='game-card';c.onclick=()=>{playSound('click'); navigateTo('game', id)};const titleStyle=localStorage.getItem('titleStyle')||'outlined';const customColor=localStorage.getItem('customTitleColor')||'#ffffff';let titleClass='game-card-title ';let titleStyleAttr='';if(titleStyle==='gradient')titleClass+='gradient';else if(titleStyle==='outlined')titleClass+='outlined';else if(titleStyle==='custom'){titleStyleAttr=`style="color:${customColor}"`}c.innerHTML=`${game.update?`<div class="new-badge">NEW<div class="tooltip">${game.updateDate} - v${game.updateVersion}</div></div>`:''}<img src="${game.avatar}"><div class="game-card-content"><div class="${titleClass}" ${titleStyleAttr}>${game.title}</div><div style="font-size:calc(var(--font-size-base) - 1px);color:var(--text-secondary)">${game.shortDesc}</div></div>`;g.appendChild(c)})}
 function search(){const q=document.getElementById('searchInput').value.toLowerCase();const r=document.getElementById('searchResults');const t=translations[currentLang]||translations['en'];if(!q){r.style.display='none';return}const gr=games.filter(g=>g.title.toLowerCase().includes(q));const ar=accounts.filter(a=>a.nickname.toLowerCase().includes(q));const devMode=localStorage.getItem('devMode')==='true';if(!gr.length&&!ar.length){r.innerHTML=`<div style="padding:15px;text-align:center">${t.nothingFound}</div>`;r.style.display='block';return}r.innerHTML='';gr.forEach(g=>{const i=document.createElement('div');i.className='search-result-item';i.onclick=()=>{playSound('click'); navigateTo('game', g.id);document.getElementById('searchInput').value='';r.style.display='none'};i.innerHTML=`<img src="${g.avatar}" class="search-game-img"><div><div style="font-weight:bold">${g.title}</div><div style="font-size:14px;color:var(--text-secondary)">${g.shortDesc}</div></div><div class="search-result-type game">${t.game}</div>`;r.appendChild(i)});ar.forEach(a=>{const i=document.createElement('div');i.className='search-result-item';i.onclick=()=>{playSound('click'); openAccountView(a);document.getElementById('searchInput').value='';r.style.display='none'};const lvlData = calculateLevel(a.exp);const badgeHTML=a.badge?`<img src="${a.badge}" style="width:20px;height:20px;margin-left:5px">`:'';const primeClass = a.prime ? 'prime-user' : '';const uidStr = devMode ? ` | UID: ${a.uid}` : '';const frameHTML = a.frame ? `<img src="${a.frame}" class="search-avatar-frame">` : '';i.innerHTML=`<div class="search-avatar-wrapper"><img src="${a.avatar}" class="search-avatar-img">${frameHTML}</div><div><div style="font-weight:bold;display:flex;align-items:center" class="${primeClass}">${a.nickname}${badgeHTML}</div><div style="font-size:12px;color:var(--text-secondary)">Lvl ${lvlData.level} (${a.exp} XP)${uidStr}</div></div><div class="search-result-type account">${t.account}</div>`;r.appendChild(i)});r.style.display='block'}
-function openAccountView(a){currentViewAccount=a;const t=translations[currentLang]||translations['en'];const devMode=localStorage.getItem('devMode')==='true';document.getElementById('viewProfileAvatar').src=a.avatar;document.getElementById('viewProfileName').textContent=a.nickname;document.getElementById('viewProfileName').className = a.prime ? 'profile-name prime-user' : 'profile-name';if(a.frame) {document.getElementById('viewProfileFrame').src = a.frame;document.getElementById('viewProfileFrame').style.display = 'block';} else {document.getElementById('viewProfileFrame').style.display = 'none';}const viewBadgeHTML=a.badge?`<img src="${a.badge}" style="width:24px;height:24px;margin-left:10px;cursor:pointer" onclick="handleViewBadgeClick()">`:'';document.getElementById('viewProfileName').innerHTML=`${a.nickname}${viewBadgeHTML}`;document.getElementById('viewProfileCreated').textContent=`${t.created}: ${a.created}`;document.getElementById('viewProfileTelegram').style.display=a.telegram?'inline-flex':'none';const contactBtn=document.getElementById('viewProfileTelegram');contactBtn.innerHTML=`<span>📱</span><span>${t.contact}</span>`;const lvlData = calculateLevel(a.exp);const lvlClass = getLevelClass(lvlData.level);const lvlContainer = document.getElementById('viewLevelContainer');const shapeContent = lvlData.level >= 50 ? `<span class="lvl-text-gradient">${lvlData.level}</span>` : lvlData.level;lvlContainer.innerHTML = `<div class="level-shape ${lvlClass}">${shapeContent}</div><div class="level-info"><span style="font-weight:bold; color:var(--text-primary)">Level ${lvlData.level}</span><span>${a.exp} / ${lvlData.nextReq} XP</span></div>`;const uidDisplay = document.getElementById('viewProfileUid');if(devMode){uidDisplay.style.display='block';uidDisplay.textContent = `UID: ${a.uid}`;} else {uidDisplay.style.display='none';}document.getElementById('accountViewModal').style.display='flex'}
+function openAccountView(a){
+    currentViewAccount=a;
+    const t=translations[currentLang]||translations['en'];
+    const devMode=localStorage.getItem('devMode')==='true';
+    document.getElementById('viewProfileAvatar').src=a.avatar;
+    document.getElementById('viewProfileName').textContent=a.nickname;
+    document.getElementById('viewProfileName').className = a.prime ? 'profile-name prime-user' : 'profile-name';
+    if(a.frame) {
+        document.getElementById('viewProfileFrame').src = a.frame;
+        document.getElementById('viewProfileFrame').style.display = 'block';
+    } else {
+        document.getElementById('viewProfileFrame').style.display = 'none';
+    }
+    const viewBadgeHTML=a.badge?`<img src="${a.badge}" style="width:24px;height:24px;margin-left:10px;cursor:pointer" onclick="handleViewBadgeClick()">`:'';
+    document.getElementById('viewProfileName').innerHTML=`${a.nickname}${viewBadgeHTML}`;
+    document.getElementById('viewProfileCreated').textContent=`${t.created}: ${a.created}`;
+    document.getElementById('viewProfileTelegram').style.display=a.telegram?'inline-flex':'none';
+    const contactBtn=document.getElementById('viewProfileTelegram');
+    contactBtn.innerHTML=`<span>📱</span><span>${t.contact}</span>`;
+    const lvlData = calculateLevel(a.exp);
+    const lvlClass = getLevelClass(lvlData.level);
+    const lvlContainer = document.getElementById('viewLevelContainer');
+    const shapeContent = lvlData.level >= 50 ? `<span class="lvl-text-gradient">${lvlData.level}</span>` : lvlData.level;
+    lvlContainer.innerHTML = `<div class="level-shape ${lvlClass}">${shapeContent}</div><div class="level-info"><span style="font-weight:bold; color:var(--text-primary)">Level ${lvlData.level}</span><span>${a.exp} / ${lvlData.nextReq} XP</span></div>`;
+    const uidDisplay = document.getElementById('viewProfileUid');
+    if(devMode){
+        uidDisplay.style.display='block';
+        uidDisplay.textContent = `UID: ${a.uid}`;
+    } else {
+        uidDisplay.style.display='none';
+    }
+
+    // View Profile: Friends List
+    const viewFriendsList = document.getElementById('viewFriendsList');
+    viewFriendsList.innerHTML = '';
+    if (a.friends && a.friends.length > 0) {
+        a.friends.forEach(fNick => {
+            const f = accounts.find(acc => acc.nickname === fNick);
+            if (f) {
+                const fItem = document.createElement('div');
+                fItem.className = 'view-friend-mini';
+                fItem.onclick = () => openAccountView(f);
+                fItem.innerHTML = `<img src="${f.avatar}"><div>${f.nickname}</div>`;
+                viewFriendsList.appendChild(fItem);
+            }
+        });
+    } else {
+        viewFriendsList.innerHTML = `<div style="font-size:12px;color:var(--text-secondary)">No friends</div>`;
+    }
+
+    // View Profile: Achievements
+    const viewAchRow = document.getElementById('viewAchievementsRow');
+    const viewAchList = document.getElementById('viewAchievementsList');
+    viewAchList.innerHTML = '';
+    if (a.achievements && a.achievements.length > 0) {
+        viewAchRow.style.display = 'block';
+        a.achievements.forEach(ach => {
+            const div = document.createElement('div');
+            div.className = 'achievement-item';
+            div.title = ach.title;
+            div.innerHTML = `<img src="${ach.img}" class="achievement-img">`;
+            viewAchList.appendChild(div);
+        });
+    } else {
+        viewAchRow.style.display = 'none';
+    }
+
+    document.getElementById('accountViewModal').style.display='flex';
+}
 function handleViewBadgeClick(){if(currentViewAccount && currentViewAccount.badgeText){document.getElementById('badgeModalText').textContent = currentViewAccount.badgeText;document.getElementById('badgeModal').style.display='flex';playSound('click');}}
 function closeAccountViewModal(){document.getElementById('accountViewModal').style.display='none';currentViewAccount=null}
 function encryptData(data) {const key = "FragmentKey";let json = JSON.stringify(data);let xor = "";for (let i = 0; i < json.length; i++) {xor += String.fromCharCode(json.charCodeAt(i) ^ key.charCodeAt(i % key.length));}return btoa(xor);}
 function decryptData(data) {try {const key = "FragmentKey";let xor = atob(data);let json = "";for (let i = 0; i < xor.length; i++) {json += String.fromCharCode(xor.charCodeAt(i) ^ key.charCodeAt(i % key.length));}return JSON.parse(json);} catch (e) {return null;}}
-function exportBackup(){let userToExport = null;const rawUser = localStorage.getItem('currentUser');if(rawUser) {try{userToExport = JSON.parse(rawUser);delete userToExport.exp;delete userToExport.level;delete userToExport.prime;delete userToExport.uid;delete userToExport.frame;}catch(e){}}const b={version: CURRENT_VERSION,date:new Date().toISOString(),currentUser: JSON.stringify(userToExport),library:localStorage.getItem('library'),exePaths:localStorage.getItem('exePaths'),playtime:localStorage.getItem('playtime'),theme:localStorage.getItem('theme'),style:localStorage.getItem('style'),font:localStorage.getItem('font'),size:localStorage.getItem('size'),language:localStorage.getItem('language'),devMode:localStorage.getItem('devMode'),titleStyle:localStorage.getItem('titleStyle'),customTitleColor:localStorage.getItem('customTitleColor'),lastPlayed: localStorage.getItem('lastPlayed'),gameNotes: localStorage.getItem('gameNotes'),dailyPlaytime: localStorage.getItem('dailyPlaytime'),recentGames: localStorage.getItem('recentGames'),soundVolume: localStorage.getItem('soundVolume'),soundType: localStorage.getItem('soundType')};const encrypted = encryptData(b);const blob=new Blob([encrypted],{type:'text/plain'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`fragment_backup_${new Date().toISOString().split('T')[0]}.frag`;a.click();URL.revokeObjectURL(url);alert((translations[currentLang]||translations['en']).exported)}
+function exportBackup(){let userToExport = null;const rawUser = localStorage.getItem('currentUser');if(rawUser) {try{userToExport = JSON.parse(rawUser);delete userToExport.exp;delete userToExport.level;delete userToExport.prime;delete userToExport.uid;delete userToExport.frame;delete userToExport.notifications;delete userToExport.achievements;}catch(e){}}const b={version: CURRENT_VERSION,date:new Date().toISOString(),currentUser: JSON.stringify(userToExport),library:localStorage.getItem('library'),exePaths:localStorage.getItem('exePaths'),playtime:localStorage.getItem('playtime'),theme:localStorage.getItem('theme'),style:localStorage.getItem('style'),font:localStorage.getItem('font'),size:localStorage.getItem('size'),language:localStorage.getItem('language'),devMode:localStorage.getItem('devMode'),titleStyle:localStorage.getItem('titleStyle'),customTitleColor:localStorage.getItem('customTitleColor'),lastPlayed: localStorage.getItem('lastPlayed'),gameNotes: localStorage.getItem('gameNotes'),dailyPlaytime: localStorage.getItem('dailyPlaytime'),recentGames: localStorage.getItem('recentGames'),soundVolume: localStorage.getItem('soundVolume'),soundType: localStorage.getItem('soundType'),readNotifs: localStorage.getItem('readNotifs')};const encrypted = encryptData(b);const blob=new Blob([encrypted],{type:'text/plain'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`fragment_backup_${new Date().toISOString().split('T')[0]}.frag`;a.click();URL.revokeObjectURL(url);alert((translations[currentLang]||translations['en']).exported)}
 function importBackup(e){const f=e.target.files[0];if(f){const r=new FileReader();r.onload=e=>{const b = decryptData(e.target.result);if (b) {Object.keys(b).forEach(k=>{if(b[k]&&k!=='version'&&k!=='date')localStorage.setItem(k,b[k])});alert((translations[currentLang]||translations['en']).imported);location.reload();} else {alert((translations[currentLang]||translations['en']).invalidFile);}};r.readAsText(f);}}
-document.addEventListener('click',e=>{if(!document.querySelector('.search-container').contains(e.target)){document.getElementById('searchResults').style.display='none'}});
-document.getElementById('notesModal').onclick = (e) => { if(e.target === document.getElementById('notesModal')) closeNotesModal(); };
-document.getElementById('accountViewModal').onclick = (e) => { if(e.target === document.getElementById('accountViewModal')) closeAccountViewModal(); };
+document.addEventListener('click',e=>{
+    if(!document.querySelector('.search-container').contains(e.target)){document.getElementById('searchResults').style.display='none'}
+    if(!document.querySelector('.notif-container').contains(e.target)){document.getElementById('notifDropdown').style.display='none'}
+    
+    // Close modal on outside click (if modal is open and click is on modal background)
+    if(e.target.classList.contains('modal')){
+        e.target.style.display = 'none';
+        if(e.target.id === 'accountViewModal') currentViewAccount = null;
+        if(e.target.id === 'launchModal' && launchTimer) { clearInterval(launchTimer); launchTimer = null; checkAuth(); }
+    }
+});
 function toggleSidebar(){const sb = document.getElementById('sidebar');const overlay = document.querySelector('.sidebar-overlay');if(sb.classList.contains('open')) {sb.classList.remove('open');overlay.style.display = 'none';} else {sb.classList.add('open');overlay.style.display = 'block';}}
 function changeTheme(){const t=document.getElementById('themeSelect').value;localStorage.setItem('theme',t);applyTheme(t)}
 function applyTheme(t){document.body.classList.remove('light-theme','neon-theme');if(t==='light')document.body.classList.add('light-theme');else if(t==='neon')document.body.classList.add('neon-theme');}
@@ -1258,7 +1756,7 @@ function openRandomGame(){if(games.length>0){const randomIndex=Math.floor(Math.r
 function openAccountModal(){document.getElementById('accountModal').style.display='flex'}
 function closeAccountModal(){document.getElementById('accountModal').style.display='none'}
 function login(){const l=document.getElementById('loginInput').value;const p=document.getElementById('passwordInput').value;const u=accounts.find(a=>a.login===l&&a.password===p);const t=translations[currentLang]||translations['en'];if(u){const d={...u};delete d.password;localStorage.setItem('currentUser',JSON.stringify(d));closeAccountModal();checkAuth();alert(t.loggedIn)}else alert(t.invalid)}
-function logout(){localStorage.removeItem('currentUser');document.getElementById('profileSection').style.display='none';document.getElementById('profileLoginPrompt').style.display='block';document.getElementById('logoutGroup').style.display='none';const btn=document.getElementById('accountBtn');btn.classList.remove('logged-in');btn.innerHTML='+';btn.onclick=openAccountModal;document.querySelector('.profile-avatar-wrapper .avatar-edit-icon').style.display='none';alert((translations[currentLang]||translations['en']).loggedOut)}
+function logout(){localStorage.removeItem('currentUser');document.getElementById('profileSection').style.display='none';document.getElementById('profileLoginPrompt').style.display='block';document.getElementById('logoutGroup').style.display='none';const btn=document.getElementById('accountBtn');btn.classList.remove('logged-in');btn.innerHTML='+';btn.onclick=openAccountModal;document.querySelector('.profile-avatar-wrapper .avatar-edit-icon').style.display='none';document.getElementById('notifBtn').style.display = 'none';alert((translations[currentLang]||translations['en']).loggedOut)}
 function openAvatarChangeModal(){document.getElementById('avatarChangeModal').style.display='flex'}
 function closeAvatarChangeModal(){document.getElementById('avatarChangeModal').style.display='none'}
 function openAvatarBot(){window.open('https://t.me/your_avatar_bot','_blank');closeAvatarChangeModal()}
@@ -1276,6 +1774,14 @@ function updateUI(){const t=translations[currentLang]||translations['en'];docume
     // SAFE REVIEW HEADER UPDATE
     const revLabel = document.getElementById('reviewsLabel');
     if(revLabel) revLabel.textContent = t.reviews;
+    document.getElementById('writeReviewBtn').textContent = t.writeReview;
+    document.getElementById('friendsTitle').textContent = t.friends;
+    document.getElementById('achievementsTitle').textContent = t.achievements;
+    document.getElementById('viewAchTitle').textContent = t.achievements;
+    document.getElementById('viewFriendsTitle').textContent = t.friends;
+    document.getElementById('userProfileTitle').textContent = t.userProfile;
+    document.getElementById('installModsTitle').textContent = t.installMods;
+    document.getElementById('availableModsTitle').textContent = t.availableMods;
     
     document.getElementById('needLoginTitle').textContent=t.needLogin;document.getElementById('pwaText').textContent=t.installApp;document.getElementById('pwaBtn').textContent=t.install;
     const sb = document.getElementById('sidebar');
