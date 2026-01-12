@@ -133,7 +133,7 @@ body {
 .view-friend-mini:hover { background: rgba(45,45,50,0.6); transform: translateX(5px); }
 .view-friend-mini img { width: 30px; height: 30px; border-radius: 50%; }
 .view-achievements-row { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--glass-border); }
-.view-achievements-list { display: flex; gap: 10px; overflow-x: auto; padding: 15px 10px; /* Padding prevents clipping on hover scale */ }
+.view-achievements-list { display: flex; gap: 10px; overflow-x: auto; padding: 15px 10px; }
 
 .search-results{position:absolute;top:110%;left:0;right:0;background:rgba(35,35,40,.95);backdrop-filter:blur(25px);border-radius:18px;max-height:400px;overflow-y:auto;display:none;box-shadow:0 8px 32px rgba(0,0,0,.5); z-index: 1000;}
 .search-result-item{padding:15px;cursor:pointer;display:flex;gap:15px;align-items:center;transition:all .3s ease}
@@ -369,6 +369,26 @@ body {
 
 @media (max-width:768px){.mobile-warning{display:flex!important}.header,.main-content,.sidebar{display:none!important}}
 @media (max-width:900px){.launch-methods{grid-template-columns:1fr}}
+
+/* New for v0.1.5 */
+.official-badge {
+    position:absolute; top:15px; left:15px;
+    background:linear-gradient(135deg,#2196f3 0,#00bcd4 100%);
+    color:#fff; padding:6px 14px; border-radius:20px;
+    font-size:12px; font-weight:700; z-index:10;
+    box-shadow:0 4px 15px rgba(33,150,243,.4);
+    cursor:help; white-space:nowrap;
+}
+.official-badge .tooltip {
+    visibility:hidden; opacity:0;
+    position:absolute; bottom:-60px; left:50%;
+    transform:translateX(-50%);
+    background:rgba(0,0,0,.95); color:#fff;
+    padding:10px 15px; border-radius:10px;
+    font-size:12px; white-space:nowrap;
+    transition:all .3s ease; pointer-events:none;
+}
+.official-badge:hover .tooltip { visibility:visible; opacity:1; bottom:-50px; }
 </style>
 <link rel="stylesheet" href="/index.css">
 </head>
@@ -418,10 +438,10 @@ body {
 <div class="main-content">
 <div id="mainPage">
 <div class="featured-game">
-<img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200" alt="Featured">
+<img src="https://cdn1.epicgames.com/spt-assets/9e8b37541e614575b4de303d2c2e44cf/arc-raiders-weavs.jpg" alt="Featured">
 <div class="featured-overlay">
-<div class="featured-title">Cyberpunk 2077</div>
-<div style="font-size:18px;color:#d0d0d0">Discover the world of the future</div>
+<div class="featured-title">Arc Raiders</div>
+<div style="font-size:18px;color:#d0d0d0">ARC Raiders — это многопользовательский приключенческий шутер с элементами выживания и эвакуации</div>
 </div>
 </div>
 <div class="games-section">
@@ -816,16 +836,13 @@ body {
 <div class="modal" id="updateModal">
     <div class="modal-content" style="max-width:600px">
         <button class="modal-close" onclick="closeUpdateModal()">×</button>
-        <div class="modal-title">Update v0.1.4</div>
+        <div class="modal-title">Update v0.1.5</div>
         <div style="margin-bottom:20px">
             <h3 style="color:var(--accent);margin-bottom:10px">Changes / Изменения</h3>
             <ul style="line-height:1.6;padding-left:20px">
-                <li>🔔 <b>Notifications:</b> Inbox system for user messages. / Система уведомлений.</li>
-                <li>🏆 <b>Achievements:</b> Display trophies in profile. / Достижения в профиле.</li>
-                <li>⏱️ <b>Auto Playtime:</b> Time tracks automatically when launch window is open. / Автоматический подсчет времени.</li>
-                <li>📋 <b>Expanded Data:</b> More detailed system requirements. / Детальные системные требования.</li>
-                <li>👤 <b>Profile View:</b> See friends and achievements of others. / Просмотр друзей и достижений других.</li>
-                <li>🇷🇺 <b>Translation:</b> Full Russian translation added. / Полный перевод на русский.</li>
+                <li>🎮 <b>New Game:</b> ARC Raiders added. / Добавлена игра ARC Raiders.</li>
+                <li>✅ <b>Official Verification:</b> Official games now have a badge. / У официальных игр теперь есть значок.</li>
+                <li>📜 <b>Instructions:</b> Official games link to install instructions instead of download. / У официальных игр теперь кнопка Инструкция.</li>
             </ul>
         </div>
         <button class="btn" onclick="closeUpdateModal()" style="width:100%">Got it!</button>
@@ -936,7 +953,8 @@ const games = [
         modInstructions: "1. Скачайте мод <br>2. Перенесите мод в папку Mods которая находится в папке с игрой <br>3. Активируйте мод в игре во вкладке mods",
         mods: [
             {name: "Chainsaw Man Mod", desc: "Этот мод добавляет полностью функционирующие контракты, гибридов, НАСТОЯЩЕГО человека с бензопилой и многое другое.", img: "https://top-mods.ru/upload/000/u1/c/a/chainsaw-man-mod-photo-mods-main.jpg", url: "https://modsfire.com/739Zdera4k1SS62"}
-        ]
+        ],
+        ofc: 0
     },
     {
         id: 2,
@@ -955,7 +973,8 @@ const games = [
         updateDate: "",
         updateVersion: "",
         reviews: [],
-        hasMods: 0
+        hasMods: 0,
+        ofc: 0
     },
     {
         id: 3,
@@ -974,11 +993,34 @@ const games = [
         updateDate: "2024-12-05",
         updateVersion: "1.10",
         reviews: [],
-        hasMods: 0
+        hasMods: 0,
+        ofc: 0
+    },
+    {
+        id: 4,
+        title: "ARC Raiders",
+        shortDesc: "ARC Raiders — многопользовательская игра жанра extraction adventure, действие которой разворачивается в суровом будущем на Земле, атакованной загадочными механическими захватчиками ARC.",
+        description: "В ARC Raiders вас ждет Поверхность, которой заправляют смертоносные машины, и красочный подземный мир Сперанцы. Мастерите, чините и улучшайте экипировку в безопасности собственной мастерской, а затем совершайте вылазки на Поверхность, в разоренный, но все еще прекрасный мир. Играйте в одиночку или в группе до трех человек и вступайте в противостояние с нескончаемыми машинами ARC и непредсказуемыми выжившими. Только вам решать, каким рейдером стать. На что вы готовы пойти ради победы?",
+        banner: "https://cdn1.epicgames.com/spt-assets/9e8b37541e614575b4de303d2c2e44cf/arc-raiders-weavs.jpg",
+        avatar: "https://cdn.shopify.com/s/files/1/0412/9928/0033/files/KV_mobile_1280x1100_bdb7ff5b-cb2f-4ba5-b4f2-5dc4daa5060c.jpg?v=1758706193",
+        gallery: [
+            "https://gaming-cdn.com/images/products/21041/screenshot/arc-raiders-deluxe-edition-pc-steam-wallpaper-3.jpg?v=1767949224",
+            "https://static0.thegamerimages.com/wordpress/wp-content/uploads/2022/08/Ex-DICE-Devs-Co-Op-Shooter-ARC-Raiders-Delayed-To-2023.jpg?w=1600&h=900&fit=crop",
+	    "https://static0.srcdn.com/wordpress/wp-content/uploads/2024/11/arc-raiders-missing-robots.jpg?w=1600&h=900&fit=crop"
+        ],
+        downloadUrl: "https://drive.google.com/file/d/1AN-sriD86C4v-W8-2BtF627NQp7uWvKk/view?usp=drive_link",
+        minReq: "OS: Windows 10 or later 64-bit (latest update)<br>CPU: Intel Core i5-6600K or AMD Ryzen R5 1600 processor<br>RAM: 12GB<br>GPU: NVIDIA GeForce GTX 1050 Ti or AMD Radeon RX 580 or Intel Arc A380",
+        recReq: "OS: Windows 10 or later 64-bit (latest update)<br>CPU: Intel Core i5-9600K or AMD Ryzen 5 3600 processor<br>RAM: 16GB<br>GPU: NVIDIA GeForce RTX 2070 or AMD Radeon RX 5700 XT or Intel Arc B570",
+        update: 0,
+        updateDate: "",
+        updateVersion: "",
+        reviews: [],
+        hasMods: 0,
+        ofc: 1
     }
 ];
 
-const CURRENT_VERSION = '0.1.4';
+const CURRENT_VERSION = '0.1.5';
 let currentLang='en',devModeClicks=0,devModeTimeout=null;
 let currentGame = null;
 let currentViewAccount = null;
@@ -991,8 +1033,8 @@ let achPage = 0;
 let launchTimer = null;
 
 const translations={
-    en:{main:"Main",library:"Library",profile:"Profile",settings:"Settings",chat:"Chat",faq:"FAQ",search:"Search games & accounts...",login:"Login",password:"Password",loginBtn:"Login",logout:"Logout",theme:"Theme",dark:"Dark",light:"Light",neon:"Neon (Beta)",liquid:"Liquid Glass (New)",interfaceStyle:"Interface Style",standard:"Standard",cosmic:"Cosmic Style",fontFamily:"Font Family",default:"Default",monospace:"Monospace",rounded:"Rounded",interfaceSize:"Interface Size",compact:"Compact",normal:"Normal",large:"Large",titleStyle:"Game Title Style",outlined:"White with Black Outline",gradient:"Gradient",customColor:"Custom Color",customTitleColor:"Custom Title Color",backup:"Backup & Restore",backupDesc:"Save all your data securely",export:"Export",import:"Import",addToLibrary:"Add to Library",removeFromLibrary:"Remove",download:"Download",launch:"Launch",launchInstructions:"Launch Instructions",launchStep1:"1. Open Command Prompt (Win + R, type 'cmd')",launchStep2:"2. Copy the command below:",launchStep3:"3. Paste it into Command Prompt and press Enter",copyCommand:"Copy Command",commandCopied:"Command copied!",description:"Description",screenshots:"Screenshots",systemReq:"System Requirements",minimum:"Minimum",recommended:"Recommended",reviews:"Reviews",hoursPlayed:"hours played",addTime:"Add Time",removeTime:"Remove Time",launchSetup:"Launch Setup",desktopShortcut:"Desktop Shortcut",manualPath:"Manual Path",desktopStep1:"Right-click Desktop",desktopStep2:"New → Shortcut",desktopStep3:"Browse for .exe",desktopStep4:"Name it and done!",manualStep1:"Open File Explorer",manualStep2:"Find game folder",manualStep3:"Shift + Right-click .exe",manualStep4:'"Copy as path"',manualStep5:"Paste below",gamePath:"Game Path:",cancel:"Cancel",save:"Save",minutes:"Minutes",loggedIn:"Logged in!",loggedOut:"Logged out",invalid:"Invalid!",saved:"Saved!",exported:"Exported!",imported:"Imported! Reloading...",invalidFile:"Invalid file!",empty:"Empty",nothingFound:"Nothing found",game:"Game",account:"Account",created:"Created",userProfile:"User Profile",contact:"Contact",totalPlaytime:"Total Playtime",devModeOn:"You activated developer mode",devModeOff:"You deactivated developer mode",randomGame:"Random Game",changeAvatar:"Change Avatar",changeAvatarDesc:"Click the button below to change your avatar via bot",openBot:"Open Avatar Bot",soundVolume:"Sound Volume",libraryStats:"{count} Games in Library",chartTitle:"Activity (Last 14 Days)",recentTitle:"Recent Activity",notesTitle:"Game Notes",notesPlaceholder:"Write your strategies, keys, or thoughts here...",saveNote:"Save Note",lastPlayed:"Last played: {date}",needLogin:"You need to login",installApp:"Install App",install:"Install", launcherStats: "Launcher Stats", statsMsg: "Games: {g}\nAccounts: {a}\nReviews: {r}", mods: "Mods", main: "Main", installMods: "How to install mods", availableMods: "Available Mods", writeReview: "Write Review", friends: "Friends", achievements: "Achievements", noNotifs: "No notifications", inbox: "Inbox", markRead: "Mark as read"},
-    ru:{main:"Главная",library:"Библиотека",profile:"Профиль",settings:"Настройки",chat:"Чат",faq:"FAQ",search:"Поиск игр и аккаунтов...",login:"Логин",password:"Пароль",loginBtn:"Войти",logout:"Выйти",theme:"Тема",dark:"Темная",light:"Светлая",neon:"Неон (Бета)",liquid:"Жидкое Стекло (New)",interfaceStyle:"Стиль интерфейса",standard:"Стандартный",cosmic:"Космический стиль",fontFamily:"Шрифт",default:"По умолчанию",monospace:"Моноширинный",rounded:"Округлый",interfaceSize:"Размер интерфейса",compact:"Компактный",normal:"Обычный",large:"Большой",titleStyle:"Стиль названия игр",outlined:"Белый с черным контуром",gradient:"Градиент",customColor:"Свой цвет",customTitleColor:"Свой цвет названия",backup:"Резервное копирование",backupDesc:"Безопасно сохраните данные",export:"Экспорт",import:"Импорт",addToLibrary:"Добавить в библиотеку",removeFromLibrary:"Удалить",download:"Скачать",launch:"Запустить",launchInstructions:"Инструкция по запуску",launchStep1:"1. Откройте командную строку (Win + R, введите 'cmd')",launchStep2:"2. Скопируйте команду ниже:",launchStep3:"3. Вставьте в командную строку и нажмите Enter",copyCommand:"Копировать команду",commandCopied:"Команда скопирована!",description:"Описание",screenshots:"Скриншоты",systemReq:"Системные требования",minimum:"Минимальные",recommended:"Рекомендуемые",reviews:"Отзывы",hoursPlayed:"часов сыграно",addTime:"Добавить время",removeTime:"Убрать время",launchSetup:"Настройка запуска",desktopShortcut:"Ярлык на рабочем столе",manualPath:"Ручной путь",desktopStep1:"ПКМ на рабочем столе",desktopStep2:"Создать → Ярлык",desktopStep3:"Обзор для .exe",desktopStep4:"Назовите и готово!",manualStep1:"Откройте проводник",manualStep2:"Найдите папку игры",manualStep3:"Shift + ПКМ на .exe",manualStep4:'"Копировать как путь"',manualStep5:"Вставьте ниже",gamePath:"Путь к игре:",cancel:"Отмена",save:"Сохранить",minutes:"Минуты",loggedIn:"Вход выполнен!",loggedOut:"Выход выполнен",invalid:"Неверно!",saved:"Сохранено!",exported:"Экспортировано!",imported:"Импортировано! Перезагрузка...",invalidFile:"Неверный файл!",empty:"Пусто",nothingFound:"Ничего не найдено",game:"Игра",account:"Аккаунт",created:"Создан",userProfile:"Профиль пользователя",contact:"Связаться",totalPlaytime:"Всего наиграно",devModeOn:"Вы активировали режим разработчика",devModeOff:"Вы отключили режим разработчика",randomGame:"Случайная игра",changeAvatar:"Изменить аватарку",changeAvatarDesc:"Нажмите кнопку ниже чтобы изменить аватарку через бота",openBot:"Открыть бота",soundVolume:"Громкость звука",libraryStats:"{count} игр в библиотеке",chartTitle:"Активность (14 дней)",recentTitle:"Недавняя активность",notesTitle:"Заметки к игре",notesPlaceholder:"Напишите здесь свои стратегии, ключи или мысли...",saveNote:"Сохранить заметку",lastPlayed:"Последний запуск: {date}",needLogin:"Вам нужно войти",installApp:"Установить приложение",install:"Установить", launcherStats: "Статистика лаунчера", statsMsg: "Игр: {g}\nАккаунтов: {a}\nОтзывов: {r}", mods: "Моды", main: "Главная", installMods: "Как установить моды", availableMods: "Доступные моды", writeReview: "Написать отзыв", friends: "Друзья", achievements: "Достижения", noNotifs: "Нет уведомлений", inbox: "Ящик", markRead: "Прочитано"}
+    en:{main:"Main",library:"Library",profile:"Profile",settings:"Settings",chat:"Chat",faq:"FAQ",search:"Search games & accounts...",login:"Login",password:"Password",loginBtn:"Login",logout:"Logout",theme:"Theme",dark:"Dark",light:"Light",neon:"Neon (Beta)",liquid:"Liquid Glass (New)",interfaceStyle:"Interface Style",standard:"Standard",cosmic:"Cosmic Style",fontFamily:"Font Family",default:"Default",monospace:"Monospace",rounded:"Rounded",interfaceSize:"Interface Size",compact:"Compact",normal:"Normal",large:"Large",titleStyle:"Game Title Style",outlined:"White with Black Outline",gradient:"Gradient",customColor:"Custom Color",customTitleColor:"Custom Title Color",backup:"Backup & Restore",backupDesc:"Save all your data securely",export:"Export",import:"Import",addToLibrary:"Add to Library",removeFromLibrary:"Remove",download:"Download",launch:"Launch",launchInstructions:"Launch Instructions",launchStep1:"1. Open Command Prompt (Win + R, type 'cmd')",launchStep2:"2. Copy the command below:",launchStep3:"3. Paste it into Command Prompt and press Enter",copyCommand:"Copy Command",commandCopied:"Command copied!",description:"Description",screenshots:"Screenshots",systemReq:"System Requirements",minimum:"Minimum",recommended:"Recommended",reviews:"Reviews",hoursPlayed:"hours played",addTime:"Add Time",removeTime:"Remove Time",launchSetup:"Launch Setup",desktopShortcut:"Desktop Shortcut",manualPath:"Manual Path",desktopStep1:"Right-click Desktop",desktopStep2:"New → Shortcut",desktopStep3:"Browse for .exe",desktopStep4:"Name it and done!",manualStep1:"Open File Explorer",manualStep2:"Find game folder",manualStep3:"Shift + Right-click .exe",manualStep4:'"Copy as path"',manualStep5:"Paste below",gamePath:"Game Path:",cancel:"Cancel",save:"Save",minutes:"Minutes",loggedIn:"Logged in!",loggedOut:"Logged out",invalid:"Invalid!",saved:"Saved!",exported:"Exported!",imported:"Imported! Reloading...",invalidFile:"Invalid file!",empty:"Empty",nothingFound:"Nothing found",game:"Game",account:"Account",created:"Created",userProfile:"User Profile",contact:"Contact",totalPlaytime:"Total Playtime",devModeOn:"You activated developer mode",devModeOff:"You deactivated developer mode",randomGame:"Random Game",changeAvatar:"Change Avatar",changeAvatarDesc:"Click the button below to change your avatar via bot",openBot:"Open Avatar Bot",soundVolume:"Sound Volume",libraryStats:"{count} Games in Library",chartTitle:"Activity (Last 14 Days)",recentTitle:"Recent Activity",notesTitle:"Game Notes",notesPlaceholder:"Write your strategies, keys, or thoughts here...",saveNote:"Save Note",lastPlayed:"Last played: {date}",needLogin:"You need to login",installApp:"Install App",install:"Install", launcherStats: "Launcher Stats", statsMsg: "Games: {g}\nAccounts: {a}\nReviews: {r}", mods: "Mods", main: "Main", installMods: "How to install mods", availableMods: "Available Mods", writeReview: "Write Review", friends: "Friends", achievements: "Achievements", noNotifs: "No notifications", inbox: "Inbox", markRead: "Mark as read", instructions: "Instructions", officialTooltip: "Official game license"},
+    ru:{main:"Главная",library:"Библиотека",profile:"Профиль",settings:"Настройки",chat:"Чат",faq:"FAQ",search:"Поиск игр и аккаунтов...",login:"Логин",password:"Пароль",loginBtn:"Войти",logout:"Выйти",theme:"Тема",dark:"Темная",light:"Светлая",neon:"Неон (Бета)",liquid:"Жидкое Стекло (New)",interfaceStyle:"Стиль интерфейса",standard:"Стандартный",cosmic:"Космический стиль",fontFamily:"Шрифт",default:"По умолчанию",monospace:"Моноширинный",rounded:"Округлый",interfaceSize:"Размер интерфейса",compact:"Компактный",normal:"Обычный",large:"Большой",titleStyle:"Стиль названия игр",outlined:"Белый с черным контуром",gradient:"Градиент",customColor:"Свой цвет",customTitleColor:"Свой цвет названия",backup:"Резервное копирование",backupDesc:"Безопасно сохраните данные",export:"Экспорт",import:"Импорт",addToLibrary:"Добавить в библиотеку",removeFromLibrary:"Удалить",download:"Скачать",launch:"Запустить",launchInstructions:"Инструкция по запуску",launchStep1:"1. Откройте командную строку (Win + R, введите 'cmd')",launchStep2:"2. Скопируйте команду ниже:",launchStep3:"3. Вставьте в командную строку и нажмите Enter",copyCommand:"Копировать команду",commandCopied:"Команда скопирована!",description:"Описание",screenshots:"Скриншоты",systemReq:"Системные требования",minimum:"Минимальные",recommended:"Рекомендуемые",reviews:"Отзывы",hoursPlayed:"часов сыграно",addTime:"Добавить время",removeTime:"Убрать время",launchSetup:"Настройка запуска",desktopShortcut:"Ярлык на рабочем столе",manualPath:"Ручной путь",desktopStep1:"ПКМ на рабочем столе",desktopStep2:"Создать → Ярлык",desktopStep3:"Обзор для .exe",desktopStep4:"Назовите и готово!",manualStep1:"Откройте проводник",manualStep2:"Найдите папку игры",manualStep3:"Shift + ПКМ на .exe",manualStep4:'"Копировать как путь"',manualStep5:"Вставьте ниже",gamePath:"Путь к игре:",cancel:"Отмена",save:"Сохранить",minutes:"Минуты",loggedIn:"Вход выполнен!",loggedOut:"Выход выполнен",invalid:"Неверно!",saved:"Сохранено!",exported:"Экспортировано!",imported:"Импортировано! Перезагрузка...",invalidFile:"Неверный файл!",empty:"Пусто",nothingFound:"Ничего не найдено",game:"Игра",account:"Аккаунт",created:"Создан",userProfile:"Профиль пользователя",contact:"Связаться",totalPlaytime:"Всего наиграно",devModeOn:"Вы активировали режим разработчика",devModeOff:"Вы отключили режим разработчика",randomGame:"Случайная игра",changeAvatar:"Изменить аватарку",changeAvatarDesc:"Нажмите кнопку ниже чтобы изменить аватарку через бота",openBot:"Открыть бота",soundVolume:"Громкость звука",libraryStats:"{count} игр в библиотеке",chartTitle:"Активность (14 дней)",recentTitle:"Недавняя активность",notesTitle:"Заметки к игре",notesPlaceholder:"Напишите здесь свои стратегии, ключи или мысли...",saveNote:"Сохранить заметку",lastPlayed:"Последний запуск: {date}",needLogin:"Вам нужно войти",installApp:"Установить приложение",install:"Установить", launcherStats: "Статистика лаунчера", statsMsg: "Игр: {g}\nАккаунтов: {a}\nОтзывов: {r}", mods: "Моды", main: "Главная", installMods: "Как установить моды", availableMods: "Доступные моды", writeReview: "Написать отзыв", friends: "Друзья", achievements: "Достижения", noNotifs: "Нет уведомлений", inbox: "Ящик", markRead: "Прочитано", instructions: "Инструкция", officialTooltip: "Официальная лицензия игры"}
 };
 
 const faqItems = [
@@ -1097,6 +1139,11 @@ function loadData(){
         
         if (!history.state) {
             history.replaceState({page: 'main'}, '', '#main');
+        } else {
+            // Restore page state if reload
+            const s = history.state;
+            if(s.page === 'game' && s.gameId) showGame(s.gameId, false);
+            else showPage(s.page, false);
         }
     } catch(e) {
         console.error("Critical Load Error:", e);
@@ -1317,12 +1364,33 @@ function renderGames(){
     const g=document.getElementById('gamesGrid');g.innerHTML='';
     const sorted=[...games].reverse();
     sorted.forEach(game=>{
-        const c=document.createElement('div');c.className='game-card';c.onclick=()=>{playSound('click'); navigateTo('game', game.id)};
-        const titleStyle=localStorage.getItem('titleStyle')||'outlined';const customColor=localStorage.getItem('customTitleColor')||'#ffffff';
-        let titleClass='game-card-title ';let titleStyleAttr='';
-        if(titleStyle==='gradient')titleClass+='gradient';else if(titleStyle==='outlined')titleClass+='outlined';else if(titleStyle==='custom'){titleStyleAttr=`style="color:${customColor}"`}
-        c.innerHTML=`${game.update?`<div class="new-badge">NEW<div class="tooltip">${game.updateDate} - v${game.updateVersion}</div></div>`:''}
-        <img src="${game.avatar}"><div class="game-card-content"><div class="${titleClass}" ${titleStyleAttr}>${game.title}</div><div style="font-size:calc(var(--font-size-base) - 1px);color:var(--text-secondary)">${game.shortDesc}</div></div>`;g.appendChild(c)
+        const c=document.createElement('div');
+        c.className='game-card';
+        c.onclick=()=>{playSound('click'); navigateTo('game', game.id)};
+        
+        const titleStyle=localStorage.getItem('titleStyle')||'outlined';
+        const customColor=localStorage.getItem('customTitleColor')||'#ffffff';
+        let titleClass='game-card-title ';
+        let titleStyleAttr='';
+        
+        if(titleStyle==='gradient') titleClass+='gradient';
+        else if(titleStyle==='outlined') titleClass+='outlined';
+        else if(titleStyle==='custom'){ titleStyleAttr=`style="color:${customColor}"`; }
+        
+        const t = translations[currentLang]||translations['en'];
+        const ofcBadge = game.ofc ? `<div class="official-badge">OFFICIAL<div class="tooltip">${t.officialTooltip}</div></div>` : '';
+        const newBadge = game.update ? `<div class="new-badge">NEW<div class="tooltip">${game.updateDate} - v${game.updateVersion}</div></div>` : '';
+
+        c.innerHTML=`
+            ${newBadge}
+            ${ofcBadge}
+            <img src="${game.avatar}">
+            <div class="game-card-content">
+                <div class="${titleClass}" ${titleStyleAttr}>${game.title}</div>
+                <div style="font-size:calc(var(--font-size-base) - 1px);color:var(--text-secondary)">${game.shortDesc}</div>
+            </div>
+        `;
+        g.appendChild(c);
     })
 }
 
@@ -1457,8 +1525,13 @@ function showGame(id, pushHistory = true){
             document.getElementById('downloadBtn').onclick=()=>openLaunchModal(true)
         }else if(inLib){
             document.getElementById('downloadBtn').style.display='inline-block';
-            document.getElementById('downloadBtn').textContent=t.download;
-            document.getElementById('downloadBtn').onclick=downloadGame
+            if (g.ofc) {
+                document.getElementById('downloadBtn').textContent = t.instructions;
+                document.getElementById('downloadBtn').onclick = () => window.open(g.downloadUrl, '_blank');
+            } else {
+                document.getElementById('downloadBtn').textContent = t.download;
+                document.getElementById('downloadBtn').onclick = downloadGame;
+            }
         }else{document.getElementById('downloadBtn').style.display='none'}
         
         document.getElementById('exeSettingsBtn').style.display=inLib?'inline-block':'none';
@@ -1653,7 +1726,47 @@ function closeNotesModal() { document.getElementById('notesModal').style.display
 function saveNotes() {const notes = safeGet('gameNotes', {});notes[currentGame] = document.getElementById('gameNotesInput').value;localStorage.setItem('gameNotes', JSON.stringify(notes));closeNotesModal();}
 function toggleRequirements(t){document.querySelectorAll('.req-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.requirements').forEach(r=>r.classList.remove('active'));if(t==='min'){document.querySelector('.req-btn:first-child').classList.add('active');document.getElementById('minReq').classList.add('active')}else{document.querySelector('.req-btn:last-child').classList.add('active');document.getElementById('recReq').classList.add('active')}}
 function showPage(p, pushHistory = true){document.querySelectorAll('.game-page').forEach(el=>el.style.display='none');document.getElementById('mainPage').style.display='none';if(pushHistory) history.pushState({page: p}, '', `#${p}`);if(p==='main')document.getElementById('mainPage').style.display='block';else if(p==='library'){document.getElementById('libraryPage').style.display='block';renderLibrary()}else if(p==='profile'){document.getElementById('profilePage').style.display='block';checkAuth()}else if(p==='settings')document.getElementById('settingsPage').style.display='block';else if(p==='faq'){document.getElementById('faqPage').style.display='block';renderFAQ();}else if(p==='chat'){document.getElementById('chatPage').style.display='block';}if(document.getElementById('sidebar').classList.contains('open'))toggleSidebar()}
-function renderLibrary(){const lib=safeGet('library', []);const g=document.getElementById('libraryGrid');const t=translations[currentLang]||translations['en'];g.innerHTML=lib.length===0?`<p style="grid-column:1/-1;text-align:center;color:var(--text-secondary)">${t.empty}</p>`:'';lib.forEach(id=>{const game=games.find(x=>x.id===id);if(!game)return;const c=document.createElement('div');c.className='game-card';c.onclick=()=>{playSound('click'); navigateTo('game', id)};const titleStyle=localStorage.getItem('titleStyle')||'outlined';const customColor=localStorage.getItem('customTitleColor')||'#ffffff';let titleClass='game-card-title ';let titleStyleAttr='';if(titleStyle==='gradient')titleClass+='gradient';else if(titleStyle==='outlined')titleClass+='outlined';else if(titleStyle==='custom'){titleStyleAttr=`style="color:${customColor}"`}c.innerHTML=`${game.update?`<div class="new-badge">NEW<div class="tooltip">${game.updateDate} - v${game.updateVersion}</div></div>`:''}<img src="${game.avatar}"><div class="game-card-content"><div class="${titleClass}" ${titleStyleAttr}>${game.title}</div><div style="font-size:calc(var(--font-size-base) - 1px);color:var(--text-secondary)">${game.shortDesc}</div></div>`;g.appendChild(c)})}
+
+function renderLibrary(){
+    const lib=safeGet('library', []);
+    const g=document.getElementById('libraryGrid');
+    const t=translations[currentLang]||translations['en'];
+    
+    g.innerHTML=lib.length===0?`<p style="grid-column:1/-1;text-align:center;color:var(--text-secondary)">${t.empty}</p>`:'';
+    
+    lib.forEach(id=>{
+        const game=games.find(x=>x.id===id);
+        if(!game)return;
+        
+        const c=document.createElement('div');
+        c.className='game-card';
+        c.onclick=()=>{playSound('click'); navigateTo('game', id)};
+        
+        const titleStyle=localStorage.getItem('titleStyle')||'outlined';
+        const customColor=localStorage.getItem('customTitleColor')||'#ffffff';
+        let titleClass='game-card-title ';
+        let titleStyleAttr='';
+        
+        if(titleStyle==='gradient') titleClass+='gradient';
+        else if(titleStyle==='outlined') titleClass+='outlined';
+        else if(titleStyle==='custom'){ titleStyleAttr=`style="color:${customColor}"`; }
+        
+        const ofcBadge = game.ofc ? `<div class="official-badge">OFFICIAL<div class="tooltip">${t.officialTooltip}</div></div>` : '';
+        const newBadge = game.update ? `<div class="new-badge">NEW<div class="tooltip">${game.updateDate} - v${game.updateVersion}</div></div>` : '';
+        
+        c.innerHTML=`
+            ${newBadge}
+            ${ofcBadge}
+            <img src="${game.avatar}">
+            <div class="game-card-content">
+                <div class="${titleClass}" ${titleStyleAttr}>${game.title}</div>
+                <div style="font-size:calc(var(--font-size-base) - 1px);color:var(--text-secondary)">${game.shortDesc}</div>
+            </div>
+        `;
+        g.appendChild(c)
+    })
+}
+
 function search(){const q=document.getElementById('searchInput').value.toLowerCase();const r=document.getElementById('searchResults');const t=translations[currentLang]||translations['en'];if(!q){r.style.display='none';return}const gr=games.filter(g=>g.title.toLowerCase().includes(q));const ar=accounts.filter(a=>a.nickname.toLowerCase().includes(q));const devMode=localStorage.getItem('devMode')==='true';if(!gr.length&&!ar.length){r.innerHTML=`<div style="padding:15px;text-align:center">${t.nothingFound}</div>`;r.style.display='block';return}r.innerHTML='';gr.forEach(g=>{const i=document.createElement('div');i.className='search-result-item';i.onclick=()=>{playSound('click'); navigateTo('game', g.id);document.getElementById('searchInput').value='';r.style.display='none'};i.innerHTML=`<img src="${g.avatar}" class="search-game-img"><div><div style="font-weight:bold">${g.title}</div><div style="font-size:14px;color:var(--text-secondary)">${g.shortDesc}</div></div><div class="search-result-type game">${t.game}</div>`;r.appendChild(i)});ar.forEach(a=>{const i=document.createElement('div');i.className='search-result-item';i.onclick=()=>{playSound('click'); openAccountView(a);document.getElementById('searchInput').value='';r.style.display='none'};const lvlData = calculateLevel(a.exp);const badgeHTML=a.badge?`<img src="${a.badge}" style="width:20px;height:20px;margin-left:5px">`:'';const primeClass = a.prime ? 'prime-user' : '';const uidStr = devMode ? ` | UID: ${a.uid}` : '';const frameHTML = a.frame ? `<img src="${a.frame}" class="search-avatar-frame">` : '';i.innerHTML=`<div class="search-avatar-wrapper"><img src="${a.avatar}" class="search-avatar-img">${frameHTML}</div><div><div style="font-weight:bold;display:flex;align-items:center" class="${primeClass}">${a.nickname}${badgeHTML}</div><div style="font-size:12px;color:var(--text-secondary)">Lvl ${lvlData.level} (${a.exp} XP)${uidStr}</div></div><div class="search-result-type account">${t.account}</div>`;r.appendChild(i)});r.style.display='block'}
 function openAccountView(a){
     currentViewAccount=a;
@@ -1822,6 +1935,5 @@ window.addEventListener('appinstalled', () => {document.getElementById('pwaBanne
 async function installPWA() {if (deferredPrompt) {deferredPrompt.prompt();const { outcome } = await deferredPrompt.userChoice;if (outcome === 'accepted') {}deferredPrompt = null;document.getElementById('pwaBanner').style.display = 'none';}}
 loadData();
 </script>
-<script type="module" src="/index.tsx"></script>
 </body>
 </html>
