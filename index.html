@@ -70,7 +70,7 @@ body {
     user-select: none; /* No selection by default */
 }
 /* Allowed Copy Areas */
-.game-title, .section p, .review-text, .mod-desc, .friend-name, input, textarea, .faq-answer, .notif-content, .tooltip-text {
+.game-title, .section p, .review-text, .mod-desc, .friend-name, input, textarea, .faq-answer, .notif-content, .tooltip-text, .launch-command-code {
     user-select: text;
 }
 
@@ -153,6 +153,7 @@ body {
 .sidebar-item:hover{background:rgba(108,99,255,.25);transform:translateX(12px)}
 .sidebar-footer { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--glass-border); text-align: center; }
 .support-link { color: var(--accent); text-decoration: none; font-weight: bold; font-size: 14px; display: block; margin-bottom: 5px; cursor: pointer;}
+.visits-counter { font-size: 12px; color: var(--text-secondary); margin-bottom: 10px; font-weight: 500; }
 .copyright { color: var(--text-secondary); font-size: 12px; }
 
 .prime-user {background: linear-gradient(135deg, #ffd700 0%, #fdb931 25%, #fff 50%, #fdb931 75%, #ffd700 100%);background-size: 200% auto;-webkit-background-clip: text;-webkit-text-fill-color: transparent;animation: primeShine 3s linear infinite;font-weight: bold;}
@@ -208,7 +209,7 @@ body {
 .notes-btn:hover{transform:translateY(-3px)}
 .section{background:var(--glass-bg);backdrop-filter:blur(25px);padding:30px;border-radius:24px;margin-bottom:30px;border:1px solid var(--glass-border)}
 .section-title{font-size:28px;margin-bottom:20px;border-bottom:2px solid var(--accent);padding-bottom:12px;display: flex; justify-content: space-between; align-items: center;}
-.launch-methods{display:grid;grid-template-columns:1fr 1fr;gap:25px;margin-top:20px}
+.launch-methods{display:grid;grid-template-columns:1fr 1fr;gap:25px;margin-top:20px;transition: all 0.5s ease;}
 .launch-method{background:rgba(45,45,50,.4);padding:25px;border-radius:18px}
 .method-title{font-size:20px;font-weight:700;color:var(--accent);margin-bottom:15px}
 .gallery{display:flex;gap:20px;overflow-x:auto}
@@ -389,6 +390,48 @@ body {
     transition:all .3s ease; pointer-events:none;
 }
 .official-badge:hover .tooltip { visibility:visible; opacity:1; bottom:-50px; }
+
+/* New for v0.1.6 */
+.launch-overlay-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+.stats-left { font-size: 14px; color: var(--accent); font-weight: bold; }
+.stats-right { font-size: 12px; color: var(--text-secondary); text-align: right; }
+.toggle-circle {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(108,99,255,0.4);
+    transition: all 0.3s ease;
+    margin: 0 auto;
+    font-size: 18px;
+}
+.toggle-circle:hover { transform: scale(1.1); box-shadow: 0 0 20px rgba(108,99,255,0.6); }
+.launch-details { transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; opacity: 1; max-height: 500px; }
+.launch-content.collapsed .launch-details { max-height: 0; opacity: 0; margin-bottom: 0; }
+.launch-content.collapsed .toggle-circle i { transform: rotate(180deg); }
+.launch-warning { text-align: center; color: #ff6b6b; font-size: 12px; margin-top: 20px; font-weight: bold; opacity: 0.8; }
+.persistent-copy-btn { display: none; width: 100%; margin-top: 10px; }
+.launch-content.collapsed .persistent-copy-btn { display: block; animation: slideIn 0.3s ease; }
+
+/* Liquid Glass Style Specifics */
+body.style-liquid .persistent-copy-btn {
+    background: rgba(108, 99, 255, 0.1) !important;
+    border: 1px solid rgba(108, 99, 255, 0.3) !important;
+    backdrop-filter: blur(10px);
+    color: #fff !important;
+}
+body.style-liquid .persistent-copy-btn:hover {
+    background: rgba(108, 99, 255, 0.25) !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 15px var(--accent);
+}
 </style>
 <link rel="stylesheet" href="/index.css">
 </head>
@@ -431,6 +474,7 @@ body {
 <div class="sidebar-item" onclick="playSound('click'); navigateTo('chat')">Chat</div>
 </div>
 <div class="sidebar-footer">
+<div class="visits-counter" id="visitsCounter"></div>
 <a class="support-link" href="#" onclick="openSupportLink()">Tech Support / Тех. Поддержка</a>
 <div class="copyright">© ouForge, 2026 г.</div>
 </div>
@@ -438,10 +482,10 @@ body {
 <div class="main-content">
 <div id="mainPage">
 <div class="featured-game">
-<img src="https://cdn1.epicgames.com/spt-assets/9e8b37541e614575b4de303d2c2e44cf/arc-raiders-weavs.jpg" alt="Featured">
+<img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200" alt="Featured">
 <div class="featured-overlay">
-<div class="featured-title">Arc Raiders</div>
-<div style="font-size:18px;color:#d0d0d0">ARC Raiders — это многопользовательский приключенческий шутер с элементами выживания и эвакуации</div>
+<div class="featured-title">Cyberpunk 2077</div>
+<div style="font-size:18px;color:#d0d0d0">Discover the world of the future</div>
 </div>
 </div>
 <div class="games-section">
@@ -817,32 +861,51 @@ body {
 </div>
 </div>
 <div class="modal" id="launchModal">
-<div class="modal-content" style="max-width:600px">
-<button class="modal-close" onclick="closeLaunchModal()">×</button>
-<div class="modal-title" id="launchModalTitle">Launch Instructions</div>
-<div style="background:rgba(45,45,50,.4);padding:20px;border-radius:16px;margin-bottom:20px">
-<p id="launchStep1" style="margin-bottom:10px">1. Open Command Prompt (Win + R, type 'cmd')</p>
-<p id="launchStep2" style="margin-bottom:10px">2. Copy the command below:</p>
-<div style="background:rgba(0,0,0,.5);padding:15px;border-radius:12px;margin:15px 0;font-family:monospace;word-break:break-all;position:relative">
-<code id="launchCommand" style="color:#4caf50"></code>
-</div>
-<button class="btn" onclick="playSound('click'); copyLaunchCommand()" style="width:100%;margin-bottom:10px" id="copyCommandBtn">Copy Command</button>
-<p id="launchStep3">3. Paste it into Command Prompt and press Enter</p>
-<p style="margin-top:15px;font-size:12px;color:var(--accent);font-style:italic">⏳ Playtime is tracking automatically...</p>
-</div>
-<button class="btn btn-secondary" onclick="closeLaunchModal()" style="width:100%">Close</button>
+<div class="modal-content launch-content" style="max-width:600px">
+    <!-- Replaced Header Logic v0.1.6 -->
+    <div class="launch-overlay-header">
+        <div class="stats-left">
+            <div id="sessionTitle">Current Session</div>
+            <div style="font-size:12px; color:white; margin-top:2px"><span id="sessionTimeDisplay">0</span> min</div>
+        </div>
+        <div class="toggle-circle" onclick="toggleLaunchMode()">
+            <i class="fas fa-arrow-up" id="launchToggleIcon"></i>
+        </div>
+        <div class="stats-right">
+            <div id="launchGameName" style="font-weight:bold; color:white; font-size:14px"></div>
+            <div id="launchTotalTime"></div>
+            <div id="launchRating" style="color:#ffd700"></div>
+        </div>
+    </div>
+
+    <div class="launch-details" id="launchDetails">
+        <div class="modal-title" id="launchModalTitle" style="text-align:center">Launch Instructions</div>
+        <div style="background:rgba(45,45,50,.4);padding:20px;border-radius:16px;margin-bottom:20px">
+        <p id="launchStep1" style="margin-bottom:10px">1. Open Command Prompt (Win + R, type 'cmd')</p>
+        <p id="launchStep2" style="margin-bottom:10px">2. Copy the command below:</p>
+        <div style="background:rgba(0,0,0,.5);padding:15px;border-radius:12px;margin:15px 0;font-family:monospace;word-break:break-all;position:relative">
+        <code id="launchCommand" class="launch-command-code" style="color:#4caf50"></code>
+        </div>
+        <button class="btn" onclick="playSound('click'); copyLaunchCommand()" style="width:100%;margin-bottom:10px" id="copyCommandBtn">Copy Command</button>
+        <p id="launchStep3">3. Paste it into Command Prompt and press Enter</p>
+        </div>
+        <button class="btn btn-secondary" onclick="closeLaunchModal()" style="width:100%" id="launchCloseBtn">Close</button>
+    </div>
+    
+    <button class="btn persistent-copy-btn" onclick="playSound('click'); copyLaunchCommand()" id="persistentCopyBtn">Copy Command</button>
+    <p class="launch-warning" id="keepOpenWarning">Do not close this tab to track playtime!</p>
 </div>
 </div>
 <div class="modal" id="updateModal">
     <div class="modal-content" style="max-width:600px">
         <button class="modal-close" onclick="closeUpdateModal()">×</button>
-        <div class="modal-title">Update v0.1.5</div>
+        <div class="modal-title">Update v0.1.6</div>
         <div style="margin-bottom:20px">
             <h3 style="color:var(--accent);margin-bottom:10px">Changes / Изменения</h3>
             <ul style="line-height:1.6;padding-left:20px">
-                <li>🎮 <b>New Game:</b> ARC Raiders added. / Добавлена игра ARC Raiders.</li>
-                <li>✅ <b>Official Verification:</b> Official games now have a badge. / У официальных игр теперь есть значок.</li>
-                <li>📜 <b>Instructions:</b> Official games link to install instructions instead of download. / У официальных игр теперь кнопка Инструкция.</li>
+                <li>✨ <b>New Overlay:</b> Compact launch mode with session stats. / Новый оверлей запуска со статистикой.</li>
+                <li>📊 <b>Visits Counter:</b> Added total site visits. / Добавлен счетчик посещений.</li>
+                <li>📰 <b>Global News:</b> Check your inbox! / Проверьте уведомления!</li>
             </ul>
         </div>
         <button class="btn" onclick="closeUpdateModal()" style="width:100%">Got it!</button>
@@ -853,6 +916,20 @@ body {
 </div>
 <script>
 // --- CORE DATA (Embedded for Stability) ---
+const CURRENT_VERSION = '0.1.6';
+// EDIT THIS NUMBER MANUALLY
+const TOTAL_SITE_VISITS = 12458; 
+
+// GLOBAL NOTIFICATIONS INJECTION
+const GLOBAL_NEWS = [
+    {
+        id: 'global_016',
+        date: '2026-02-25',
+        title: 'Update 0.1.6 Released',
+        content: 'We have updated the launch overlay to be more compact and informative. Check out the new session stats and collapse feature!'
+    }
+];
+
 const accounts = [
     {
         uid: 1001,
@@ -1020,7 +1097,6 @@ const games = [
     }
 ];
 
-const CURRENT_VERSION = '0.1.5';
 let currentLang='en',devModeClicks=0,devModeTimeout=null;
 let currentGame = null;
 let currentViewAccount = null;
@@ -1031,10 +1107,15 @@ let currentSoundType = 'standard';
 let notifPage = 0;
 let achPage = 0;
 let launchTimer = null;
+let currentSessionMinutes = 0;
 
 const translations={
-    en:{main:"Main",library:"Library",profile:"Profile",settings:"Settings",chat:"Chat",faq:"FAQ",search:"Search games & accounts...",login:"Login",password:"Password",loginBtn:"Login",logout:"Logout",theme:"Theme",dark:"Dark",light:"Light",neon:"Neon (Beta)",liquid:"Liquid Glass (New)",interfaceStyle:"Interface Style",standard:"Standard",cosmic:"Cosmic Style",fontFamily:"Font Family",default:"Default",monospace:"Monospace",rounded:"Rounded",interfaceSize:"Interface Size",compact:"Compact",normal:"Normal",large:"Large",titleStyle:"Game Title Style",outlined:"White with Black Outline",gradient:"Gradient",customColor:"Custom Color",customTitleColor:"Custom Title Color",backup:"Backup & Restore",backupDesc:"Save all your data securely",export:"Export",import:"Import",addToLibrary:"Add to Library",removeFromLibrary:"Remove",download:"Download",launch:"Launch",launchInstructions:"Launch Instructions",launchStep1:"1. Open Command Prompt (Win + R, type 'cmd')",launchStep2:"2. Copy the command below:",launchStep3:"3. Paste it into Command Prompt and press Enter",copyCommand:"Copy Command",commandCopied:"Command copied!",description:"Description",screenshots:"Screenshots",systemReq:"System Requirements",minimum:"Minimum",recommended:"Recommended",reviews:"Reviews",hoursPlayed:"hours played",addTime:"Add Time",removeTime:"Remove Time",launchSetup:"Launch Setup",desktopShortcut:"Desktop Shortcut",manualPath:"Manual Path",desktopStep1:"Right-click Desktop",desktopStep2:"New → Shortcut",desktopStep3:"Browse for .exe",desktopStep4:"Name it and done!",manualStep1:"Open File Explorer",manualStep2:"Find game folder",manualStep3:"Shift + Right-click .exe",manualStep4:'"Copy as path"',manualStep5:"Paste below",gamePath:"Game Path:",cancel:"Cancel",save:"Save",minutes:"Minutes",loggedIn:"Logged in!",loggedOut:"Logged out",invalid:"Invalid!",saved:"Saved!",exported:"Exported!",imported:"Imported! Reloading...",invalidFile:"Invalid file!",empty:"Empty",nothingFound:"Nothing found",game:"Game",account:"Account",created:"Created",userProfile:"User Profile",contact:"Contact",totalPlaytime:"Total Playtime",devModeOn:"You activated developer mode",devModeOff:"You deactivated developer mode",randomGame:"Random Game",changeAvatar:"Change Avatar",changeAvatarDesc:"Click the button below to change your avatar via bot",openBot:"Open Avatar Bot",soundVolume:"Sound Volume",libraryStats:"{count} Games in Library",chartTitle:"Activity (Last 14 Days)",recentTitle:"Recent Activity",notesTitle:"Game Notes",notesPlaceholder:"Write your strategies, keys, or thoughts here...",saveNote:"Save Note",lastPlayed:"Last played: {date}",needLogin:"You need to login",installApp:"Install App",install:"Install", launcherStats: "Launcher Stats", statsMsg: "Games: {g}\nAccounts: {a}\nReviews: {r}", mods: "Mods", main: "Main", installMods: "How to install mods", availableMods: "Available Mods", writeReview: "Write Review", friends: "Friends", achievements: "Achievements", noNotifs: "No notifications", inbox: "Inbox", markRead: "Mark as read", instructions: "Instructions", officialTooltip: "Official game license"},
-    ru:{main:"Главная",library:"Библиотека",profile:"Профиль",settings:"Настройки",chat:"Чат",faq:"FAQ",search:"Поиск игр и аккаунтов...",login:"Логин",password:"Пароль",loginBtn:"Войти",logout:"Выйти",theme:"Тема",dark:"Темная",light:"Светлая",neon:"Неон (Бета)",liquid:"Жидкое Стекло (New)",interfaceStyle:"Стиль интерфейса",standard:"Стандартный",cosmic:"Космический стиль",fontFamily:"Шрифт",default:"По умолчанию",monospace:"Моноширинный",rounded:"Округлый",interfaceSize:"Размер интерфейса",compact:"Компактный",normal:"Обычный",large:"Большой",titleStyle:"Стиль названия игр",outlined:"Белый с черным контуром",gradient:"Градиент",customColor:"Свой цвет",customTitleColor:"Свой цвет названия",backup:"Резервное копирование",backupDesc:"Безопасно сохраните данные",export:"Экспорт",import:"Импорт",addToLibrary:"Добавить в библиотеку",removeFromLibrary:"Удалить",download:"Скачать",launch:"Запустить",launchInstructions:"Инструкция по запуску",launchStep1:"1. Откройте командную строку (Win + R, введите 'cmd')",launchStep2:"2. Скопируйте команду ниже:",launchStep3:"3. Вставьте в командную строку и нажмите Enter",copyCommand:"Копировать команду",commandCopied:"Команда скопирована!",description:"Описание",screenshots:"Скриншоты",systemReq:"Системные требования",minimum:"Минимальные",recommended:"Рекомендуемые",reviews:"Отзывы",hoursPlayed:"часов сыграно",addTime:"Добавить время",removeTime:"Убрать время",launchSetup:"Настройка запуска",desktopShortcut:"Ярлык на рабочем столе",manualPath:"Ручной путь",desktopStep1:"ПКМ на рабочем столе",desktopStep2:"Создать → Ярлык",desktopStep3:"Обзор для .exe",desktopStep4:"Назовите и готово!",manualStep1:"Откройте проводник",manualStep2:"Найдите папку игры",manualStep3:"Shift + ПКМ на .exe",manualStep4:'"Копировать как путь"',manualStep5:"Вставьте ниже",gamePath:"Путь к игре:",cancel:"Отмена",save:"Сохранить",minutes:"Минуты",loggedIn:"Вход выполнен!",loggedOut:"Выход выполнен",invalid:"Неверно!",saved:"Сохранено!",exported:"Экспортировано!",imported:"Импортировано! Перезагрузка...",invalidFile:"Неверный файл!",empty:"Пусто",nothingFound:"Ничего не найдено",game:"Игра",account:"Аккаунт",created:"Создан",userProfile:"Профиль пользователя",contact:"Связаться",totalPlaytime:"Всего наиграно",devModeOn:"Вы активировали режим разработчика",devModeOff:"Вы отключили режим разработчика",randomGame:"Случайная игра",changeAvatar:"Изменить аватарку",changeAvatarDesc:"Нажмите кнопку ниже чтобы изменить аватарку через бота",openBot:"Открыть бота",soundVolume:"Громкость звука",libraryStats:"{count} игр в библиотеке",chartTitle:"Активность (14 дней)",recentTitle:"Недавняя активность",notesTitle:"Заметки к игре",notesPlaceholder:"Напишите здесь свои стратегии, ключи или мысли...",saveNote:"Сохранить заметку",lastPlayed:"Последний запуск: {date}",needLogin:"Вам нужно войти",installApp:"Установить приложение",install:"Установить", launcherStats: "Статистика лаунчера", statsMsg: "Игр: {g}\nАккаунтов: {a}\nОтзывов: {r}", mods: "Моды", main: "Главная", installMods: "Как установить моды", availableMods: "Доступные моды", writeReview: "Написать отзыв", friends: "Друзья", achievements: "Достижения", noNotifs: "Нет уведомлений", inbox: "Ящик", markRead: "Прочитано", instructions: "Инструкция", officialTooltip: "Официальная лицензия игры"}
+    en:{main:"Main",library:"Library",profile:"Profile",settings:"Settings",chat:"Chat",faq:"FAQ",search:"Search games & accounts...",login:"Login",password:"Password",loginBtn:"Login",logout:"Logout",theme:"Theme",dark:"Dark",light:"Light",neon:"Neon (Beta)",liquid:"Liquid Glass (New)",interfaceStyle:"Interface Style",standard:"Standard",cosmic:"Cosmic Style",fontFamily:"Font Family",default:"Default",monospace:"Monospace",rounded:"Rounded",interfaceSize:"Interface Size",compact:"Compact",normal:"Normal",large:"Large",titleStyle:"Game Title Style",outlined:"White with Black Outline",gradient:"Gradient",customColor:"Custom Color",customTitleColor:"Custom Title Color",backup:"Backup & Restore",backupDesc:"Save all your data securely",export:"Export",import:"Import",addToLibrary:"Add to Library",removeFromLibrary:"Remove",download:"Download",launch:"Launch",launchInstructions:"Launch Instructions",launchStep1:"1. Open Command Prompt (Win + R, type 'cmd')",launchStep2:"2. Copy the command below:",launchStep3:"3. Paste it into Command Prompt and press Enter",copyCommand:"Copy Command",commandCopied:"Command copied!",description:"Description",screenshots:"Screenshots",systemReq:"System Requirements",minimum:"Minimum",recommended:"Recommended",reviews:"Reviews",hoursPlayed:"hours played",addTime:"Add Time",removeTime:"Remove Time",launchSetup:"Launch Setup",desktopShortcut:"Desktop Shortcut",manualPath:"Manual Path",desktopStep1:"Right-click Desktop",desktopStep2:"New → Shortcut",desktopStep3:"Browse for .exe",desktopStep4:"Name it and done!",manualStep1:"Open File Explorer",manualStep2:"Find game folder",manualStep3:"Shift + Right-click .exe",manualStep4:'"Copy as path"',manualStep5:"Paste below",gamePath:"Game Path:",cancel:"Cancel",save:"Save",minutes:"Minutes",loggedIn:"Logged in!",loggedOut:"Logged out",invalid:"Invalid!",saved:"Saved!",exported:"Exported!",imported:"Imported! Reloading...",invalidFile:"Invalid file!",empty:"Empty",nothingFound:"Nothing found",game:"Game",account:"Account",created:"Created",userProfile:"User Profile",contact:"Contact",totalPlaytime:"Total Playtime",devModeOn:"You activated developer mode",devModeOff:"You deactivated developer mode",randomGame:"Random Game",changeAvatar:"Change Avatar",changeAvatarDesc:"Click the button below to change your avatar via bot",openBot:"Open Avatar Bot",soundVolume:"Sound Volume",libraryStats:"{count} Games in Library",chartTitle:"Activity (Last 14 Days)",recentTitle:"Recent Activity",notesTitle:"Game Notes",notesPlaceholder:"Write your strategies, keys, or thoughts here...",saveNote:"Save Note",lastPlayed:"Last played: {date}",needLogin:"You need to login",installApp:"Install App",install:"Install", launcherStats: "Launcher Stats", statsMsg: "Games: {g}\nAccounts: {a}\nReviews: {r}", mods: "Mods", main: "Main", installMods: "How to install mods", availableMods: "Available Mods", writeReview: "Write Review", friends: "Friends", achievements: "Achievements", noNotifs: "No notifications", inbox: "Inbox", markRead: "Mark as read", instructions: "Instructions", officialTooltip: "Official game license",
+        visits: "Total Visits", currentSession: "Current Session", totalTime: "Total", rating: "Rating", close: "Close", keepOpen: "Do not close this tab to track playtime!"
+    },
+    ru:{main:"Главная",library:"Библиотека",profile:"Профиль",settings:"Настройки",chat:"Чат",faq:"FAQ",search:"Поиск игр и аккаунтов...",login:"Логин",password:"Пароль",loginBtn:"Войти",logout:"Выйти",theme:"Тема",dark:"Темная",light:"Светлая",neon:"Неон (Бета)",liquid:"Жидкое Стекло (New)",interfaceStyle:"Стиль интерфейса",standard:"Стандартный",cosmic:"Космический стиль",fontFamily:"Шрифт",default:"По умолчанию",monospace:"Моноширинный",rounded:"Округлый",interfaceSize:"Размер интерфейса",compact:"Компактный",normal:"Обычный",large:"Большой",titleStyle:"Стиль названия игр",outlined:"Белый с черным контуром",gradient:"Градиент",customColor:"Свой цвет",customTitleColor:"Свой цвет названия",backup:"Резервное копирование",backupDesc:"Безопасно сохраните данные",export:"Экспорт",import:"Импорт",addToLibrary:"Добавить в библиотеку",removeFromLibrary:"Удалить",download:"Скачать",launch:"Запустить",launchInstructions:"Инструкция по запуску",launchStep1:"1. Откройте командную строку (Win + R, введите 'cmd')",launchStep2:"2. Скопируйте команду ниже:",launchStep3:"3. Вставьте в командную строку и нажмите Enter",copyCommand:"Копировать команду",commandCopied:"Команда скопирована!",description:"Описание",screenshots:"Скриншоты",systemReq:"Системные требования",minimum:"Минимальные",recommended:"Рекомендуемые",reviews:"Отзывы",hoursPlayed:"часов сыграно",addTime:"Добавить время",removeTime:"Убрать время",launchSetup:"Настройка запуска",desktopShortcut:"Ярлык на рабочем столе",manualPath:"Ручной путь",desktopStep1:"ПКМ на рабочем столе",desktopStep2:"Создать → Ярлык",desktopStep3:"Обзор для .exe",desktopStep4:"Назовите и готово!",manualStep1:"Откройте проводник",manualStep2:"Найдите папку игры",manualStep3:"Shift + ПКМ на .exe",manualStep4:'"Копировать как путь"',manualStep5:"Вставьте ниже",gamePath:"Путь к игре:",cancel:"Отмена",save:"Сохранить",minutes:"Минуты",loggedIn:"Вход выполнен!",loggedOut:"Выход выполнен",invalid:"Неверно!",saved:"Сохранено!",exported:"Экспортировано!",imported:"Импортировано! Перезагрузка...",invalidFile:"Неверный файл!",empty:"Пусто",nothingFound:"Ничего не найдено",game:"Игра",account:"Аккаунт",created:"Создан",userProfile:"Профиль пользователя",contact:"Связаться",totalPlaytime:"Всего наиграно",devModeOn:"Вы активировали режим разработчика",devModeOff:"Вы отключили режим разработчика",randomGame:"Случайная игра",changeAvatar:"Изменить аватарку",changeAvatarDesc:"Нажмите кнопку ниже чтобы изменить аватарку через бота",openBot:"Открыть бота",soundVolume:"Громкость звука",libraryStats:"{count} игр в библиотеке",chartTitle:"Активность (14 дней)",recentTitle:"Недавняя активность",notesTitle:"Заметки к игре",notesPlaceholder:"Напишите здесь свои стратегии, ключи или мысли...",saveNote:"Сохранить заметку",lastPlayed:"Последний запуск: {date}",needLogin:"Вам нужно войти",installApp:"Установить приложение",install:"Установить", launcherStats: "Статистика лаунчера", statsMsg: "Игр: {g}\nАккаунтов: {a}\nОтзывов: {r}", mods: "Моды", main: "Главная", installMods: "Как установить моды", availableMods: "Доступные моды", writeReview: "Написать отзыв", friends: "Друзья", achievements: "Достижения", noNotifs: "Нет уведомлений", inbox: "Ящик", markRead: "Прочитано", instructions: "Инструкция", officialTooltip: "Официальная лицензия игры",
+        visits: "Посещений", currentSession: "Текущая сессия", totalTime: "Всего", rating: "Оценка", close: "Закрыть", keepOpen: "Не закрывайте вкладку для учета времени!"
+    }
 };
 
 const faqItems = [
@@ -1157,6 +1238,26 @@ function checkAuth(){
         const codeAccount = accounts.find(a => a.login === u.login);
         if (codeAccount) {
             Object.assign(u, codeAccount);
+        }
+
+        // Global News Injection Logic
+        if (GLOBAL_NEWS.length > 0) {
+            if (!u.notifications) u.notifications = [];
+            let updated = false;
+            // We want to add them in order.
+            // If we push, they go to the end.
+            // GLOBAL_NEWS is likely [Older, Newer] or just one.
+            // Let's assume GLOBAL_NEWS order is relevant.
+            GLOBAL_NEWS.forEach(newsItem => {
+                if (!u.notifications.some(n => n.id === newsItem.id)) {
+                    u.notifications.push(newsItem); // Changed from unshift to push
+                    updated = true;
+                }
+            });
+            if (updated) {
+                // Save locally only since no backend
+                localStorage.setItem('currentUser', JSON.stringify(u)); 
+            }
         }
 
         const btn=document.getElementById('accountBtn');
@@ -1673,6 +1774,17 @@ function savePlaytime(minutesToAdd = null){
         daily[key]=(daily[key]||0)+m;
         localStorage.setItem('dailyPlaytime',JSON.stringify(daily));
         
+        // Update Launch Overlay Display if open
+        if (minutesToAdd !== null) {
+            currentSessionMinutes += minutesToAdd;
+            document.getElementById('sessionTimeDisplay').textContent = currentSessionMinutes;
+            
+            const totalMins = pt[currentGame]||0;
+            const t = translations[currentLang]||translations['en'];
+            const hours = (totalMins/60).toFixed(1);
+            document.getElementById('launchTotalTime').textContent = `${t.totalTime}: ${hours} h`;
+        }
+
         if (minutesToAdd === null) {
             closePlaytimeModal();
             showGame(currentGame, false);
@@ -1690,17 +1802,56 @@ function removePlaytime(){const pt=safeGet('playtime', {});const currentTime=pt[
 function openExeSettings(){const p=safeGet('exePaths', {})[currentGame]||'';document.getElementById('exePath').value=p;document.getElementById('exeModal').style.display='flex'}
 function closeExeModal(){document.getElementById('exeModal').style.display='none'}
 function saveExePath(){const p=document.getElementById('exePath').value;const paths=safeGet('exePaths', {});p?paths[currentGame]=p:delete paths[currentGame];localStorage.setItem('exePaths',JSON.stringify(paths));closeExeModal();alert((translations[currentLang]||translations['en']).saved);showGame(currentGame, false)}
+
 function openLaunchModal(isLaunch = false){
     const paths=safeGet('exePaths', {});
     let path=paths[currentGame]||'';
     if(path&&!path.startsWith('"')&&!path.endsWith('"')){path=`"${path}"`}
     const t=translations[currentLang]||translations['en'];
+    const g = games.find(x => x.id === currentGame);
+    const pt = safeGet('playtime', {});
+    
+    // Header Stats
+    currentSessionMinutes = 0;
+    document.getElementById('sessionTimeDisplay').textContent = '0';
+    document.getElementById('launchGameName').textContent = g ? g.title : 'Game';
+    
+    const totalMins = pt[currentGame]||0;
+    const hours = (totalMins/60).toFixed(1);
+    document.getElementById('launchTotalTime').textContent = `${t.totalTime}: ${hours} h`;
+    
+    // Calculate Avg Rating
+    let ratingStr = '0.0';
+    if(g && g.reviews && g.reviews.length > 0) {
+        const sum = g.reviews.reduce((acc, curr) => acc + curr.rating, 0);
+        ratingStr = (sum / g.reviews.length).toFixed(1);
+    }
+    document.getElementById('launchRating').textContent = `${t.rating}: ${ratingStr} ⭐`;
+
+    // Instructions
     document.getElementById('launchModalTitle').textContent=t.launchInstructions;
     document.getElementById('launchStep1').textContent=t.launchStep1;
     document.getElementById('launchStep2').textContent=t.launchStep2;
     document.getElementById('launchStep3').textContent=t.launchStep3;
     document.getElementById('copyCommandBtn').textContent=t.copyCommand;
+    document.getElementById('persistentCopyBtn').textContent=t.copyCommand;
+    document.getElementById('launchCloseBtn').textContent=t.close;
+    document.getElementById('keepOpenWarning').textContent=t.keepOpen;
     document.getElementById('launchCommand').textContent=`start "" ${path}`;
+    
+    // Reset view
+    const modalContent = document.querySelector('.launch-content');
+    // Check saved state
+    const savedCollapsed = localStorage.getItem('launchOverlayCollapsed') === 'true';
+    if(savedCollapsed) {
+        modalContent.classList.add('collapsed');
+    } else {
+        modalContent.classList.remove('collapsed');
+    }
+    
+    // Text translations
+    document.getElementById('sessionTitle').textContent = t.currentSession;
+
     document.getElementById('launchModal').style.display='flex';
     
     if(isLaunch) {
@@ -1712,6 +1863,13 @@ function openLaunchModal(isLaunch = false){
         }, 60000);
     }
 }
+
+function toggleLaunchMode() {
+    const modalContent = document.querySelector('.launch-content');
+    modalContent.classList.toggle('collapsed');
+    localStorage.setItem('launchOverlayCollapsed', modalContent.classList.contains('collapsed'));
+}
+
 function closeLaunchModal(){
     document.getElementById('launchModal').style.display='none';
     if(launchTimer) {
@@ -1720,7 +1878,7 @@ function closeLaunchModal(){
         checkAuth(); // Refresh stats
     }
 }
-function copyLaunchCommand(){const command=document.getElementById('launchCommand').textContent;navigator.clipboard.writeText(command).then(()=>{const btn=document.getElementById('copyCommandBtn');const originalText=btn.textContent;btn.textContent=(translations[currentLang]||translations['en']).commandCopied;setTimeout(()=>{btn.textContent=originalText},2000)})}
+function copyLaunchCommand(){const command=document.getElementById('launchCommand').textContent;navigator.clipboard.writeText(command).then(()=>{const btn=document.getElementById('copyCommandBtn');const pBtn=document.getElementById('persistentCopyBtn');const originalText=btn.textContent;const t=translations[currentLang]||translations['en'];btn.textContent=t.commandCopied;pBtn.textContent=t.commandCopied;setTimeout(()=>{btn.textContent=originalText;pBtn.textContent=originalText;},2000)})}
 function openNotes() {const notes = safeGet('gameNotes', {});document.getElementById('gameNotesInput').value = notes[currentGame] || '';document.getElementById('notesModal').style.display = 'flex';}
 function closeNotesModal() { document.getElementById('notesModal').style.display = 'none'; }
 function saveNotes() {const notes = safeGet('gameNotes', {});notes[currentGame] = document.getElementById('gameNotesInput').value;localStorage.setItem('gameNotes', JSON.stringify(notes));closeNotesModal();}
@@ -1913,6 +2071,17 @@ function updateUI(){const t=translations[currentLang]||translations['en'];docume
     } else if (existingStats) {
         existingStats.remove();
     }
+
+    // v0.1.6 new elements
+    document.getElementById('visitsCounter').textContent = `${t.visits}: ${TOTAL_SITE_VISITS}`;
+    document.getElementById('launchModalTitle').textContent = t.launchInstructions;
+    document.getElementById('launchStep1').textContent = t.launchStep1;
+    document.getElementById('launchStep2').textContent = t.launchStep2;
+    document.getElementById('launchStep3').textContent = t.launchStep3;
+    document.getElementById('copyCommandBtn').textContent = t.copyCommand;
+    document.getElementById('persistentCopyBtn').textContent = t.copyCommand;
+    document.getElementById('launchCloseBtn').textContent = t.close;
+    document.getElementById('keepOpenWarning').textContent = t.keepOpen;
 }
 function showDevStats() {
     const t = translations[currentLang] || translations['en'];
