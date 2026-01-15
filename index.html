@@ -31,7 +31,7 @@ body.style-liquid .glass, body.style-liquid .game-card, body.style-liquid .secti
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
     border-radius: 24px;
 }
-body.style-liquid .btn, body.style-liquid .menu-btn, body.style-liquid .account-btn, body.style-liquid .backup-btn, body.style-liquid .req-btn.active, body.style-liquid .tab-btn.active, body.style-liquid .notif-btn {
+body.style-liquid .btn, body.style-liquid .menu-btn, body.style-liquid .account-btn, body.style-liquid .backup-btn, body.style-liquid .req-btn.active, body.style-liquid .tab-btn.active, body.style-liquid .notif-btn, body.style-liquid .filter-btn {
     background: rgba(255, 255, 255, 0.1) !important;
     border: 1px solid rgba(255, 255, 255, 0.3) !important;
     color: var(--text-primary) !important;
@@ -41,7 +41,7 @@ body.style-liquid .btn, body.style-liquid .menu-btn, body.style-liquid .account-
     overflow: hidden;
     transition: all 0.3s ease;
 }
-body.style-liquid .btn:hover, body.style-liquid .menu-btn:hover, body.style-liquid .notif-btn:hover {
+body.style-liquid .btn:hover, body.style-liquid .menu-btn:hover, body.style-liquid .notif-btn:hover, body.style-liquid .filter-btn:hover {
     background: rgba(255, 255, 255, 0.2) !important;
     transform: translateY(-2px);
     box-shadow: 0 0 15px var(--accent);
@@ -88,9 +88,12 @@ body {
 .menu-btn{background:linear-gradient(135deg,var(--accent) 0,#5a52d5 100%);border:none;color:#fff;padding:12px 18px;cursor:pointer;border-radius:14px;font-size:18px;transition:all .4s ease}
 .menu-btn:hover{transform:translateY(-3px)}
 .logo{font-size:28px;font-weight:700;background:linear-gradient(135deg,var(--accent) 0,#a855f7 50%,#ec4899 100%);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;cursor:pointer;animation:gradientFlow 3s ease infinite}
-.search-container{margin-left:auto;position:relative}
+.search-container{margin-left:auto;position:relative;display: flex; align-items: center; gap: 10px;}
 .search-input{background:rgba(45,45,50,.6);border:1px solid var(--glass-border);padding:12px 20px;border-radius:25px;color:var(--text-primary);width:350px;transition:all .4s ease}
 .search-input:focus{outline:0;border-color:var(--accent);width:400px}
+.filter-btn { background: rgba(45,45,50,.6); border: 1px solid var(--glass-border); color: #fff; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+.filter-btn:hover { background: rgba(108,99,255,0.3); border-color: var(--accent); }
+.filter-active-dot { position: absolute; top: 0; right: 0; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; border: 2px solid var(--bg-primary); display: none; }
 
 /* Header Avatar */
 .account-btn{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--accent) 0,#5a52d5 100%);border:none;color:#fff;font-size:24px;cursor:pointer;transition:all .4s ease;display:flex;align-items:center;justify-content:center; overflow: hidden; margin-left: 10px;}
@@ -158,9 +161,9 @@ body {
 
 .prime-user {background: linear-gradient(135deg, #ffd700 0%, #fdb931 25%, #fff 50%, #fdb931 75%, #ffd700 100%);background-size: 200% auto;-webkit-background-clip: text;-webkit-text-fill-color: transparent;animation: primeShine 3s linear infinite;font-weight: bold;}
 
-.featured-game{width:100%;height:500px;position:relative;overflow:hidden;margin-bottom:50px}
+.featured-game{width:100%;height:500px;position:relative;overflow:hidden;margin-bottom:50px;}
 .featured-game img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
-.featured-game:hover img{transform:scale(1.05)}
+.featured-game:hover img{transform:scale(1.02)}
 .featured-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.95));padding:50px}
 .featured-title{font-size:48px;font-weight:700;margin-bottom:15px;color:#fff}
 .games-section{padding:0 40px 40px}
@@ -432,6 +435,45 @@ body.style-liquid .persistent-copy-btn:hover {
     border-color: var(--accent) !important;
     box-shadow: 0 0 15px var(--accent);
 }
+
+/* v0.1.7 New Styles */
+.fragment-plus-settings {
+    border: 1px solid #ffd700;
+    background: rgba(255, 215, 0, 0.05);
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+}
+.fragment-plus-settings h3 {
+    background: linear-gradient(135deg, #ffd700 0%, #fdb931 50%, #ffd700 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 15px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.drive-btn-group { display: flex; gap: 10px; margin-top: 10px; }
+.drive-btn { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3); color: var(--text-secondary); cursor: pointer; transition: all 0.3s ease; }
+.drive-btn.active { border-color: #ffd700; color: #ffd700; background: rgba(255, 215, 0, 0.1); font-weight: bold; }
+
+.genre-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.genre-pill { padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; background: rgba(255,255,255,0.1); color: var(--text-secondary); border: 1px solid var(--glass-border); }
+.game-card .genre-list { margin-top: 10px; }
+
+/* Filter Modal */
+.filter-options { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-bottom: 20px; }
+.filter-option { padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); cursor: pointer; text-align: center; font-size: 13px; transition: all 0.2s ease; }
+.filter-option.active { border-color: var(--accent); background: rgba(108,99,255,0.2); color: white; }
+
+.featured-game{width:100%;height:500px;position:relative;overflow:hidden;margin-bottom:50px;}
+.featured-game img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.featured-game:hover img{transform:scale(1.02)}
+
+.input-disabled { opacity: 0.6; cursor: not-allowed; color: var(--text-secondary) !important; }
 </style>
 <link rel="stylesheet" href="/index.css">
 </head>
@@ -445,6 +487,7 @@ body.style-liquid .persistent-copy-btn:hover {
 <button class="menu-btn" onclick="playSound('click'); toggleSidebar()">☰</button>
 <div class="logo" onclick="playSound('click'); navigateTo('main')">Fragment</div>
 <div class="search-container">
+<button class="filter-btn" onclick="playSound('click'); openFilterModal()"><i class="fas fa-filter"></i><div class="filter-active-dot" id="filterActiveDot"></div></button>
 <input type="text" class="search-input" id="searchInput" placeholder="Search games & accounts..." oninput="search()">
 <div class="search-results" id="searchResults"></div>
 </div>
@@ -513,6 +556,7 @@ body.style-liquid .persistent-copy-btn:hover {
 <div class="game-title" id="gameTitle"></div>
 <div id="gameBadge"></div>
 </div>
+<div class="genre-list" id="gamePageGenres" style="margin-bottom:15px"></div>
 <div class="playtime-container">
 <div class="playtime-display" id="playtimeDisplay"><span>0.0 hours played</span></div>
 <button class="playtime-btn" onclick="playSound('click'); addPlaytime()" title="Add time">+</button>
@@ -521,7 +565,10 @@ body.style-liquid .persistent-copy-btn:hover {
 </div>
 <div class="game-actions">
 <button class="btn" id="addToLibraryBtn" onclick="playSound('click'); addToLibrary()"></button>
-<button class="btn" id="downloadBtn" style="display:none" onclick="playSound('click'); downloadGame()">Download</button>
+<div id="playDownloadGroup" style="display:flex; flex-direction:column; align-items:center;">
+    <button class="btn" id="launchGameBtn" style="display:none; margin-bottom: 5px;" onclick="playSound('click'); openLaunchModal(true)">Launch</button>
+    <button class="btn" id="downloadBtn" style="display:none" onclick="playSound('click'); downloadGame()">Download</button>
+</div>
 <button class="settings-btn" id="exeSettingsBtn" style="display:none" onclick="playSound('click'); openExeSettings()">⚙️</button>
 <button class="notes-btn" id="gameNotesBtn" onclick="playSound('click'); openNotes()">📝</button>
 </div>
@@ -644,6 +691,27 @@ body.style-liquid .persistent-copy-btn:hover {
 <div class="game-page" id="settingsPage">
 <h1 style="font-size:42px;margin-bottom:30px" id="settTitle">Settings</h1>
 <div class="section">
+    <!-- Fragment Plus Settings -->
+    <div class="fragment-plus-settings" id="plusSettings" style="display:none">
+        <h3 id="fpTitle"><i class="fas fa-crown"></i> Fragment Plus</h3>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+            <label style="margin:0" id="fpAutoLabel">Auto-Detect Paths</label>
+            <label class="switch">
+                <input type="checkbox" id="autoDetectToggle" onchange="toggleAutoDetect()">
+                <span class="slider round"></span>
+            </label>
+        </div>
+        <div id="fpHint" style="font-size:12px; color:var(--text-secondary); margin-bottom:15px">
+            Create a folder named <b>Fragment</b> on your selected drive and unpack games there.
+        </div>
+        <label id="fpLocLabel" style="font-size:12px; font-weight:bold; color:var(--text-primary)">Library Location:</label>
+        <div class="drive-btn-group">
+            <button class="drive-btn" id="driveC" onclick="selectDrive('C')">Drive C</button>
+            <button class="drive-btn" id="driveD" onclick="selectDrive('D')">Drive D</button>
+        </div>
+        <div id="currentPathDisplay" style="margin-top:10px; font-family:monospace; font-size:11px; color:var(--accent)"></div>
+    </div>
+
 <div class="settings-group">
 <label id="languageLabel">Language / Язык</label>
 <select id="languageSelect" onchange="changeLanguage()">
@@ -737,6 +805,28 @@ body.style-liquid .persistent-copy-btn:hover {
 </div>
 <button class="btn" onclick="playSound('click'); login()" style="width:100%;margin-top:20px">Login</button>
 </div>
+</div>
+
+<!-- Filter Modal -->
+<div class="modal" id="filterModal">
+    <div class="modal-content" style="max-width:500px">
+        <button class="modal-close" onclick="closeFilterModal()">×</button>
+        <div class="modal-title">Filters</div>
+        <div class="settings-group">
+            <label id="ratingFilterLabel">Min Rating: 0.0</label>
+            <input type="range" min="0" max="50" value="0" class="range-slider" id="ratingFilterSlider" oninput="updateFilterRatingDisplay()">
+        </div>
+        <div class="settings-group">
+            <label>Genres</label>
+            <div class="filter-options" id="genreFilterOptions">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+        <div style="display:flex; gap:15px; margin-top:20px">
+            <button class="btn btn-secondary" onclick="clearFilters()" style="flex:1">Clear</button>
+            <button class="btn" onclick="applyFilters()" style="flex:1">Apply</button>
+        </div>
+    </div>
 </div>
 
 <div class="modal" id="notesModal">
@@ -899,13 +989,14 @@ body.style-liquid .persistent-copy-btn:hover {
 <div class="modal" id="updateModal">
     <div class="modal-content" style="max-width:600px">
         <button class="modal-close" onclick="closeUpdateModal()">×</button>
-        <div class="modal-title">Update v0.1.6</div>
+        <div class="modal-title">Update v0.1.7</div>
         <div style="margin-bottom:20px">
             <h3 style="color:var(--accent);margin-bottom:10px">Changes / Изменения</h3>
             <ul style="line-height:1.6;padding-left:20px">
-                <li>✨ <b>New Overlay:</b> Compact launch mode with session stats. / Новый оверлей запуска со статистикой.</li>
-                <li>📊 <b>Visits Counter:</b> Added total site visits. / Добавлен счетчик посещений.</li>
-                <li>📰 <b>Global News:</b> Check your inbox! / Проверьте уведомления!</li>
+                <li>✨ <b>Fragment Plus:</b> Auto-Detect game paths! / Авто-определение пути к играм!</li>
+                <li>🏷️ <b>Genres:</b> Added game genres. / Добавлены жанры игр.</li>
+                <li>🔍 <b>Filters:</b> Advanced search filters. / Расширенные фильтры поиска.</li>
+                <li>🖼️ <b>UI Fix:</b> Better featured image display. / Улучшено отображение обложки.</li>
             </ul>
         </div>
         <button class="btn" onclick="closeUpdateModal()" style="width:100%">Got it!</button>
@@ -915,18 +1006,21 @@ body.style-liquid .persistent-copy-btn:hover {
 <img id="avatarViewerImg" src="" alt="">
 </div>
 <script>
-// --- CORE DATA (Embedded for Stability) ---
-const CURRENT_VERSION = '0.1.6';
+// --- CORE DATA ---
+const CURRENT_VERSION = '0.1.7';
 // EDIT THIS NUMBER MANUALLY
-const TOTAL_SITE_VISITS = 134; 
+const TOTAL_SITE_VISITS = 12458; 
+
+// GENRE CONFIG
+const GENRE_NAMES = ["Action", "RPG", "Simulation", "Horror", "Shooter", "Sandbox", "Strategy", "Adventure"];
 
 // GLOBAL NOTIFICATIONS INJECTION
 const GLOBAL_NEWS = [
     {
-        id: 'global_016',
-        date: '2026-02-25',
-        title: 'Update 0.1.6 Released',
-        content: 'We have updated the launch overlay to be more compact and informative. Check out the new session stats and collapse feature!'
+        id: 'global_017',
+        date: '2026-03-05',
+        title: 'Fragment Plus & Filters',
+        content: 'Version 0.1.7 brings Auto-Detect game paths for Fragment Plus users and a new filtering system!'
     }
 ];
 
@@ -1017,7 +1111,7 @@ const games = [
             "https://gfn.am/en/games/media/images/scree_x68WEwr.2e16d0ba.fill-1152x648.format-webp.webpquality-50.webp",
             "https://gfn.am/en/games/media/images/scree_gJ8zkub.2e16d0ba.fill-1152x648.format-webp.webpquality-50.webp"
         ],
-        downloadUrl: "https://drive.usercontent.google.com/download?id=18YF3N5yyZS6g8M8ZPxkACm2_kPDZVz7V&export=download&authuser=0",
+        downloadUrl: "https://drive.usercontent.google.com/download?id=1D7XHLw3eckgXkhqJb-qkxoc9C8giORW9&export=download&authuser=0",
         minReq: "OS: Windows 7 SP2+<br>CPU: 2 GHz<br>RAM: 4GB<br>GPU: NVIDIA GT 630 / AMD HD 6570",
         recReq: "OS: Windows 10<br>CPU: 3 GHz<br>RAM: 8GB<br>GPU: NVIDIA GTX 1050 / AMD RX 560",
         update: 1,
@@ -1031,17 +1125,19 @@ const games = [
         mods: [
             {name: "Chainsaw Man Mod", desc: "Этот мод добавляет полностью функционирующие контракты, гибридов, НАСТОЯЩЕГО человека с бензопилой и многое другое.", img: "https://top-mods.ru/upload/000/u1/c/a/chainsaw-man-mod-photo-mods-main.jpg", url: "https://modsfire.com/739Zdera4k1SS62"}
         ],
-        ofc: 0
+        ofc: 0,
+        genreFlags: [0, 0, 1, 0, 0, 1, 0, 0], // Simulation, Sandbox
+        internalPath: "People Playground [Build 12526410]\\People Playground\People Playground.exe"
     },
     {
         id: 2,
         title: "Schedule I",
         shortDesc: "Schedule I — это популярный инди-симулятор наркобизнеса.",
-        description: "Schedule I — это криминальный симулятор, где вы начинаете путь с уличного дилера и развиваетесь до главы наркоимперии. Производите и распространяйте различные наркотики по мрачному городу Hyland Point. В этой версии 0.4.1f13 предустановлен руссификатор на текст и текстуры.",
+        description: "Schedule I — это криминальный симулятор, где вы начинаете путь с уличного дилера и развиваетесь до главы наркоимперии. Производите и распространяйте различные наркотики по мрачному городу Hyland Point.",
         banner: "https://i-mg24.ru/images/010926080338-wip0c.jpg",
         avatar: "https://i-mg24.ru/images/010926080148-ui4lx.jpg",
         gallery: [
-            "https://i-mg24.ru/images/011026191545-wkb4r.webp", "https://i-mg24.ru/images/011026191601-cx3a7.jpg", "https://i-mg24.ru/images/011026191614-uhqwv.jpg",
+            "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400"
         ],
         downloadUrl: "https://drive.usercontent.google.com/download?id=1Zf4uvnAw-ND2MgtHGTOd9mWEiPR-Rxi7&export=download&authuser=0",
         minReq: "OS: Windows 10<br>CPU: 3 GHz<br>RAM: 8GB<br>GPU: GTX 960",
@@ -1051,7 +1147,9 @@ const games = [
         updateVersion: "",
         reviews: [],
         hasMods: 0,
-        ofc: 0
+        ofc: 0,
+        genreFlags: [0, 0, 1, 0, 0, 0, 1, 0], // Simulation, Strategy
+        internalPath: "Schedule I\\Schedule I.exe"
     },
     {
         id: 3,
@@ -1071,7 +1169,9 @@ const games = [
         updateVersion: "1.10",
         reviews: [],
         hasMods: 0,
-        ofc: 0
+        ofc: 0,
+        genreFlags: [1, 1, 0, 0, 0, 0, 0, 1], // Action, RPG, Adventure
+        internalPath: "Elden Ring\\Game\\eldenring.exe"
     },
     {
         id: 4,
@@ -1093,7 +1193,9 @@ const games = [
         updateVersion: "",
         reviews: [],
         hasMods: 0,
-        ofc: 1
+        ofc: 1,
+        genreFlags: [1, 0, 0, 0, 1, 0, 0, 0], // Action, Shooter
+        internalPath: "ARC Raiders\\ARC Raiders.exe"
     }
 ];
 
@@ -1109,12 +1211,35 @@ let achPage = 0;
 let launchTimer = null;
 let currentSessionMinutes = 0;
 
+// Settings State
+let autoDetectEnabled = false;
+let gameDrive = 'C';
+let filterSettings = { rating: 0, genres: [] };
+
 const translations={
     en:{main:"Main",library:"Library",profile:"Profile",settings:"Settings",chat:"Chat",faq:"FAQ",search:"Search games & accounts...",login:"Login",password:"Password",loginBtn:"Login",logout:"Logout",theme:"Theme",dark:"Dark",light:"Light",neon:"Neon (Beta)",liquid:"Liquid Glass (New)",interfaceStyle:"Interface Style",standard:"Standard",cosmic:"Cosmic Style",fontFamily:"Font Family",default:"Default",monospace:"Monospace",rounded:"Rounded",interfaceSize:"Interface Size",compact:"Compact",normal:"Normal",large:"Large",titleStyle:"Game Title Style",outlined:"White with Black Outline",gradient:"Gradient",customColor:"Custom Color",customTitleColor:"Custom Title Color",backup:"Backup & Restore",backupDesc:"Save all your data securely",export:"Export",import:"Import",addToLibrary:"Add to Library",removeFromLibrary:"Remove",download:"Download",launch:"Launch",launchInstructions:"Launch Instructions",launchStep1:"1. Open Command Prompt (Win + R, type 'cmd')",launchStep2:"2. Copy the command below:",launchStep3:"3. Paste it into Command Prompt and press Enter",copyCommand:"Copy Command",commandCopied:"Command copied!",description:"Description",screenshots:"Screenshots",systemReq:"System Requirements",minimum:"Minimum",recommended:"Recommended",reviews:"Reviews",hoursPlayed:"hours played",addTime:"Add Time",removeTime:"Remove Time",launchSetup:"Launch Setup",desktopShortcut:"Desktop Shortcut",manualPath:"Manual Path",desktopStep1:"Right-click Desktop",desktopStep2:"New → Shortcut",desktopStep3:"Browse for .exe",desktopStep4:"Name it and done!",manualStep1:"Open File Explorer",manualStep2:"Find game folder",manualStep3:"Shift + Right-click .exe",manualStep4:'"Copy as path"',manualStep5:"Paste below",gamePath:"Game Path:",cancel:"Cancel",save:"Save",minutes:"Minutes",loggedIn:"Logged in!",loggedOut:"Logged out",invalid:"Invalid!",saved:"Saved!",exported:"Exported!",imported:"Imported! Reloading...",invalidFile:"Invalid file!",empty:"Empty",nothingFound:"Nothing found",game:"Game",account:"Account",created:"Created",userProfile:"User Profile",contact:"Contact",totalPlaytime:"Total Playtime",devModeOn:"You activated developer mode",devModeOff:"You deactivated developer mode",randomGame:"Random Game",changeAvatar:"Change Avatar",changeAvatarDesc:"Click the button below to change your avatar via bot",openBot:"Open Avatar Bot",soundVolume:"Sound Volume",libraryStats:"{count} Games in Library",chartTitle:"Activity (Last 14 Days)",recentTitle:"Recent Activity",notesTitle:"Game Notes",notesPlaceholder:"Write your strategies, keys, or thoughts here...",saveNote:"Save Note",lastPlayed:"Last played: {date}",needLogin:"You need to login",installApp:"Install App",install:"Install", launcherStats: "Launcher Stats", statsMsg: "Games: {g}\nAccounts: {a}\nReviews: {r}", mods: "Mods", main: "Main", installMods: "How to install mods", availableMods: "Available Mods", writeReview: "Write Review", friends: "Friends", achievements: "Achievements", noNotifs: "No notifications", inbox: "Inbox", markRead: "Mark as read", instructions: "Instructions", officialTooltip: "Official game license",
-        visits: "Total Visits", currentSession: "Current Session", totalTime: "Total", rating: "Rating", close: "Close", keepOpen: "Do not close this tab to track playtime!"
+        visits: "Total Visits", currentSession: "Current Session", totalTime: "Total", rating: "Rating", close: "Close", keepOpen: "Do not close this tab to track playtime!",
+        fragmentPlus: "Fragment Plus",
+        autoDetect: "Auto-Detect Paths",
+        autoDetectHint: "Create a folder named <b>Fragment</b> on your selected drive and unpack games there.",
+        libLocation: "Library Location:",
+        driveC: "Drive C",
+        driveD: "Drive D",
+        pathPattern: "Current Path Pattern:",
+        autoDisabled: "Auto-Detect Disabled",
+        autoDetectActive: "Auto-Detect Active"
     },
     ru:{main:"Главная",library:"Библиотека",profile:"Профиль",settings:"Настройки",chat:"Чат",faq:"FAQ",search:"Поиск игр и аккаунтов...",login:"Логин",password:"Пароль",loginBtn:"Войти",logout:"Выйти",theme:"Тема",dark:"Темная",light:"Светлая",neon:"Неон (Бета)",liquid:"Жидкое Стекло (New)",interfaceStyle:"Стиль интерфейса",standard:"Стандартный",cosmic:"Космический стиль",fontFamily:"Шрифт",default:"По умолчанию",monospace:"Моноширинный",rounded:"Округлый",interfaceSize:"Размер интерфейса",compact:"Компактный",normal:"Обычный",large:"Большой",titleStyle:"Стиль названия игр",outlined:"Белый с черным контуром",gradient:"Градиент",customColor:"Свой цвет",customTitleColor:"Свой цвет названия",backup:"Резервное копирование",backupDesc:"Безопасно сохраните данные",export:"Экспорт",import:"Импорт",addToLibrary:"Добавить в библиотеку",removeFromLibrary:"Удалить",download:"Скачать",launch:"Запустить",launchInstructions:"Инструкция по запуску",launchStep1:"1. Откройте командную строку (Win + R, введите 'cmd')",launchStep2:"2. Скопируйте команду ниже:",launchStep3:"3. Вставьте в командную строку и нажмите Enter",copyCommand:"Копировать команду",commandCopied:"Команда скопирована!",description:"Описание",screenshots:"Скриншоты",systemReq:"Системные требования",minimum:"Минимальные",recommended:"Рекомендуемые",reviews:"Отзывы",hoursPlayed:"часов сыграно",addTime:"Добавить время",removeTime:"Убрать время",launchSetup:"Настройка запуска",desktopShortcut:"Ярлык на рабочем столе",manualPath:"Ручной путь",desktopStep1:"ПКМ на рабочем столе",desktopStep2:"Создать → Ярлык",desktopStep3:"Обзор для .exe",desktopStep4:"Назовите и готово!",manualStep1:"Откройте проводник",manualStep2:"Найдите папку игры",manualStep3:"Shift + ПКМ на .exe",manualStep4:'"Копировать как путь"',manualStep5:"Вставьте ниже",gamePath:"Путь к игре:",cancel:"Отмена",save:"Сохранить",minutes:"Минуты",loggedIn:"Вход выполнен!",loggedOut:"Выход выполнен",invalid:"Неверно!",saved:"Сохранено!",exported:"Экспортировано!",imported:"Импортировано! Перезагрузка...",invalidFile:"Неверный файл!",empty:"Пусто",nothingFound:"Ничего не найдено",game:"Игра",account:"Аккаунт",created:"Создан",userProfile:"Профиль пользователя",contact:"Связаться",totalPlaytime:"Всего наиграно",devModeOn:"Вы активировали режим разработчика",devModeOff:"Вы отключили режим разработчика",randomGame:"Случайная игра",changeAvatar:"Изменить аватарку",changeAvatarDesc:"Нажмите кнопку ниже чтобы изменить аватарку через бота",openBot:"Открыть бота",soundVolume:"Громкость звука",libraryStats:"{count} игр в библиотеке",chartTitle:"Активность (14 дней)",recentTitle:"Недавняя активность",notesTitle:"Заметки к игре",notesPlaceholder:"Напишите здесь свои стратегии, ключи или мысли...",saveNote:"Сохранить заметку",lastPlayed:"Последний запуск: {date}",needLogin:"Вам нужно войти",installApp:"Установить приложение",install:"Установить", launcherStats: "Статистика лаунчера", statsMsg: "Игр: {g}\nАккаунтов: {a}\nОтзывов: {r}", mods: "Моды", main: "Главная", installMods: "Как установить моды", availableMods: "Доступные моды", writeReview: "Написать отзыв", friends: "Друзья", achievements: "Достижения", noNotifs: "Нет уведомлений", inbox: "Ящик", markRead: "Прочитано", instructions: "Инструкция", officialTooltip: "Официальная лицензия игры",
-        visits: "Посещений", currentSession: "Текущая сессия", totalTime: "Всего", rating: "Оценка", close: "Закрыть", keepOpen: "Не закрывайте вкладку для учета времени!"
+        visits: "Посещений", currentSession: "Текущая сессия", totalTime: "Всего", rating: "Оценка", close: "Закрыть", keepOpen: "Не закрывайте вкладку для учета времени!",
+        fragmentPlus: "Fragment Plus",
+        autoDetect: "Авто-определение путей",
+        autoDetectHint: "Создайте папку <b>Fragment</b> на выбранном диске и распаковывайте игры туда.",
+        libLocation: "Расположение библиотеки:",
+        driveC: "Диск C",
+        driveD: "Диск D",
+        pathPattern: "Текущий шаблон пути:",
+        autoDisabled: "Авто-определение отключено",
+        autoDetectActive: "Авто-определение активно"
     }
 };
 
@@ -1192,6 +1317,12 @@ function loadData(){
         if(!localStorage.getItem('recentGames')) localStorage.setItem('recentGames',JSON.stringify([]));
         if(!localStorage.getItem('readNotifs')) localStorage.setItem('readNotifs',JSON.stringify({}));
 
+        // Load Settings
+        autoDetectEnabled = localStorage.getItem('autoDetectEnabled') === 'true';
+        gameDrive = localStorage.getItem('gameDrive') || 'C';
+        const savedFilters = localStorage.getItem('filterSettings');
+        if(savedFilters) filterSettings = JSON.parse(savedFilters);
+
         currentLang = localStorage.getItem('language')||'en';
         masterVolume = parseInt(localStorage.getItem('soundVolume') || '100') / 100;
         currentSoundType = localStorage.getItem('soundType') || 'standard';
@@ -1211,6 +1342,10 @@ function loadData(){
         document.getElementById('sizeSelect').value = localStorage.getItem('size')||'normal';
         document.getElementById('titleStyleSelect').value = localStorage.getItem('titleStyle')||'outlined';
         document.getElementById('customColorPicker').value = localStorage.getItem('customTitleColor')||'#ffffff';
+        
+        // Update Fragment Plus Settings UI
+        document.getElementById('autoDetectToggle').checked = autoDetectEnabled;
+        updateDriveButtons();
         
         if(localStorage.getItem('titleStyle')==='custom') document.getElementById('customColorGroup').style.display='block';
         
@@ -1244,13 +1379,9 @@ function checkAuth(){
         if (GLOBAL_NEWS.length > 0) {
             if (!u.notifications) u.notifications = [];
             let updated = false;
-            // We want to add them in order.
-            // If we push, they go to the end.
-            // GLOBAL_NEWS is likely [Older, Newer] or just one.
-            // Let's assume GLOBAL_NEWS order is relevant.
             GLOBAL_NEWS.forEach(newsItem => {
                 if (!u.notifications.some(n => n.id === newsItem.id)) {
-                    u.notifications.push(newsItem); // Changed from unshift to push
+                    u.notifications.push(newsItem); 
                     updated = true;
                 }
             });
@@ -1275,6 +1406,18 @@ function checkAuth(){
         document.getElementById('profileName').className = u.prime ? 'profile-name prime-user' : 'profile-name';
         document.getElementById('notifBtn').style.display = 'flex';
         
+        // Settings for Prime
+        if(u.prime) {
+            document.getElementById('plusSettings').style.display = 'block';
+        } else {
+            document.getElementById('plusSettings').style.display = 'none';
+            // Disable features if lost prime
+            if(autoDetectEnabled) {
+                autoDetectEnabled = false;
+                localStorage.setItem('autoDetectEnabled', 'false');
+            }
+        }
+
         if(u.frame) {
             document.getElementById('profileFrame').src = u.frame;
             document.getElementById('profileFrame').style.display = 'block';
@@ -1356,6 +1499,7 @@ function checkAuth(){
         document.getElementById('profileLoginPrompt').style.display='block';
         document.getElementById('logoutGroup').style.display='none';
         document.getElementById('notifBtn').style.display = 'none';
+        document.getElementById('plusSettings').style.display = 'none';
     }
 }
 
@@ -1461,10 +1605,52 @@ function closeNotifModal() {
     document.getElementById('notifModal').style.display = 'none';
 }
 
+// --- FILTERS & GENRES ---
+function getGenresHTML(flags) {
+    if(!flags) return '';
+    let html = '';
+    flags.forEach((active, index) => {
+        if(active) {
+            html += `<span class="genre-pill">${GENRE_NAMES[index]}</span>`;
+        }
+    });
+    return html ? `<div class="genre-list">${html}</div>` : '';
+}
+
+function getFilteredGames() {
+    let filtered = [...games].reverse();
+    
+    // Filter by Rating
+    if (filterSettings.rating > 0) {
+        const minRating = filterSettings.rating / 10; // Slider 0-50 -> 0.0-5.0
+        filtered = filtered.filter(g => {
+            if (!g.reviews || g.reviews.length === 0) return false;
+            const sum = g.reviews.reduce((acc, curr) => acc + curr.rating, 0);
+            const avg = sum / g.reviews.length;
+            return avg >= minRating;
+        });
+    }
+
+    // Filter by Genre
+    if (filterSettings.genres.length > 0) {
+        filtered = filtered.filter(g => {
+            if (!g.genreFlags) return false;
+            // Game must have ALL selected genres (AND logic) or ANY (OR logic)? Usually OR for tags.
+            // Let's go with OR logic for now (shows if it matches at least one).
+            // Actually, for advanced filters, usually AND. User asked to "mark interested genres".
+            // Let's do OR logic (easier for users).
+            return filterSettings.genres.some(genreIndex => g.genreFlags[genreIndex] === 1);
+        });
+    }
+
+    return filtered;
+}
+
 function renderGames(){
     const g=document.getElementById('gamesGrid');g.innerHTML='';
-    const sorted=[...games].reverse();
-    sorted.forEach(game=>{
+    const filteredGames = getFilteredGames();
+    
+    filteredGames.forEach(game=>{
         const c=document.createElement('div');
         c.className='game-card';
         c.onclick=()=>{playSound('click'); navigateTo('game', game.id)};
@@ -1481,6 +1667,8 @@ function renderGames(){
         const t = translations[currentLang]||translations['en'];
         const ofcBadge = game.ofc ? `<div class="official-badge">OFFICIAL<div class="tooltip">${t.officialTooltip}</div></div>` : '';
         const newBadge = game.update ? `<div class="new-badge">NEW<div class="tooltip">${game.updateDate} - v${game.updateVersion}</div></div>` : '';
+        
+        const genres = getGenresHTML(game.genreFlags);
 
         c.innerHTML=`
             ${newBadge}
@@ -1489,10 +1677,107 @@ function renderGames(){
             <div class="game-card-content">
                 <div class="${titleClass}" ${titleStyleAttr}>${game.title}</div>
                 <div style="font-size:calc(var(--font-size-base) - 1px);color:var(--text-secondary)">${game.shortDesc}</div>
+                ${genres}
             </div>
         `;
         g.appendChild(c);
     })
+    
+    // Active Filter Dot
+    const dot = document.getElementById('filterActiveDot');
+    if (filterSettings.rating > 0 || filterSettings.genres.length > 0) {
+        dot.style.display = 'block';
+    } else {
+        dot.style.display = 'none';
+    }
+}
+
+// --- FRAGMENT PLUS LOGIC ---
+function toggleAutoDetect() {
+    autoDetectEnabled = document.getElementById('autoDetectToggle').checked;
+    localStorage.setItem('autoDetectEnabled', autoDetectEnabled);
+    updateDriveButtons(); // Visual update path
+}
+
+function selectDrive(drive) {
+    if(!autoDetectEnabled) return; // Can't select if disabled
+    gameDrive = drive;
+    localStorage.setItem('gameDrive', drive);
+    updateDriveButtons();
+}
+
+function updateDriveButtons() {
+    const t = translations[currentLang] || translations['en'];
+    const btnC = document.getElementById('driveC');
+    const btnD = document.getElementById('driveD');
+    const pathDisplay = document.getElementById('currentPathDisplay');
+    
+    if(autoDetectEnabled) {
+        btnC.disabled = false;
+        btnD.disabled = false;
+        btnC.classList.toggle('active', gameDrive === 'C');
+        btnD.classList.toggle('active', gameDrive === 'D');
+        pathDisplay.textContent = `${t.pathPattern} ${gameDrive}:\\Fragment\\{GameFolder}`;
+    } else {
+        btnC.disabled = true;
+        btnD.disabled = true;
+        btnC.classList.remove('active');
+        btnD.classList.remove('active');
+        pathDisplay.textContent = t.autoDisabled;
+    }
+}
+
+// --- FILTER MODAL LOGIC ---
+function openFilterModal() {
+    const modal = document.getElementById('filterModal');
+    modal.style.display = 'flex';
+    
+    // Set Slider
+    document.getElementById('ratingFilterSlider').value = filterSettings.rating;
+    updateFilterRatingDisplay();
+    
+    // Render Genres
+    const container = document.getElementById('genreFilterOptions');
+    container.innerHTML = '';
+    GENRE_NAMES.forEach((name, index) => {
+        const div = document.createElement('div');
+        div.className = 'filter-option' + (filterSettings.genres.includes(index) ? ' active' : '');
+        div.textContent = name;
+        div.onclick = () => {
+            div.classList.toggle('active');
+            if(div.classList.contains('active')) {
+                filterSettings.genres.push(index);
+            } else {
+                filterSettings.genres = filterSettings.genres.filter(i => i !== index);
+            }
+        };
+        container.appendChild(div);
+    });
+}
+
+function closeFilterModal() {
+    document.getElementById('filterModal').style.display = 'none';
+}
+
+function updateFilterRatingDisplay() {
+    const val = document.getElementById('ratingFilterSlider').value;
+    filterSettings.rating = parseInt(val);
+    document.getElementById('ratingFilterLabel').textContent = `Min Rating: ${(val/10).toFixed(1)}`;
+}
+
+function applyFilters() {
+    localStorage.setItem('filterSettings', JSON.stringify(filterSettings));
+    closeFilterModal();
+    renderGames(); // Re-render grid
+    search(); // Re-apply search if active
+}
+
+function clearFilters() {
+    filterSettings = { rating: 0, genres: [] };
+    document.getElementById('ratingFilterSlider').value = 0;
+    updateFilterRatingDisplay();
+    document.querySelectorAll('.filter-option').forEach(el => el.classList.remove('active'));
+    applyFilters();
 }
 
 function showGame(id, pushHistory = true){
@@ -1515,6 +1800,9 @@ function showGame(id, pushHistory = true){
         document.getElementById('gameTitle').textContent=g.title;
         document.getElementById('gameBadge').innerHTML=g.update?`<div class="new-badge">NEW<div class="tooltip">${g.updateDate} - v${g.updateVersion}</div></div>`:'';
         
+        // Show Genres on Game Page
+        document.getElementById('gamePageGenres').innerHTML = getGenresHTML(g.genreFlags);
+
         const devMode=localStorage.getItem('devMode')==='true';
         document.getElementById('gameIdDisplay').textContent=`game id: ${g.id}`;
         document.getElementById('gameIdDisplay').style.display=devMode?'block':'none';
@@ -1620,26 +1908,98 @@ function showGame(id, pushHistory = true){
         const inLib=lib.includes(id);const hasPath=paths[id]&&paths[id].trim()!=='';
         
         document.getElementById('addToLibraryBtn').textContent=inLib?t.removeFromLibrary:t.addToLibrary;
-        if(inLib&&hasPath){
-            document.getElementById('downloadBtn').style.display='inline-block';
-            document.getElementById('downloadBtn').textContent=t.launch;
-            document.getElementById('downloadBtn').onclick=()=>openLaunchModal(true)
-        }else if(inLib){
-            document.getElementById('downloadBtn').style.display='inline-block';
-            if (g.ofc) {
-                document.getElementById('downloadBtn').textContent = t.instructions;
-                document.getElementById('downloadBtn').onclick = () => window.open(g.downloadUrl, '_blank');
+        
+        // --- LAUNCH / DOWNLOAD LOGIC (Updated v0.1.7) ---
+        const dlBtn = document.getElementById('downloadBtn');
+        const launchBtn = document.getElementById('launchGameBtn');
+        
+        // Reset
+        dlBtn.style.display = 'none';
+        launchBtn.style.display = 'none';
+
+        if(inLib) {
+            if(g.ofc) {
+                // Official Game: Download/Instructions only
+                dlBtn.style.display = 'inline-block';
+                dlBtn.textContent = t.instructions;
+                dlBtn.onclick = () => window.open(g.downloadUrl, '_blank');
+                // Reset styling
+                dlBtn.style.background = ''; dlBtn.style.border = ''; dlBtn.style.textDecoration = ''; dlBtn.style.fontSize = ''; dlBtn.style.padding = ''; dlBtn.style.color = ''; dlBtn.style.width = '';
             } else {
-                document.getElementById('downloadBtn').textContent = t.download;
-                document.getElementById('downloadBtn').onclick = downloadGame;
+                const u = safeGet('currentUser', null);
+                // Check if user is prime and auto-detect is ON
+                const isPlusEnabled = u && u.prime && autoDetectEnabled;
+
+                if (isPlusEnabled) {
+                    // Auto-Detect Mode
+                    launchBtn.style.display = 'block'; // Make it block
+                    launchBtn.textContent = t.launch; // Translate!
+                    launchBtn.style.marginBottom = '5px';
+                    
+                    dlBtn.style.display = 'block'; 
+                    dlBtn.textContent = t.download;
+                    dlBtn.onclick = downloadGame;
+                    dlBtn.style.background = 'transparent'; 
+                    dlBtn.style.border = 'none';
+                    dlBtn.style.textDecoration = 'underline';
+                    dlBtn.style.fontSize = '11px';
+                    dlBtn.style.padding = '0';
+                    dlBtn.style.color = 'var(--text-secondary)';
+                    dlBtn.style.width = '100%'; 
+                    dlBtn.style.textAlign = 'center';
+                } else {
+                    // Standard Mode
+                    if (hasPath) {
+                        dlBtn.style.display = 'inline-block';
+                        dlBtn.textContent = t.launch;
+                        dlBtn.onclick = () => openLaunchModal(true);
+                        // Reset style
+                        dlBtn.style.background = ''; dlBtn.style.border = ''; dlBtn.style.textDecoration = ''; dlBtn.style.fontSize = ''; dlBtn.style.padding = ''; dlBtn.style.color = ''; dlBtn.style.width = '';
+                    } else {
+                        dlBtn.style.display = 'inline-block';
+                        dlBtn.textContent = t.download;
+                        dlBtn.onclick = downloadGame;
+                        // Reset style
+                        dlBtn.style.background = ''; dlBtn.style.border = ''; dlBtn.style.textDecoration = ''; dlBtn.style.fontSize = ''; dlBtn.style.padding = ''; dlBtn.style.color = ''; dlBtn.style.width = '';
+                    }
+                }
             }
-        }else{document.getElementById('downloadBtn').style.display='none'}
+        }
         
         document.getElementById('exeSettingsBtn').style.display=inLib?'inline-block':'none';
     } catch (e) {
         console.error("Show Game Error:", e);
         alert("Error showing game.");
     }
+}
+
+function openExeSettings(){
+    const u = safeGet('currentUser', null);
+    const g = games.find(x => x.id === currentGame);
+    const isPlus = autoDetectEnabled && u && u.prime && !g.ofc;
+    const t = translations[currentLang] || translations['en'];
+    
+    if (isPlus) {
+        const path = `${gameDrive}:\\Fragment\\${g.internalPath || ''}`;
+        const input = document.getElementById('exePath');
+        input.value = path;
+        input.disabled = true;
+        input.classList.add('input-disabled');
+        // Hide manual instructions if preferred, but keep for reference or overlay?
+        // Let's change title to indicate Auto Mode
+        document.getElementById('exeModalTitle').innerHTML = `${t.autoDetectActive} <i class="fas fa-crown" style="color:#ffd700"></i>`;
+        document.getElementById('exeSaveBtn').style.display = 'none'; // Cannot save manually
+    } else {
+        // Standard
+        const p=safeGet('exePaths', {})[currentGame]||'';
+        const input = document.getElementById('exePath');
+        input.value=p;
+        input.disabled = false;
+        input.classList.remove('input-disabled');
+        document.getElementById('exeSaveBtn').style.display = 'inline-block';
+        document.getElementById('exeModalTitle').textContent = t.launchSetup;
+    }
+    document.getElementById('exeModal').style.display='flex';
 }
 
 function switchGameTab(tab) {
@@ -1799,16 +2159,25 @@ function savePlaytime(minutesToAdd = null){
     }
 }
 function removePlaytime(){const pt=safeGet('playtime', {});const currentTime=pt[currentGame]||0;if(currentTime>0){const removeAmount=prompt((translations[currentLang]||translations['en']).minutes+':','30');if(removeAmount!==null){const minutes=parseInt(removeAmount)||0;if(minutes>0){pt[currentGame]=Math.max(0,currentTime-minutes);localStorage.setItem('playtime',JSON.stringify(pt));showGame(currentGame, false);checkAuth();}}}}
-function openExeSettings(){const p=safeGet('exePaths', {})[currentGame]||'';document.getElementById('exePath').value=p;document.getElementById('exeModal').style.display='flex'}
 function closeExeModal(){document.getElementById('exeModal').style.display='none'}
 function saveExePath(){const p=document.getElementById('exePath').value;const paths=safeGet('exePaths', {});p?paths[currentGame]=p:delete paths[currentGame];localStorage.setItem('exePaths',JSON.stringify(paths));closeExeModal();alert((translations[currentLang]||translations['en']).saved);showGame(currentGame, false)}
 
 function openLaunchModal(isLaunch = false){
-    const paths=safeGet('exePaths', {});
-    let path=paths[currentGame]||'';
+    // Determine path based on Auto Detect
+    let path = '';
+    const g = games.find(x => x.id === currentGame);
+    const u = safeGet('currentUser', null);
+    
+    if (autoDetectEnabled && u && u.prime && !g.ofc) {
+        path = `${gameDrive}:\\Fragment\\${g.internalPath || ''}`;
+    } else {
+        const paths=safeGet('exePaths', {});
+        path=paths[currentGame]||'';
+    }
+
     if(path&&!path.startsWith('"')&&!path.endsWith('"')){path=`"${path}"`}
     const t=translations[currentLang]||translations['en'];
-    const g = games.find(x => x.id === currentGame);
+    
     const pt = safeGet('playtime', {});
     
     // Header Stats
@@ -1925,7 +2294,28 @@ function renderLibrary(){
     })
 }
 
-function search(){const q=document.getElementById('searchInput').value.toLowerCase();const r=document.getElementById('searchResults');const t=translations[currentLang]||translations['en'];if(!q){r.style.display='none';return}const gr=games.filter(g=>g.title.toLowerCase().includes(q));const ar=accounts.filter(a=>a.nickname.toLowerCase().includes(q));const devMode=localStorage.getItem('devMode')==='true';if(!gr.length&&!ar.length){r.innerHTML=`<div style="padding:15px;text-align:center">${t.nothingFound}</div>`;r.style.display='block';return}r.innerHTML='';gr.forEach(g=>{const i=document.createElement('div');i.className='search-result-item';i.onclick=()=>{playSound('click'); navigateTo('game', g.id);document.getElementById('searchInput').value='';r.style.display='none'};i.innerHTML=`<img src="${g.avatar}" class="search-game-img"><div><div style="font-weight:bold">${g.title}</div><div style="font-size:14px;color:var(--text-secondary)">${g.shortDesc}</div></div><div class="search-result-type game">${t.game}</div>`;r.appendChild(i)});ar.forEach(a=>{const i=document.createElement('div');i.className='search-result-item';i.onclick=()=>{playSound('click'); openAccountView(a);document.getElementById('searchInput').value='';r.style.display='none'};const lvlData = calculateLevel(a.exp);const badgeHTML=a.badge?`<img src="${a.badge}" style="width:20px;height:20px;margin-left:5px">`:'';const primeClass = a.prime ? 'prime-user' : '';const uidStr = devMode ? ` | UID: ${a.uid}` : '';const frameHTML = a.frame ? `<img src="${a.frame}" class="search-avatar-frame">` : '';i.innerHTML=`<div class="search-avatar-wrapper"><img src="${a.avatar}" class="search-avatar-img">${frameHTML}</div><div><div style="font-weight:bold;display:flex;align-items:center" class="${primeClass}">${a.nickname}${badgeHTML}</div><div style="font-size:12px;color:var(--text-secondary)">Lvl ${lvlData.level} (${a.exp} XP)${uidStr}</div></div><div class="search-result-type account">${t.account}</div>`;r.appendChild(i)});r.style.display='block'}
+function search(){
+    const q=document.getElementById('searchInput').value.toLowerCase();
+    const r=document.getElementById('searchResults');
+    const t=translations[currentLang]||translations['en'];
+    
+    if(!q){r.style.display='none';return}
+    
+    // Apply filters first
+    const filteredGames = getFilteredGames();
+    
+    const gr=filteredGames.filter(g=>g.title.toLowerCase().includes(q));
+    const ar=accounts.filter(a=>a.nickname.toLowerCase().includes(q));
+    const devMode=localStorage.getItem('devMode')==='true';
+    
+    if(!gr.length&&!ar.length){r.innerHTML=`<div style="padding:15px;text-align:center">${t.nothingFound}</div>`;r.style.display='block';return}
+    
+    r.innerHTML='';
+    gr.forEach(g=>{const i=document.createElement('div');i.className='search-result-item';i.onclick=()=>{playSound('click'); navigateTo('game', g.id);document.getElementById('searchInput').value='';r.style.display='none'};i.innerHTML=`<img src="${g.avatar}" class="search-game-img"><div><div style="font-weight:bold">${g.title}</div><div style="font-size:14px;color:var(--text-secondary)">${g.shortDesc}</div></div><div class="search-result-type game">${t.game}</div>`;r.appendChild(i)});
+    ar.forEach(a=>{const i=document.createElement('div');i.className='search-result-item';i.onclick=()=>{playSound('click'); openAccountView(a);document.getElementById('searchInput').value='';r.style.display='none'};const lvlData = calculateLevel(a.exp);const badgeHTML=a.badge?`<img src="${a.badge}" style="width:20px;height:20px;margin-left:5px">`:'';const primeClass = a.prime ? 'prime-user' : '';const uidStr = devMode ? ` | UID: ${a.uid}` : '';const frameHTML = a.frame ? `<img src="${a.frame}" class="search-avatar-frame">` : '';i.innerHTML=`<div class="search-avatar-wrapper"><img src="${a.avatar}" class="search-avatar-img">${frameHTML}</div><div><div style="font-weight:bold;display:flex;align-items:center" class="${primeClass}">${a.nickname}${badgeHTML}</div><div style="font-size:12px;color:var(--text-secondary)">Lvl ${lvlData.level} (${a.exp} XP)${uidStr}</div></div><div class="search-result-type account">${t.account}</div>`;r.appendChild(i)});
+    r.style.display='block'
+}
+
 function openAccountView(a){
     currentViewAccount=a;
     const t=translations[currentLang]||translations['en'];
@@ -1999,7 +2389,7 @@ function handleViewBadgeClick(){if(currentViewAccount && currentViewAccount.badg
 function closeAccountViewModal(){document.getElementById('accountViewModal').style.display='none';currentViewAccount=null}
 function encryptData(data) {const key = "FragmentKey";let json = JSON.stringify(data);let xor = "";for (let i = 0; i < json.length; i++) {xor += String.fromCharCode(json.charCodeAt(i) ^ key.charCodeAt(i % key.length));}return btoa(xor);}
 function decryptData(data) {try {const key = "FragmentKey";let xor = atob(data);let json = "";for (let i = 0; i < xor.length; i++) {json += String.fromCharCode(xor.charCodeAt(i) ^ key.charCodeAt(i % key.length));}return JSON.parse(json);} catch (e) {return null;}}
-function exportBackup(){let userToExport = null;const rawUser = localStorage.getItem('currentUser');if(rawUser) {try{userToExport = JSON.parse(rawUser);delete userToExport.exp;delete userToExport.level;delete userToExport.prime;delete userToExport.uid;delete userToExport.frame;delete userToExport.notifications;delete userToExport.achievements;}catch(e){}}const b={version: CURRENT_VERSION,date:new Date().toISOString(),currentUser: JSON.stringify(userToExport),library:localStorage.getItem('library'),exePaths:localStorage.getItem('exePaths'),playtime:localStorage.getItem('playtime'),theme:localStorage.getItem('theme'),style:localStorage.getItem('style'),font:localStorage.getItem('font'),size:localStorage.getItem('size'),language:localStorage.getItem('language'),devMode:localStorage.getItem('devMode'),titleStyle:localStorage.getItem('titleStyle'),customTitleColor:localStorage.getItem('customTitleColor'),lastPlayed: localStorage.getItem('lastPlayed'),gameNotes: localStorage.getItem('gameNotes'),dailyPlaytime: localStorage.getItem('dailyPlaytime'),recentGames: localStorage.getItem('recentGames'),soundVolume: localStorage.getItem('soundVolume'),soundType: localStorage.getItem('soundType'),readNotifs: localStorage.getItem('readNotifs')};const encrypted = encryptData(b);const blob=new Blob([encrypted],{type:'text/plain'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`fragment_backup_${new Date().toISOString().split('T')[0]}.frag`;a.click();URL.revokeObjectURL(url);alert((translations[currentLang]||translations['en']).exported)}
+function exportBackup(){let userToExport = null;const rawUser = localStorage.getItem('currentUser');if(rawUser) {try{userToExport = JSON.parse(rawUser);delete userToExport.exp;delete userToExport.level;delete userToExport.prime;delete userToExport.uid;delete userToExport.frame;delete userToExport.notifications;delete userToExport.achievements;}catch(e){}}const b={version: CURRENT_VERSION,date:new Date().toISOString(),currentUser: JSON.stringify(userToExport),library:localStorage.getItem('library'),exePaths:localStorage.getItem('exePaths'),playtime:localStorage.getItem('playtime'),theme:localStorage.getItem('theme'),style:localStorage.getItem('style'),font:localStorage.getItem('font'),size:localStorage.getItem('size'),language:localStorage.getItem('language'),devMode:localStorage.getItem('devMode'),titleStyle:localStorage.getItem('titleStyle'),customTitleColor:localStorage.getItem('customTitleColor'),lastPlayed: localStorage.getItem('lastPlayed'),gameNotes: localStorage.getItem('gameNotes'),dailyPlaytime: localStorage.getItem('dailyPlaytime'),recentGames: localStorage.getItem('recentGames'),soundVolume: localStorage.getItem('soundVolume'),soundType: localStorage.getItem('soundType'),readNotifs: localStorage.getItem('readNotifs'),autoDetectEnabled: localStorage.getItem('autoDetectEnabled'),gameDrive: localStorage.getItem('gameDrive')};const encrypted = encryptData(b);const blob=new Blob([encrypted],{type:'text/plain'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`fragment_backup_${new Date().toISOString().split('T')[0]}.frag`;a.click();URL.revokeObjectURL(url);alert((translations[currentLang]||translations['en']).exported)}
 function importBackup(e){const f=e.target.files[0];if(f){const r=new FileReader();r.onload=e=>{const b = decryptData(e.target.result);if (b) {Object.keys(b).forEach(k=>{if(b[k]&&k!=='version'&&k!=='date')localStorage.setItem(k,b[k])});alert((translations[currentLang]||translations['en']).imported);location.reload();} else {alert((translations[currentLang]||translations['en']).invalidFile);}};r.readAsText(f);}}
 document.addEventListener('click',e=>{
     if(!document.querySelector('.search-container').contains(e.target)){document.getElementById('searchResults').style.display='none'}
@@ -2023,7 +2413,15 @@ function changeSize(){const s=document.getElementById('sizeSelect').value;localS
 function applySize(s){document.body.classList.remove('size-compact','size-large');if(s!=='normal')document.body.classList.add(`size-${s}`)}
 function changeTitleStyle(){const style=document.getElementById('titleStyleSelect').value;localStorage.setItem('titleStyle',style);if(style==='custom'){document.getElementById('customColorGroup').style.display='block';const color=document.getElementById('customColorPicker').value;localStorage.setItem('customTitleColor',color)}else{document.getElementById('customColorGroup').style.display='none'}renderGames();const lib=safeGet('library', []);const g=document.getElementById('libraryGrid');if(g.children.length>0){lib.forEach(id=>{const game=games.find(x=>x.id===id);if(!game)return;const cards=g.querySelectorAll('.game-card');cards.forEach(card=>{const titleEl=card.querySelector('.game-card-title');if(titleEl){titleEl.className='game-card-title ';titleEl.removeAttribute('style');if(style==='gradient')titleEl.classList.add('gradient');else if(style==='outlined')titleEl.classList.add('outlined');else if(style==='custom'){const customColor=localStorage.getItem('customTitleColor')||'#ffffff';titleEl.style.color=customColor}}})})}}
 function handleBackupClick(){devModeClicks++;if(devModeTimeout){clearTimeout(devModeTimeout)}devModeTimeout=setTimeout(()=>{devModeClicks=0},1000);if(devModeClicks===5){const currentDevMode=localStorage.getItem('devMode')==='true';const newDevMode=!currentDevMode;localStorage.setItem('devMode',newDevMode.toString());alert((translations[currentLang]||translations['en'])[newDevMode?'devModeOn':'devModeOff']);devModeClicks=0; updateUI();}}
-function openRandomGame(){if(games.length>0){const randomIndex=Math.floor(Math.random()*games.length);navigateTo('game', games[randomIndex].id)}}
+function openRandomGame(){
+    const filtered = getFilteredGames();
+    if(filtered.length>0){
+        const randomIndex=Math.floor(Math.random()*filtered.length);
+        navigateTo('game', filtered[randomIndex].id)
+    } else {
+        alert(translations[currentLang].nothingFound);
+    }
+}
 function openAccountModal(){document.getElementById('accountModal').style.display='flex'}
 function closeAccountModal(){document.getElementById('accountModal').style.display='none'}
 function login(){const l=document.getElementById('loginInput').value;const p=document.getElementById('passwordInput').value;const u=accounts.find(a=>a.login===l&&a.password===p);const t=translations[currentLang]||translations['en'];if(u){const d={...u};delete d.password;localStorage.setItem('currentUser',JSON.stringify(d));closeAccountModal();checkAuth();alert(t.loggedIn)}else alert(t.invalid)}
@@ -2039,8 +2437,10 @@ function openSupportLink(){window.open('https://t.me/ouForgeSupport', '_blank');
 function changeLanguage(){currentLang=document.getElementById('languageSelect').value;localStorage.setItem('language',currentLang);updateUI();updateSettingsLabels();checkAuth();renderFAQ();}
 function changeVolume(){const val = document.getElementById('volumeSlider').value;localStorage.setItem('soundVolume', val);masterVolume = val / 100;updateSettingsLabels();}
 function changeSoundType() {currentSoundType = document.getElementById('soundSelect').value;localStorage.setItem('soundType', currentSoundType);playSound('click');}
-function updateSettingsLabels(){const t=translations[currentLang]||translations['en'];document.querySelectorAll('.settings-group label').forEach((label, i) => {if(i===1)label.textContent=t.theme;if(i===2)label.textContent=t.interfaceStyle;if(i===3)label.textContent=t.fontFamily;if(i===4)label.textContent=t.interfaceSize;if(i===5)label.textContent=t.soundVolume + ': ' + (masterVolume*100).toFixed(0) + '%';if(i===7)label.textContent=t.titleStyle;if(i===8)label.textContent=t.customTitleColor;});}
-function updateUI(){const t=translations[currentLang]||translations['en'];document.querySelectorAll('.sidebar-item')[0].textContent=t.main;document.querySelectorAll('.sidebar-item')[1].textContent=t.library;document.querySelectorAll('.sidebar-item')[2].textContent=t.profile;document.querySelectorAll('.sidebar-item')[3].textContent=t.faq;document.querySelectorAll('.sidebar-item')[4].textContent=t.settings;document.querySelectorAll('.sidebar-item')[5].textContent=t.chat;document.getElementById('searchInput').placeholder=t.search;document.querySelector('.random-game-btn').innerHTML=`🎲 ${t.randomGame}`;updateSettingsLabels();const logoutBtn=document.querySelector('#logoutGroup .btn');if(logoutBtn)logoutBtn.textContent=t.logout;document.querySelector('.backup-title').textContent=`💾 ${t.backup}`;document.querySelector('.backup-section p').textContent=t.backupDesc;const backupBtns=document.querySelectorAll('.backup-btn');if(backupBtns[0])backupBtns[0].innerHTML=`📥 ${t.export}`;if(backupBtns[1])backupBtns[1].innerHTML=`📤 ${t.import}`;document.getElementById('exeModalTitle').textContent=t.launchSetup;document.getElementById('method1Title').textContent=`🖥️ ${t.desktopShortcut}`;document.getElementById('method2Title').textContent=`📂 ${t.manualPath}`;document.getElementById('exePathLabel').textContent=t.gamePath;document.getElementById('exeCancelBtn').textContent=t.cancel;document.getElementById('exeSaveBtn').textContent=t.save;document.getElementById('desktopStep1').textContent=t.desktopStep1;document.getElementById('desktopStep2').textContent=t.desktopStep2;document.getElementById('desktopStep3').textContent=t.desktopStep3;document.getElementById('desktopStep4').textContent=t.desktopStep4;document.getElementById('manualStep1').textContent=t.manualStep1;document.getElementById('manualStep2').textContent=t.manualStep2;document.getElementById('manualStep3').textContent=t.manualStep3;document.getElementById('manualStep4').textContent=t.manualStep4;document.getElementById('manualStep5').textContent=t.manualStep5;document.getElementById('chartTitle').textContent=t.chartTitle;document.getElementById('recentTitle').textContent=t.recentTitle;document.getElementById('profTitle').textContent=t.profile;document.getElementById('libTitle').textContent=t.library;document.getElementById('settTitle').textContent=t.settings;document.getElementById('notesTitle').textContent=t.notesTitle;document.getElementById('gameNotesInput').placeholder=t.notesPlaceholder;document.getElementById('saveNoteBtn').textContent=t.saveNote;document.getElementById('descTitle').textContent=t.description;document.getElementById('screenTitle').textContent=t.screenshots;document.getElementById('reqTitle').textContent=t.systemReq;
+function updateSettingsLabels(){const t=translations[currentLang]||translations['en'];document.querySelectorAll('.settings-group label').forEach((label, i) => {if(i===2)label.textContent=t.theme;if(i===3)label.textContent=t.interfaceStyle;if(i===4)label.textContent=t.fontFamily;if(i===5)label.textContent=t.interfaceSize;if(i===6)label.textContent=t.soundVolume + ': ' + (masterVolume*100).toFixed(0) + '%';if(i===8)label.textContent=t.titleStyle;if(i===9)label.textContent=t.customTitleColor;});}
+function updateUI(){
+    const t=translations[currentLang]||translations['en'];
+    document.querySelectorAll('.sidebar-item')[0].textContent=t.main;document.querySelectorAll('.sidebar-item')[1].textContent=t.library;document.querySelectorAll('.sidebar-item')[2].textContent=t.profile;document.querySelectorAll('.sidebar-item')[3].textContent=t.faq;document.querySelectorAll('.sidebar-item')[4].textContent=t.settings;document.querySelectorAll('.sidebar-item')[5].textContent=t.chat;document.getElementById('searchInput').placeholder=t.search;document.querySelector('.random-game-btn').innerHTML=`🎲 ${t.randomGame}`;updateSettingsLabels();const logoutBtn=document.querySelector('#logoutGroup .btn');if(logoutBtn)logoutBtn.textContent=t.logout;document.querySelector('.backup-title').textContent=`💾 ${t.backup}`;document.querySelector('.backup-section p').textContent=t.backupDesc;const backupBtns=document.querySelectorAll('.backup-btn');if(backupBtns[0])backupBtns[0].innerHTML=`📥 ${t.export}`;if(backupBtns[1])backupBtns[1].innerHTML=`📤 ${t.import}`;document.getElementById('exeModalTitle').textContent=t.launchSetup;document.getElementById('method1Title').textContent=`🖥️ ${t.desktopShortcut}`;document.getElementById('method2Title').textContent=`📂 ${t.manualPath}`;document.getElementById('exePathLabel').textContent=t.gamePath;document.getElementById('exeCancelBtn').textContent=t.cancel;document.getElementById('exeSaveBtn').textContent=t.save;document.getElementById('desktopStep1').textContent=t.desktopStep1;document.getElementById('desktopStep2').textContent=t.desktopStep2;document.getElementById('desktopStep3').textContent=t.desktopStep3;document.getElementById('desktopStep4').textContent=t.desktopStep4;document.getElementById('manualStep1').textContent=t.manualStep1;document.getElementById('manualStep2').textContent=t.manualStep2;document.getElementById('manualStep3').textContent=t.manualStep3;document.getElementById('manualStep4').textContent=t.manualStep4;document.getElementById('manualStep5').textContent=t.manualStep5;document.getElementById('chartTitle').textContent=t.chartTitle;document.getElementById('recentTitle').textContent=t.recentTitle;document.getElementById('profTitle').textContent=t.profile;document.getElementById('libTitle').textContent=t.library;document.getElementById('settTitle').textContent=t.settings;document.getElementById('notesTitle').textContent=t.notesTitle;document.getElementById('gameNotesInput').placeholder=t.notesPlaceholder;document.getElementById('saveNoteBtn').textContent=t.saveNote;document.getElementById('descTitle').textContent=t.description;document.getElementById('screenTitle').textContent=t.screenshots;document.getElementById('reqTitle').textContent=t.systemReq;
     
     // SAFE REVIEW HEADER UPDATE
     const revLabel = document.getElementById('reviewsLabel');
@@ -2082,6 +2482,16 @@ function updateUI(){const t=translations[currentLang]||translations['en'];docume
     document.getElementById('persistentCopyBtn').textContent = t.copyCommand;
     document.getElementById('launchCloseBtn').textContent = t.close;
     document.getElementById('keepOpenWarning').textContent = t.keepOpen;
+
+    // v0.1.7 Fragment Plus Translations
+    document.getElementById('fpTitle').innerHTML = `<i class="fas fa-crown"></i> ${t.fragmentPlus}`;
+    document.getElementById('fpAutoLabel').textContent = t.autoDetect;
+    document.getElementById('fpHint').innerHTML = t.autoDetectHint;
+    document.getElementById('fpLocLabel').textContent = t.libLocation;
+    document.getElementById('driveC').textContent = t.driveC;
+    document.getElementById('driveD').textContent = t.driveD;
+    // Force path display update to catch language change
+    updateDriveButtons();
 }
 function showDevStats() {
     const t = translations[currentLang] || translations['en'];
