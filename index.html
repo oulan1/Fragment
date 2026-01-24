@@ -84,6 +84,24 @@ body {
 .mobile-warning{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg-primary);z-index:10000;justify-content:center;align-items:center;text-align:center;padding:20px}
 .mobile-warning h1{color:#f44;margin-bottom:20px}
 
+/* Loading Screen */
+#loadingScreen {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--bg-primary); z-index: 99999;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    transition: opacity 0.5s ease;
+}
+.loader {
+    width: 50px; height: 50px;
+    border: 5px solid rgba(255,255,255,0.1);
+    border-radius: 50%;
+    border-top-color: var(--accent);
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 20px;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.loading-text { font-weight: bold; font-size: 18px; letter-spacing: 2px; color: var(--accent); }
+
 /* Header & Sidebar */
 .header{background:rgba(28,28,32,.75);backdrop-filter:blur(25px);padding:15px 30px;display:flex;align-items:center;gap:20px;box-shadow:0 4px 20px rgba(0,0,0,.5);position:sticky;top:0;z-index:100}
 .menu-btn{background:linear-gradient(135deg,var(--accent) 0,#5a52d5 100%);border:none;color:#fff;padding:12px 18px;cursor:pointer;border-radius:14px;font-size:18px;transition:all .4s ease}
@@ -680,10 +698,32 @@ body.style-liquid .launch-content.collapsed .launch-compact-btn:hover {
 }
 .buy-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 215, 0, 0.6); }
 .location-footer { margin-top: 40px; text-align: center; font-size: 14px; color: var(--text-secondary); padding-top: 20px; border-top: 1px solid var(--glass-border); }
+
+/* Loading Screen */
+#loadingScreen {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--bg-primary); z-index: 99999;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    transition: opacity 0.5s ease;
+}
+.loader {
+    width: 50px; height: 50px;
+    border: 5px solid rgba(255,255,255,0.1);
+    border-radius: 50%;
+    border-top-color: var(--accent);
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 20px;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.loading-text { font-weight: bold; font-size: 18px; letter-spacing: 2px; color: var(--accent); }
 </style>
 <link rel="stylesheet" href="/index.css">
 </head>
 <body class="font-default">
+<div id="loadingScreen">
+    <div class="loader"></div>
+    <div class="loading-text">FRAGMENT</div>
+</div>
 <div class="mobile-warning"><div><h1>Access Denied</h1><p>Fragment Launcher is optimized for PC only. Please open on a computer.</p></div></div>
 <div class="update-banner" id="updateBanner">
     <h1>Update Available! / Вышло обновление!</h1>
@@ -1269,15 +1309,14 @@ body.style-liquid .launch-content.collapsed .launch-compact-btn:hover {
 <div class="modal" id="updateModal">
     <div class="modal-content" style="max-width:600px">
         <button class="modal-close" onclick="closeUpdateModal()">×</button>
-        <div class="modal-title">Update v0.1.9</div>
+        <div class="modal-title">Update v0.1.9 Fixed</div>
         <div style="margin-bottom:20px">
             <h3 style="color:var(--accent);margin-bottom:10px">Changes / Изменения</h3>
             <ul style="line-height:1.6;padding-left:20px">
-                <li>🌍 <b>Geolocation:</b> Your country is now detected and displayed in settings.</li>
-                <li>⚙️ <b>Settings Redesign:</b> New look for settings buttons and split sections.</li>
-                <li>🔒 <b>Launch Protection:</b> Prevents accidental closing of game sessions.</li>
-                <li>👑 <b>Fragment Plus:</b> Dedicated settings section.</li>
-                <li>🛠️ <b>UI Polish:</b> Sidebar icons, new animations.</li>
+                <li>🚀 <b>Auto-Update:</b> App now forces reload when a new version is detected.</li>
+                <li>⚙️ <b>Settings Tabs:</b> Separated General and Plus settings.</li>
+                <li>🛡️ <b>Launch Protection:</b> Toggleable option in settings.</li>
+                <li>🌍 <b>Geolocation:</b> Your country is detected and displayed.</li>
             </ul>
         </div>
         <button class="btn" onclick="closeUpdateModal()" style="width:100%">Got it!</button>
@@ -1288,7 +1327,7 @@ body.style-liquid .launch-content.collapsed .launch-compact-btn:hover {
 </div>
 <script>
 // --- CORE DATA ---
-const CURRENT_VERSION = '0.1.9';
+const CURRENT_VERSION = '0.1.9 Fixed';
 // EDIT THIS NUMBER MANUALLY
 const TOTAL_SITE_VISITS = 250; 
 
@@ -1299,10 +1338,10 @@ const GENRE_KEYS = ["Action", "RPG", "Simulation", "Horror", "Shooter", "Sandbox
 // GLOBAL NOTIFICATIONS INJECTION
 const GLOBAL_NEWS = [
     {
-        id: 'global_019',
-        date: '2026-03-15',
-        title: 'Fragment 0.1.9',
-        content: 'Geolocation, Settings Redesign, Launch Protection and more!'
+        id: 'global_019_fix',
+        date: '2026-03-20',
+        title: 'Fragment 0.1.9 Fixed',
+        content: 'Auto-Update fixed, Settings Tabs added, Launch Protection toggle.'
     }
 ];
 
@@ -1323,7 +1362,8 @@ const accounts = [
         friends: ["M", "Frikokid"],
         notifications: [],
         achievements: [
-            {img: "https://i-mg24.ru/images/122025220553-so5hj.png", title: "Founder", rarity: "secret"}
+            {img: "https://img.icons8.com/emoji/48/star-emoji.png", title: "Founder", rarity: "legendary"},
+            {img: "https://img.icons8.com/emoji/48/rocket-emoji.png", title: "Early Adopter", rarity: "epic"}
         ]
     },
     {
@@ -1649,6 +1689,37 @@ function playSound(type) {
 }
 
 // --- APP LOGIC ---
+async function initApp() {
+    const loader = document.getElementById('loadingScreen');
+    loader.style.display = 'flex';
+    
+    try {
+        // Force fetch to check for updates, appending timestamp to bypass cache
+        const r = await fetch(window.location.href + '?t=' + Date.now(), {cache: "no-store"});
+        const text = await r.text();
+        // Regex to find CURRENT_VERSION in the fetched file
+        const match = text.match(/const CURRENT_VERSION = '([^']+)';/);
+        
+        if (match && match[1] !== CURRENT_VERSION) {
+            console.log('New version detected:', match[1]);
+            // Force reload from server, ignoring cache
+            window.location.reload(true);
+            return; 
+        }
+    } catch (e) {
+        console.warn('Update check failed (Offline?):', e);
+    }
+
+    // No update or check failed, proceed
+    loadData();
+    
+    // Hide loader
+    setTimeout(() => {
+        loader.style.opacity = '0';
+        setTimeout(() => loader.style.display = 'none', 500);
+    }, 500);
+}
+
 function loadData(){
     try {
         const lastSeenVersion = localStorage.getItem('lastSeenVersion');
@@ -1656,11 +1727,6 @@ function loadData(){
             document.getElementById('updateModal').style.display = 'flex';
         }
         
-        // Safety check for critical DOM elements
-        if (document.querySelector('.pass-header') === null) {
-             document.getElementById('updateBanner').style.display = 'flex';
-        }
-
         if(!localStorage.getItem('library')) localStorage.setItem('library',JSON.stringify([]));
         if(!localStorage.getItem('exePaths')) localStorage.setItem('exePaths',JSON.stringify({}));
         if(!localStorage.getItem('playtime')) localStorage.setItem('playtime',JSON.stringify({}));
@@ -1669,7 +1735,6 @@ function loadData(){
         if(!localStorage.getItem('dailyPlaytime')) localStorage.setItem('dailyPlaytime',JSON.stringify({}));
         if(!localStorage.getItem('recentGames')) localStorage.setItem('recentGames',JSON.stringify([]));
         if(!localStorage.getItem('readNotifs')) localStorage.setItem('readNotifs',JSON.stringify({}));
-        // Removed: if(!localStorage.getItem('nameColor')) localStorage.setItem('nameColor', 'gold');
 
         autoDetectEnabled = localStorage.getItem('autoDetectEnabled') === 'true';
         gameDrive = localStorage.getItem('gameDrive') || 'C';
@@ -1702,14 +1767,12 @@ function loadData(){
         document.getElementById('launchProtectionToggle').checked = launchProtectionEnabled;
         updateDriveButtons();
         
-        // Removed selectNameColor init
-        
         if(localStorage.getItem('titleStyle')==='custom') document.getElementById('customColorGroup').style.display='block';
         
         checkAuth();
         renderGames();
         updateUI();
-        fetchLocation(); // New Geolocation Function
+        fetchLocation();
         
         if (!history.state) {
             safeHistoryReplace({page: 'main'}, '', '#main');
@@ -1720,7 +1783,6 @@ function loadData(){
         }
     } catch(e) {
         console.error("Critical Load Error:", e);
-        // Do not alert on history errors, allow app to continue
         if (!e.toString().includes('replaceState')) {
              alert("Launcher Error: " + e.message + ". Try clearing data.");
         }
@@ -1749,7 +1811,7 @@ async function fetchLocation() {
     }
 }
 
-// Auto-Update Polling
+// Keep simple periodic check just in case, though initApp handles the main load
 async function checkForUpdates() {
     try {
         const r = await fetch(location.href, {cache: "no-store"});
@@ -1806,11 +1868,10 @@ function checkAuth(){
         document.getElementById('logoutGroup').style.display='block';
         document.getElementById('profileAvatar').src=u.avatar;
         
-        // Apply Name Gradient (Code Based)
         const nameEl = document.getElementById('profileName');
         nameEl.textContent = u.nickname;
         if (u.prime) {
-            const color = u.nameColor || 'gold'; // Default to gold if undefined
+            const color = u.nameColor || 'gold'; 
             nameEl.className = `profile-name prime-user name-${color}`;
         } else {
             nameEl.className = 'profile-name';
@@ -1818,7 +1879,6 @@ function checkAuth(){
 
         document.getElementById('notifBtn').style.display = 'flex';
         
-        // Logic for Fragment Plus Section Blur
         const plusContent = document.getElementById('plusSettingsContent');
         const plusOverlay = document.getElementById('buyPlusOverlay');
         
@@ -3155,7 +3215,7 @@ window.addEventListener('visibilitychange', () => {if(document.visibilityState =
 window.addEventListener('beforeinstallprompt', (e) => {e.preventDefault();deferredPrompt = e;document.getElementById('pwaBanner').style.display = 'flex';});
 window.addEventListener('appinstalled', () => {document.getElementById('pwaBanner').style.display = 'none';deferredPrompt = null;});
 async function installPWA() {if (deferredPrompt) {deferredPrompt.prompt();const { outcome } = await deferredPrompt.userChoice;if (outcome === 'accepted') {}deferredPrompt = null;document.getElementById('pwaBanner').style.display = 'none';}}
-loadData();
+initApp();
 </script>
 </body>
 </html>
