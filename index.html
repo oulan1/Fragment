@@ -84,29 +84,14 @@ body {
 .mobile-warning{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg-primary);z-index:10000;justify-content:center;align-items:center;text-align:center;padding:20px}
 .mobile-warning h1{color:#f44;margin-bottom:20px}
 
-/* Loading Screen */
-#loadingScreen {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: var(--bg-primary); z-index: 99999;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    transition: opacity 0.5s ease;
-}
-.loader {
-    width: 50px; height: 50px;
-    border: 5px solid rgba(255,255,255,0.1);
-    border-radius: 50%;
-    border-top-color: var(--accent);
-    animation: spin 1s ease-in-out infinite;
-    margin-bottom: 20px;
-}
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-.loading-text { font-weight: bold; font-size: 18px; letter-spacing: 2px; color: var(--accent); }
-
 /* Header & Sidebar */
 .header{background:rgba(28,28,32,.75);backdrop-filter:blur(25px);padding:15px 30px;display:flex;align-items:center;gap:20px;box-shadow:0 4px 20px rgba(0,0,0,.5);position:sticky;top:0;z-index:100}
 .menu-btn{background:linear-gradient(135deg,var(--accent) 0,#5a52d5 100%);border:none;color:#fff;padding:12px 18px;cursor:pointer;border-radius:14px;font-size:18px;transition:all .4s ease}
 .menu-btn:hover{transform:translateY(-3px)}
 .logo{font-size:28px;font-weight:700;background:linear-gradient(135deg,var(--accent) 0,#a855f7 50%,#ec4899 100%);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;cursor:pointer;animation:gradientFlow 3s ease infinite}
+.reload-btn { background: transparent; border: 1px solid var(--glass-border); color: var(--text-secondary); width: 35px; height: 35px; border-radius: 10px; cursor: pointer; margin-left: 5px; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.reload-btn:hover { background: rgba(108,99,255,0.2); color: var(--accent); border-color: var(--accent); transform: rotate(180deg); }
+
 .search-container{margin-left:auto;position:relative;display: flex; align-items: center; gap: 10px;}
 .search-input{background:rgba(45,45,50,.6);border:1px solid var(--glass-border);padding:12px 20px;border-radius:25px;color:var(--text-primary);width:350px;transition:all .4s ease}
 .search-input:focus{outline:0;border-color:var(--accent);width:400px}
@@ -699,37 +684,17 @@ body.style-liquid .launch-content.collapsed .launch-compact-btn:hover {
 .buy-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 215, 0, 0.6); }
 .location-footer { margin-top: 40px; text-align: center; font-size: 14px; color: var(--text-secondary); padding-top: 20px; border-top: 1px solid var(--glass-border); }
 
-/* Loading Screen */
-#loadingScreen {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: var(--bg-primary); z-index: 99999;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    transition: opacity 0.5s ease;
-}
-.loader {
-    width: 50px; height: 50px;
-    border: 5px solid rgba(255,255,255,0.1);
-    border-radius: 50%;
-    border-top-color: var(--accent);
-    animation: spin 1s ease-in-out infinite;
-    margin-bottom: 20px;
-}
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-.loading-text { font-weight: bold; font-size: 18px; letter-spacing: 2px; color: var(--accent); }
+/* Reload Button Styles */
+.reload-btn { background: transparent; border: 1px solid var(--glass-border); color: var(--text-secondary); width: 35px; height: 35px; border-radius: 10px; cursor: pointer; margin-left: 5px; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.reload-btn:hover { background: rgba(108,99,255,0.2); color: var(--accent); border-color: var(--accent); transform: rotate(180deg); }
 </style>
 <link rel="stylesheet" href="/index.css">
 </head>
 <body class="font-default">
-<div id="loadingScreen">
-    <div class="loader"></div>
-    <div class="loading-text">FRAGMENT</div>
-</div>
 <div class="mobile-warning"><div><h1>Access Denied</h1><p>Fragment Launcher is optimized for PC only. Please open on a computer.</p></div></div>
-<div class="update-banner" id="updateBanner">
-    <h1>Update Available! / Вышло обновление!</h1>
-    <p>New version found. Please refresh.</p>
-    <button class="update-refresh-btn" onclick="location.reload()">Refresh / Обновить</button>
-</div>
+<!-- Banner removed for cleaner look per request -->
+<div class="update-banner" id="updateBanner" style="display:none"></div>
+
 <div id="pwaBanner" class="pwa-banner">
     <span id="pwaText">Install App for better experience</span>
     <button class="pwa-btn" id="pwaBtn" onclick="installPWA()">Install</button>
@@ -737,6 +702,7 @@ body.style-liquid .launch-content.collapsed .launch-compact-btn:hover {
 <div class="header">
 <button class="menu-btn" onclick="playSound('click'); toggleSidebar()">☰</button>
 <div class="logo" onclick="playSound('click'); navigateTo('main')">Fragment</div>
+<button class="reload-btn" onclick="location.reload()" title="Reload"><i class="fas fa-sync-alt"></i></button>
 <div class="search-container">
 <button class="filter-btn" onclick="playSound('click'); openFilterModal()"><i class="fas fa-filter"></i><div class="filter-active-dot" id="filterActiveDot"></div></button>
 <input type="text" class="search-input" id="searchInput" placeholder="Search games & accounts..." oninput="search()">
@@ -1306,17 +1272,17 @@ body.style-liquid .launch-content.collapsed .launch-compact-btn:hover {
     <p class="launch-warning" id="keepOpenWarning">Do not close this tab to track playtime!</p>
 </div>
 </div>
-<div class="modal" id="updateModal">
+<!-- Update Modal Logic Kept but hidden by default -->
+<div class="modal" id="updateModal" style="display:none">
     <div class="modal-content" style="max-width:600px">
         <button class="modal-close" onclick="closeUpdateModal()">×</button>
-        <div class="modal-title">Update v0.1.9 Fixed</div>
+        <div class="modal-title">Update v0.1.95</div>
         <div style="margin-bottom:20px">
             <h3 style="color:var(--accent);margin-bottom:10px">Changes / Изменения</h3>
             <ul style="line-height:1.6;padding-left:20px">
-                <li>🚀 <b>Auto-Update:</b> App now forces reload when a new version is detected.</li>
-                <li>⚙️ <b>Settings Tabs:</b> Separated General and Plus settings.</li>
-                <li>🛡️ <b>Launch Protection:</b> Toggleable option in settings.</li>
-                <li>🌍 <b>Geolocation:</b> Your country is detected and displayed.</li>
+                <li>⚡ <b>Instant Launch:</b> Loading screen removed completely.</li>
+                <li>🔄 <b>Background Updates:</b> Seamless update detection.</li>
+                <li>🐛 <b>Bug Fixes:</b> Fixed filter corruption and stability issues.</li>
             </ul>
         </div>
         <button class="btn" onclick="closeUpdateModal()" style="width:100%">Got it!</button>
@@ -1327,7 +1293,7 @@ body.style-liquid .launch-content.collapsed .launch-compact-btn:hover {
 </div>
 <script>
 // --- CORE DATA ---
-const CURRENT_VERSION = '0.1.9 Fixed';
+const CURRENT_VERSION = '0.1.95';
 // EDIT THIS NUMBER MANUALLY
 const TOTAL_SITE_VISITS = 250; 
 
@@ -1349,7 +1315,7 @@ const accounts = [
     {
         uid: 1001,
         nickname: "oulan",
-        password: "111 117 108 97 110 50 48 48 56"
+        password: "111 117 108 97 110 50 48 48 56", // oulan2008
         avatar: "https://i-mg24.ru/images/122025214036-rix6n.gif",
         frame: "https://upload-os-bbs.hoyolab.com/upload/2023/08/17/250252732/5d90f7c6c6eb09aba0bcd51f46f378e0_2588282090405532990.gif",
         badge: "https://i-mg24.ru/images/122025220553-so5hj.png",
@@ -1362,13 +1328,14 @@ const accounts = [
         friends: ["M", "Frikokid"],
         notifications: [],
         achievements: [
-            {img: "https://i-mg24.ru/images/122025220553-so5hj.png", title: "Founder", rarity: "secret"}
+            {img: "https://img.icons8.com/emoji/48/star-emoji.png", title: "Founder", rarity: "legendary"},
+            {img: "https://img.icons8.com/emoji/48/rocket-emoji.png", title: "Early Adopter", rarity: "epic"}
         ]
     },
     {
         uid: 1002,
         nickname: "M", 
-        password: "116 101 115 116 49 50 51"
+        password: "116 101 115 116 49 50 51", // test123
         avatar: "https://i-mg24.ru/images/122125103126-s3pjz.jpg",
         badge: "https://img.icons8.com/emoji/48/fire.png",
         badgeText: "Early Tester",
@@ -1385,7 +1352,7 @@ const accounts = [
     {
         uid: 1003,
         nickname: "CasualPlayer",
-        password: "117 115 101 114 50 112 97 115 115"
+        password: "117 115 101 114 50 112 97 115 115", // user2pass
         avatar: "https://i.pravatar.cc/150?img=3",
         badge: "",
         badgeText: "",
@@ -1400,7 +1367,7 @@ const accounts = [
     {
         uid: 1004,
         nickname: "Frikokid",
-        password: "49 51 49 50 48 56 103 111 100"
+        password: "49 51 49 50 48 56 103 111 100", // 131208god
         avatar: "https://i-mg24.ru/images/010626133057-8c4lp.jpg",
         badge: "",
         badgeText: "",
@@ -1443,7 +1410,7 @@ const games = [
         ],
         ofc: 0,
         // Converted from [0, 0, 1, 0, 0, 1, 0, 0]
-        genreFlags: { "Simulation": 1, "Sandbox": 1 }, 
+        genreFlags: { "Simulation": 1, "Sandbox": 1, "Co-op": 1 }, 
         internalPath: "People Playground [Build 12526410]\\People Playground\\People Playground.exe"
     },
     {
@@ -1468,18 +1435,18 @@ const games = [
         hasMods: 0,
         ofc: 0,
         // Converted from [0, 0, 1, 0, 0, 0, 1, 0]
-        genreFlags: { "Simulation": 1, "Strategy": 1, "Co-op": 1 },
+        genreFlags: { "Simulation": 1, "Strategy": 1 },
         internalPath: "Schedule I\\Schedule I.exe"
     },
     {
         id: 3,
-        title: "",
-        shortDesc: "",
-        description: "",
-        banner: "",
-        avatar: "",
+        title: "Elden Ring",
+        shortDesc: "Dark fantasy",
+        description: "Explore the Lands Between",
+        banner: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=1200",
+        avatar: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=300",
         gallery: [
-            ""
+            "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400"
         ],
         downloadUrl: "https://example.com",
         minReq: "OS: Win10<br>CPU: i5<br>RAM: 12GB<br>GPU: GTX 1060 3GB",
@@ -1689,41 +1656,50 @@ function playSound(type) {
 
 // --- APP LOGIC ---
 async function initApp() {
-    const loader = document.getElementById('loadingScreen');
-    loader.style.display = 'flex';
-    
     try {
-        // Force fetch to check for updates, appending timestamp to bypass cache
-        const r = await fetch(window.location.href + '?t=' + Date.now(), {cache: "no-store"});
-        const text = await r.text();
-        // Regex to find CURRENT_VERSION in the fetched file
+        loadData();
+        checkGitHubUpdate(); 
+    } catch(e) {
+        console.error("Critical Load Error:", e);
+        if (localStorage.getItem('filterSettings')) {
+            localStorage.removeItem('filterSettings');
+            alert("Settings were corrupted and reset. Games should appear now.");
+            location.reload();
+        } else {
+            alert("Launcher Error: " + e.message);
+        }
+    }
+}
+
+async function checkGitHubUpdate() {
+    try {
+        // Cache-busting with timestamp to get the raw content
+        const res = await fetch('https://raw.githubusercontent.com/oulan1/Fragment/main/index.html?t=' + Date.now());
+        if (!res.ok) return;
+        const text = await res.text();
+        // Regex to find version
         const match = text.match(/const CURRENT_VERSION = '([^']+)';/);
-        
         if (match && match[1] !== CURRENT_VERSION) {
-            console.log('New version detected:', match[1]);
-            // Force reload from server, ignoring cache
-            window.location.reload(true);
-            return; 
+            const banner = document.getElementById('updateBanner');
+            if(banner) {
+                banner.style.display = 'flex';
+                banner.innerHTML = `
+                    <h1>${translations[currentLang].updateAvailable}</h1>
+                    <p>${translations[currentLang].newVersion} ${match[1]}</p>
+                    <button class="update-refresh-btn" onclick="location.reload(true)">${translations[currentLang].refresh}</button>
+                `;
+            }
         }
     } catch (e) {
-        console.warn('Update check failed (Offline?):', e);
+        console.warn("Update check failed (likely offline or CORS):", e);
     }
-
-    // No update or check failed, proceed
-    loadData();
-    
-    // Hide loader
-    setTimeout(() => {
-        loader.style.opacity = '0';
-        setTimeout(() => loader.style.display = 'none', 500);
-    }, 500);
 }
 
 function loadData(){
     try {
         const lastSeenVersion = localStorage.getItem('lastSeenVersion');
         if (lastSeenVersion !== CURRENT_VERSION) {
-            document.getElementById('updateModal').style.display = 'flex';
+             document.getElementById('updateModal').style.display = 'flex';
         }
         
         if(!localStorage.getItem('library')) localStorage.setItem('library',JSON.stringify([]));
@@ -1740,7 +1716,18 @@ function loadData(){
         launchProtectionEnabled = localStorage.getItem('launchProtection') !== 'false';
         
         const savedFilters = localStorage.getItem('filterSettings');
-        if(savedFilters) filterSettings = JSON.parse(savedFilters);
+        if(savedFilters) {
+            try {
+                filterSettings = JSON.parse(savedFilters);
+                // Sanity check filter structure
+                if (!Array.isArray(filterSettings.genres)) filterSettings.genres = [];
+            } catch (e) {
+                console.warn("Corrupt filters, resetting");
+                filterSettings = { rating: 0, genres: [] };
+            }
+        } else {
+            filterSettings = { rating: 0, genres: [] };
+        }
 
         currentLang = localStorage.getItem('language')||'en';
         masterVolume = parseInt(localStorage.getItem('soundVolume') || '100') / 100;
@@ -1769,7 +1756,7 @@ function loadData(){
         if(localStorage.getItem('titleStyle')==='custom') document.getElementById('customColorGroup').style.display='block';
         
         checkAuth();
-        renderGames();
+        renderGames(); // Important: called after filter check
         updateUI();
         fetchLocation();
         
@@ -1781,17 +1768,14 @@ function loadData(){
             else showPage(s.page, false);
         }
     } catch(e) {
-        console.error("Critical Load Error:", e);
-        if (!e.toString().includes('replaceState')) {
-             alert("Launcher Error: " + e.message + ". Try clearing data.");
-        }
+        console.error("Data Load Error:", e);
+        throw e; // Re-throw to be caught by initApp
     }
 }
 
 async function fetchLocation() {
     try {
         const response = await fetch('http://ip-api.com/json/');
-        // Fallback for HTTPS pages blocking HTTP content
         if (!response.ok) throw new Error('API error');
         
         const data = await response.json();
@@ -1806,22 +1790,8 @@ async function fetchLocation() {
     } catch (e) {
         const t = translations[currentLang] || translations['en'];
         document.getElementById('locationFooter').textContent = t.locationError;
-        console.warn('Location fetch failed (Mixed content?):', e);
     }
 }
-
-// Keep simple periodic check just in case, though initApp handles the main load
-async function checkForUpdates() {
-    try {
-        const r = await fetch(location.href, {cache: "no-store"});
-        const text = await r.text();
-        const match = text.match(/const CURRENT_VERSION = '([^']+)';/);
-        if(match && match[1] !== CURRENT_VERSION) {
-           document.getElementById('updateBanner').style.display = 'flex';
-        }
-    } catch(e) {}
-}
-setInterval(checkForUpdates, 30000);
 
 function checkPassword(input, encrypted) {
     const arr = encrypted.split(' ').map(Number);
@@ -1927,9 +1897,11 @@ function checkAuth(){
 
         const friendsList = document.getElementById('friendsList');
         friendsList.innerHTML = '';
+        
+        // --- FIX: Renamed friendNick to fNick to match inner loop variable usage ---
         if (u.friends && u.friends.length > 0) {
-            u.friends.forEach(friendNick => {
-                const f = accounts.find(acc => acc.nickname === friendNick);
+            u.friends.forEach(fNick => {
+                const f = accounts.find(acc => acc.nickname === fNick);
                 if (f) {
                     const friendLvl = calculateLevel(f.exp).level;
                     const fFrame = f.frame ? `<img src="${f.frame}" class="friend-frame">` : '';
@@ -2210,13 +2182,13 @@ function getFilteredGames() {
             return avg >= minRating;
         });
     }
-    if (filterSettings.genres.length > 0) {
+    if (filterSettings.genres && filterSettings.genres.length > 0) {
         filtered = filtered.filter(g => {
             if (!g.genreFlags) return false;
             // filterSettings.genres is array of indices (0,1..). Map to KEYS
             return filterSettings.genres.some(idx => {
                 const genreName = GENRE_KEYS[idx];
-                return g.genreFlags[genreName] === 1;
+                return genreName && g.genreFlags[genreName] === 1;
             });
         });
     }
@@ -2227,6 +2199,11 @@ function renderGames(){
     const g=document.getElementById('gamesGrid');g.innerHTML='';
     const filteredGames = getFilteredGames();
     
+    // Safety check if games are missing due to filtering error
+    if (filteredGames.length === 0 && games.length > 0 && filterSettings.rating === 0 && filterSettings.genres.length === 0) {
+       console.warn("Games hidden but no filters active?");
+    }
+
     filteredGames.forEach(game=>{
         const c=document.createElement('div');
         c.className='game-card';
@@ -2261,7 +2238,7 @@ function renderGames(){
     })
     
     const dot = document.getElementById('filterActiveDot');
-    if (filterSettings.rating > 0 || filterSettings.genres.length > 0) {
+    if (filterSettings.rating > 0 || (filterSettings.genres && filterSettings.genres.length > 0)) {
         dot.style.display = 'block';
     } else {
         dot.style.display = 'none';
@@ -2307,8 +2284,6 @@ function updateDriveButtons() {
         pathDisplay.textContent = t.autoDisabled;
     }
 }
-
-// REMOVED selectNameColor function
 
 // --- FILTER MODAL LOGIC ---
 function openFilterModal() {
