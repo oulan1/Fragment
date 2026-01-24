@@ -171,8 +171,9 @@ body {
 .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 900; display: none; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); }
 .sidebar{position:fixed;left:-320px;top:0;width:320px;height:100%;background:rgba(28,28,32,.95);backdrop-filter:blur(30px);transition:left .4s ease;z-index:1000;padding:90px 25px 25px; display: flex; flex-direction: column;}
 .sidebar.open{left:0}
-.sidebar-item{padding:18px 25px;margin-bottom:12px;cursor:pointer;border-radius:16px;background:rgba(45,45,50,.5);transition:all .4s ease; color: #e0e0e0;}
+.sidebar-item{padding:18px 25px;margin-bottom:12px;cursor:pointer;border-radius:16px;background:rgba(45,45,50,.5);transition:all .4s ease; color: #e0e0e0; display: flex; justify-content: space-between; align-items: center;}
 .sidebar-item:hover{background:rgba(108,99,255,.25);transform:translateX(12px)}
+.sidebar-item svg { width: 20px; height: 20px; fill: var(--text-primary); transition: fill 0.3s ease; }
 .sidebar-footer { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--glass-border); text-align: center; }
 .support-link { color: var(--accent); text-decoration: none; font-weight: bold; font-size: 14px; display: block; margin-bottom: 5px; cursor: pointer;}
 .visits-counter { font-size: 12px; color: var(--text-secondary); margin-bottom: 10px; font-weight: 500; }
@@ -236,8 +237,27 @@ body {
 .btn{background:linear-gradient(135deg,var(--accent) 0,#5a52d5 100%);border:none;color:#fff;padding:15px 35px;border-radius:16px;cursor:pointer;font-size:16px;font-weight:700;transition:all .4s ease}
 .btn:hover{transform:translateY(-3px)}
 .btn-secondary{background:linear-gradient(135deg,#444 0,#555 100%)}
-.settings-btn, .notes-btn{background:linear-gradient(135deg,#444 0,#555 100%);border:none;color:#fff;padding:15px 18px;border-radius:16px;cursor:pointer;font-size:20px;transition:all .4s ease}
-.settings-btn:hover{transform:translateY(-3px) rotate(90deg)}
+/* Updated Game Settings Button */
+.settings-btn {
+    background: linear-gradient(135deg,#444 0,#555 100%);
+    border: none;
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease;
+}
+.settings-btn:hover {
+    border-radius: 14px;
+    transform: rotate(180deg) scale(1.1);
+}
+.notes-btn{background:linear-gradient(135deg,#444 0,#555 100%);border:none;color:#fff;padding:15px 18px;border-radius:16px;cursor:pointer;font-size:20px;transition:all .4s ease}
 .notes-btn:hover{transform:translateY(-3px)}
 .section{background:var(--glass-bg);backdrop-filter:blur(25px);padding:30px;border-radius:24px;margin-bottom:30px;border:1px solid var(--glass-border)}
 .section-title{font-size:28px;margin-bottom:20px;border-bottom:2px solid var(--accent);padding-bottom:12px;display: flex; justify-content: space-between; align-items: center;}
@@ -390,8 +410,9 @@ body {
 .pass-connector { width: 40px; height: 8px; background: #333; border-radius: 4px; position: relative; overflow: hidden; }
 .pass-connector-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #9c27b0, #673ab7); transition: width 0.5s ease; }
 
-.update-banner { position: fixed; top: 0; left: 0; width: 100%; background: linear-gradient(90deg, #ff5722, #f44336); color: white; text-align: center; padding: 10px; z-index: 10000; font-weight: bold; display: none; align-items: center; justify-content: center; gap: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-.update-refresh-btn { background: white; color: #f44336; border: none; padding: 5px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 12px; }
+.update-banner { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); color: white; text-align: center; padding: 20px; z-index: 99999; font-weight: bold; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); backdrop-filter: blur(10px); }
+.update-refresh-btn { background: linear-gradient(90deg, #ff5722, #f44336); color: white; border: none; padding: 15px 40px; border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 18px; transition: transform 0.2s; }
+.update-refresh-btn:hover { transform: scale(1.05); }
 
 /* Fragment Plus Settings */
 .fragment-plus-settings {
@@ -631,13 +652,42 @@ body.style-liquid .launch-content.collapsed .launch-compact-btn:hover {
     text-align: center;
     margin-top: 15px;
 }
+
+/* Settings Sections */
+.settings-section-header { margin-top: 30px; margin-bottom: 20px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; font-size: 20px; color: var(--accent); font-weight: bold; }
+.settings-section-header:first-child { margin-top: 0; }
+
+/* Settings Tabs */
+.settings-tabs { display: flex; gap: 15px; margin-bottom: 25px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; }
+.settings-tab-content { display: none; }
+.settings-tab-content.active { display: block; animation: slideIn 0.4s ease; }
+
+/* Locked Plus Section */
+.plus-locked-container { position: relative; }
+.plus-content { transition: all 0.3s ease; }
+.plus-content.locked { filter: blur(5px); pointer-events: none; user-select: none; opacity: 0.6; }
+.buy-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: none; flex-direction: column; justify-content: center; align-items: center;
+    z-index: 10;
+}
+.buy-btn {
+    background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
+    color: black; font-weight: bold; font-size: 18px;
+    padding: 15px 30px; border-radius: 25px; border: none; cursor: pointer;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    transition: transform 0.2s;
+}
+.buy-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 215, 0, 0.6); }
+.location-footer { margin-top: 40px; text-align: center; font-size: 14px; color: var(--text-secondary); padding-top: 20px; border-top: 1px solid var(--glass-border); }
 </style>
 <link rel="stylesheet" href="/index.css">
 </head>
 <body class="font-default">
 <div class="mobile-warning"><div><h1>Access Denied</h1><p>Fragment Launcher is optimized for PC only. Please open on a computer.</p></div></div>
 <div class="update-banner" id="updateBanner">
-    <span>Update Available! / Вышло обновление!</span>
+    <h1>Update Available! / Вышло обновление!</h1>
+    <p>New version found. Please refresh.</p>
     <button class="update-refresh-btn" onclick="location.reload()">Refresh / Обновить</button>
 </div>
 <div id="pwaBanner" class="pwa-banner">
@@ -670,12 +720,12 @@ body.style-liquid .launch-content.collapsed .launch-compact-btn:hover {
 <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 <div class="sidebar" id="sidebar">
 <div>
-<div class="sidebar-item" onclick="playSound('click'); navigateTo('main')">Main</div>
-<div class="sidebar-item" onclick="playSound('click'); navigateTo('library')">Library</div>
-<div class="sidebar-item" onclick="playSound('click'); navigateTo('profile')">Profile</div>
-<div class="sidebar-item" onclick="playSound('click'); navigateTo('faq')">FAQ</div>
-<div class="sidebar-item" onclick="playSound('click'); navigateTo('settings')">Settings</div>
-<div class="sidebar-item" onclick="playSound('click'); navigateTo('chat')">Chat</div>
+<div class="sidebar-item" onclick="playSound('click'); navigateTo('main')">Main <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>
+<div class="sidebar-item" onclick="playSound('click'); navigateTo('library')">Library <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg></div>
+<div class="sidebar-item" onclick="playSound('click'); navigateTo('profile')">Profile <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+<div class="sidebar-item" onclick="playSound('click'); navigateTo('faq')">FAQ <svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg></div>
+<div class="sidebar-item" onclick="playSound('click'); navigateTo('settings')">Settings <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.16 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.04.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></div>
+<div class="sidebar-item" onclick="playSound('click'); navigateTo('chat')">Chat <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 11H7V9h2v2zm4 0h-2V9h2v2zm4 0h-2V9h2v2z"/></svg></div>
 <div class="sidebar-item pass-btn" onclick="playSound('click'); navigateTo('pass')">🎫 Fragment Pass</div>
 </div>
 <div class="sidebar-footer">
@@ -873,105 +923,140 @@ body.style-liquid .launch-content.collapsed .launch-compact-btn:hover {
 
 <div class="game-page" id="settingsPage">
 <h1 style="font-size:42px;margin-bottom:30px" id="settTitle">Settings</h1>
-<div class="section">
-    <!-- Fragment Plus Settings -->
-    <div class="fragment-plus-settings" id="plusSettings" style="display:none">
-        <h3 id="fpTitle"><i class="fas fa-crown"></i> Fragment Plus</h3>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
-            <label style="margin:0" id="fpAutoLabel">Auto-Detect Paths</label>
-            <label class="switch">
-                <input type="checkbox" id="autoDetectToggle" onchange="toggleAutoDetect()">
-                <span class="slider round"></span>
-            </label>
-        </div>
-        <div id="fpHint" style="font-size:12px; color:var(--text-secondary); margin-bottom:15px">
-            Create a folder named <b>Fragment</b> on your selected drive and unpack games there.
-        </div>
-        <label id="fpLocLabel" style="font-size:12px; font-weight:bold; color:var(--text-primary)">Library Location:</label>
-        <div class="drive-btn-group">
-            <button class="drive-btn" id="driveC" onclick="selectDrive('C')">Drive C</button>
-            <button class="drive-btn" id="driveD" onclick="selectDrive('D')">Drive D</button>
-        </div>
-        <div id="currentPathDisplay" style="margin-top:10px; font-family:monospace; font-size:11px; color:var(--accent)"></div>
-    </div>
 
-<div class="settings-group">
-<label id="languageLabel">Language / Язык</label>
-<select id="languageSelect" onchange="changeLanguage()">
-<option value="en">English</option>
-<option value="ru">Русский</option>
-</select>
+<div class="settings-tabs">
+    <button class="tab-btn active" onclick="switchSettingsTab('general')" id="tabGeneral">General</button>
+    <button class="tab-btn" onclick="switchSettingsTab('plus')" id="tabPlus">Fragment Plus</button>
 </div>
-<div class="settings-group">
-<label>Theme</label>
-<select id="themeSelect" onchange="changeTheme()">
-<option value="dark">Dark</option>
-<option value="light">Light</option>
-<option value="neon">Neon (Beta)</option>
-</select>
+
+<div id="settingsGeneral" class="settings-tab-content active">
+    <div class="section">
+        <div class="settings-section-header">General Settings</div>
+        
+        <div class="settings-group">
+        <label id="languageLabel">Language / Язык</label>
+        <select id="languageSelect" onchange="changeLanguage()">
+        <option value="en">English</option>
+        <option value="ru">Русский</option>
+        </select>
+        </div>
+        <div class="settings-group">
+        <label>Theme</label>
+        <select id="themeSelect" onchange="changeTheme()">
+        <option value="dark">Dark</option>
+        <option value="light">Light</option>
+        <option value="neon">Neon (Beta)</option>
+        </select>
+        </div>
+        <div class="settings-group">
+        <label>Interface Style</label>
+        <select id="styleSelect" onchange="changeStyle()">
+        <option value="standard">Standard</option>
+        <option value="cosmic">Cosmic Style</option>
+        <option value="liquid">Liquid Glass (New)</option>
+        </select>
+        </div>
+        <div class="settings-group">
+        <label>Font Family</label>
+        <select id="fontSelect" onchange="changeFont()">
+        <option value="default">Default</option>
+        <option value="monospace">Monospace</option>
+        <option value="rounded">Rounded</option>
+        </select>
+        </div>
+        <div class="settings-group">
+        <label>Interface Size</label>
+        <select id="sizeSelect" onchange="changeSize()">
+        <option value="compact">Compact</option>
+        <option value="normal">Normal</option>
+        <option value="large">Large</option>
+        </select>
+        </div>
+        <div class="settings-group">
+        <label id="soundVolumeLabel">Sound Volume: 100%</label>
+        <input type="range" min="0" max="100" value="100" class="range-slider" id="volumeSlider" oninput="changeVolume()">
+        </div>
+        <div class="settings-group">
+        <label>Click Sound</label>
+        <select id="soundSelect" onchange="changeSoundType()">
+        <option value="standard">Standard (Beep)</option>
+        <option value="bubble">Bubble</option>
+        <option value="mech">Mechanical</option>
+        </select>
+        </div>
+        <div class="settings-group">
+        <label>Game Title Style</label>
+        <select id="titleStyleSelect" onchange="changeTitleStyle()">
+        <option value="outlined">White with Black Outline</option>
+        <option value="gradient">Gradient</option>
+        <option value="custom">Custom Color</option>
+        </select>
+        </div>
+        <div class="settings-group" id="customColorGroup" style="display:none">
+        <label>Custom Title Color</label>
+        <input type="color" id="customColorPicker" onchange="changeTitleStyle()" value="#ffffff">
+        </div>
+        
+        <div class="settings-group">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <label style="margin:0" id="launchProtectionLabel">Launch Protection</label>
+                <label class="switch">
+                    <input type="checkbox" id="launchProtectionToggle" onchange="toggleLaunchProtection()">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="settings-group" id="logoutGroup" style="display:none">
+        <button class="btn btn-secondary" onclick="playSound('click'); logout()" style="width:100%">Logout</button>
+        </div>
+        <div class="backup-section">
+        <div class="backup-title" id="backupTitle"><span style="cursor:pointer" onclick="handleBackupClick(event)">💾</span> Backup & Restore (Encrypted)</div>
+        <p style="color:var(--text-secondary);margin-bottom:10px">Save all your data securely</p>
+        <div class="backup-buttons">
+        <button class="backup-btn" onclick="playSound('click'); exportBackup()">📥 Export</button>
+        <button class="backup-btn" onclick="playSound('click'); document.getElementById('importFile').click()">📤 Import</button>
+        <input type="file" id="importFile" accept=".frag" style="display:none" onchange="importBackup(event)">
+        </div>
+        </div>
+        
+        <div class="location-footer" id="locationFooter">
+            Detecting location...
+        </div>
+    </div>
 </div>
-<div class="settings-group">
-<label>Interface Style</label>
-<select id="styleSelect" onchange="changeStyle()">
-<option value="standard">Standard</option>
-<option value="cosmic">Cosmic Style</option>
-<option value="liquid">Liquid Glass (New)</option>
-</select>
+
+<div id="settingsPlus" class="settings-tab-content">
+    <div class="section">
+        <!-- Fragment Plus Settings -->
+        <div class="settings-section-header">Fragment Plus</div>
+        <div class="plus-locked-container">
+            <div class="buy-overlay" id="buyPlusOverlay">
+                <button class="buy-btn" onclick="window.open('https://t.me/ouForgeSupport', '_blank')">Buy Fragment Plus (5₽/mo)</button>
+            </div>
+            <div class="fragment-plus-settings plus-content" id="plusSettingsContent">
+                <h3 id="fpTitle"><i class="fas fa-crown"></i> Fragment Plus</h3>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+                    <label style="margin:0" id="fpAutoLabel">Auto-Detect Paths</label>
+                    <label class="switch">
+                        <input type="checkbox" id="autoDetectToggle" onchange="toggleAutoDetect()">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div id="fpHint" style="font-size:12px; color:var(--text-secondary); margin-bottom:15px">
+                    Create a folder named <b>Fragment</b> on your selected drive and unpack games there. <b>Do not change game folder names!</b>
+                </div>
+                <label id="fpLocLabel" style="font-size:12px; font-weight:bold; color:var(--text-primary)">Library Location:</label>
+                <div class="drive-btn-group">
+                    <button class="drive-btn" id="driveC" onclick="selectDrive('C')">Drive C</button>
+                    <button class="drive-btn" id="driveD" onclick="selectDrive('D')">Drive D</button>
+                </div>
+                <div id="currentPathDisplay" style="margin-top:10px; font-family:monospace; font-size:11px; color:var(--accent)"></div>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="settings-group">
-<label>Font Family</label>
-<select id="fontSelect" onchange="changeFont()">
-<option value="default">Default</option>
-<option value="monospace">Monospace</option>
-<option value="rounded">Rounded</option>
-</select>
-</div>
-<div class="settings-group">
-<label>Interface Size</label>
-<select id="sizeSelect" onchange="changeSize()">
-<option value="compact">Compact</option>
-<option value="normal">Normal</option>
-<option value="large">Large</option>
-</select>
-</div>
-<div class="settings-group">
-<label id="soundVolumeLabel">Sound Volume: 100%</label>
-<input type="range" min="0" max="100" value="100" class="range-slider" id="volumeSlider" oninput="changeVolume()">
-</div>
-<div class="settings-group">
-<label>Click Sound</label>
-<select id="soundSelect" onchange="changeSoundType()">
-<option value="standard">Standard (Beep)</option>
-<option value="bubble">Bubble</option>
-<option value="mech">Mechanical</option>
-</select>
-</div>
-<div class="settings-group">
-<label>Game Title Style</label>
-<select id="titleStyleSelect" onchange="changeTitleStyle()">
-<option value="outlined">White with Black Outline</option>
-<option value="gradient">Gradient</option>
-<option value="custom">Custom Color</option>
-</select>
-</div>
-<div class="settings-group" id="customColorGroup" style="display:none">
-<label>Custom Title Color</label>
-<input type="color" id="customColorPicker" onchange="changeTitleStyle()" value="#ffffff">
-</div>
-<div class="settings-group" id="logoutGroup" style="display:none">
-<button class="btn btn-secondary" onclick="playSound('click'); logout()" style="width:100%">Logout</button>
-</div>
-<div class="backup-section">
-<div class="backup-title" id="backupTitle"><span style="cursor:pointer" onclick="handleBackupClick(event)">💾</span> Backup & Restore (Encrypted)</div>
-<p style="color:var(--text-secondary);margin-bottom:10px">Save all your data securely</p>
-<div class="backup-buttons">
-<button class="backup-btn" onclick="playSound('click'); exportBackup()">📥 Export</button>
-<button class="backup-btn" onclick="playSound('click'); document.getElementById('importFile').click()">📤 Import</button>
-<input type="file" id="importFile" accept=".frag" style="display:none" onchange="importBackup(event)">
-</div>
-</div>
-</div>
-</div>
+
 </div>
 
 <div class="modal" id="accountModal">
@@ -1184,14 +1269,15 @@ body.style-liquid .launch-content.collapsed .launch-compact-btn:hover {
 <div class="modal" id="updateModal">
     <div class="modal-content" style="max-width:600px">
         <button class="modal-close" onclick="closeUpdateModal()">×</button>
-        <div class="modal-title">Update v0.1.8 Fixed</div>
+        <div class="modal-title">Update v0.1.9</div>
         <div style="margin-bottom:20px">
             <h3 style="color:var(--accent);margin-bottom:10px">Changes / Изменения</h3>
             <ul style="line-height:1.6;padding-left:20px">
-                <li>🎫 <b>Fragment Pass:</b> Access Restricted to Developer Mode. / Доступ только в режиме разработчика.</li>
-                <li>⚠️ <b>Co-op Warning:</b> Added warning for non-official co-op games. / Предупреждение для неофициальных кооперативных игр.</li>
-                <li>🎨 <b>Fragment Plus:</b> Name color set by code now. / Цвет ника теперь задается через код.</li>
-                <li>🔧 <b>System:</b> Launch command now auto-closes CMD. / Консоль теперь закрывается автоматически.</li>
+                <li>🌍 <b>Geolocation:</b> Your country is now detected and displayed in settings.</li>
+                <li>⚙️ <b>Settings Redesign:</b> New look for settings buttons and split sections.</li>
+                <li>🔒 <b>Launch Protection:</b> Prevents accidental closing of game sessions.</li>
+                <li>👑 <b>Fragment Plus:</b> Dedicated settings section.</li>
+                <li>🛠️ <b>UI Polish:</b> Sidebar icons, new animations.</li>
             </ul>
         </div>
         <button class="btn" onclick="closeUpdateModal()" style="width:100%">Got it!</button>
@@ -1202,9 +1288,9 @@ body.style-liquid .launch-content.collapsed .launch-compact-btn:hover {
 </div>
 <script>
 // --- CORE DATA ---
-const CURRENT_VERSION = '0.1.8 Fixed';
+const CURRENT_VERSION = '0.1.9';
 // EDIT THIS NUMBER MANUALLY
-const TOTAL_SITE_VISITS = 240; 
+const TOTAL_SITE_VISITS = 250; 
 
 // GENRE CONFIG
 // Keys used for data object
@@ -1213,10 +1299,10 @@ const GENRE_KEYS = ["Action", "RPG", "Simulation", "Horror", "Shooter", "Sandbox
 // GLOBAL NOTIFICATIONS INJECTION
 const GLOBAL_NEWS = [
     {
-        id: 'global_018_fix',
-        date: '2026-03-12',
-        title: 'Fragment 0.1.8 Fixed',
-        content: 'Check out the new Co-op warnings and Fragment Plus customization!'
+        id: 'global_019',
+        date: '2026-03-15',
+        title: 'Fragment 0.1.9',
+        content: 'Geolocation, Settings Redesign, Launch Protection and more!'
     }
 ];
 
@@ -1233,11 +1319,12 @@ const accounts = [
         created: "2025-12-10",
         exp: 50000,
         prime: 1,
-        nameColor: "purple", 
+        nameColor: "red", 
         friends: ["M", "Frikokid"],
         notifications: [],
         achievements: [
-            {img: "https://i-mg24.ru/images/122025220553-so5hj.png", title: "Founder", rarity: "secret"}
+            {img: "https://img.icons8.com/emoji/48/star-emoji.png", title: "Founder", rarity: "legendary"},
+            {img: "https://img.icons8.com/emoji/48/rocket-emoji.png", title: "Early Adopter", rarity: "epic"}
         ]
     },
     {
@@ -1318,7 +1405,7 @@ const games = [
         ],
         ofc: 0,
         // Converted from [0, 0, 1, 0, 0, 1, 0, 0]
-        genreFlags: { "Simulation": 1, "Sandbox": 1}, 
+        genreFlags: { "Simulation": 1, "Sandbox": 1 }, 
         internalPath: "People Playground [Build 12526410]\\People Playground\\People Playground.exe"
     },
     {
@@ -1348,13 +1435,13 @@ const games = [
     },
     {
         id: 3,
-        title: "Elden Ring",
-        shortDesc: "Dark fantasy",
-        description: "Explore the Lands Between",
-        banner: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=1200",
-        avatar: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=300",
+        title: "",
+        shortDesc: "",
+        description: "",
+        banner: "",
+        avatar: "",
         gallery: [
-            "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400"
+            ""
         ],
         downloadUrl: "https://example.com",
         minReq: "OS: Win10<br>CPU: i5<br>RAM: 12GB<br>GPU: GTX 1060 3GB",
@@ -1413,13 +1500,14 @@ let currentSessionXPTracker = 0; // Tracks XP for Fragment Pass
 let autoDetectEnabled = false;
 let gameDrive = 'C';
 let filterSettings = { rating: 0, genres: [] };
+let launchProtectionEnabled = true;
 
 const translations={
     en:{main:"Main",library:"Library",profile:"Profile",settings:"Settings",chat:"Chat",faq:"FAQ",search:"Search games & accounts...",login:"Login",password:"Password",loginBtn:"Login",logout:"Logout",theme:"Theme",dark:"Dark",light:"Light",neon:"Neon (Beta)",liquid:"Liquid Glass (New)",interfaceStyle:"Interface Style",standard:"Standard",cosmic:"Cosmic Style",fontFamily:"Font Family",default:"Default",monospace:"Monospace",rounded:"Rounded",interfaceSize:"Interface Size",compact:"Compact",normal:"Normal",large:"Large",titleStyle:"Game Title Style",outlined:"White with Black Outline",gradient:"Gradient",customColor:"Custom Color",customTitleColor:"Custom Title Color",backup:"Backup & Restore",backupDesc:"Save all your data securely",export:"Export",import:"Import",addToLibrary:"Add to Library",removeFromLibrary:"Remove",download:"Download",launch:"Launch",launchInstructions:"Launch Instructions",launchStep1:"1. Open Command Prompt (Win + R, type 'cmd')",launchStep2:"2. Copy the command below:",launchStep3:"3. Paste it into Command Prompt and press Enter",copyCommand:"Copy Command",commandCopied:"Command copied!",description:"Description",screenshots:"Screenshots",systemReq:"System Requirements",minimum:"Minimum",recommended:"Recommended",reviews:"Reviews",hoursPlayed:"hours played",addTime:"Add Time",removeTime:"Remove Time",launchSetup:"Launch Setup",desktopShortcut:"Desktop Shortcut",manualPath:"Manual Path",desktopStep1:"Right-click Desktop",desktopStep2:"New → Shortcut",desktopStep3:"Browse for .exe",desktopStep4:"Name it and done!",manualStep1:"Open File Explorer",manualStep2:"Find game folder",manualStep3:"Shift + Right-click .exe",manualStep4:'"Copy as path"',manualStep5:"Paste below",gamePath:"Game Path:",cancel:"Cancel",save:"Save",minutes:"Minutes",loggedIn:"Logged in!",loggedOut:"Logged out",invalid:"Invalid!",saved:"Saved!",exported:"Exported!",imported:"Imported! Reloading...",invalidFile:"Invalid file!",empty:"Empty",nothingFound:"Nothing found",game:"Game",account:"Account",created:"Created",userProfile:"User Profile",contact:"Contact",totalPlaytime:"Total Playtime",devModeOn:"You activated developer mode",devModeOff:"You deactivated developer mode",randomGame:"Random Game",changeAvatar:"Change Avatar",changeAvatarDesc:"Click the button below to change your avatar via bot",openBot:"Open Avatar Bot",soundVolume:"Sound Volume",libraryStats:"{count} Games in Library",chartTitle:"Activity (Last 14 Days)",recentTitle:"Recent Activity",notesTitle:"Game Notes",notesPlaceholder:"Write your strategies, keys, or thoughts here...",saveNote:"Save Note",lastPlayed:"Last played: {date}",needLogin:"You need to login",installApp:"Install App",install:"Install", launcherStats: "Launcher Stats", statsMsg: "Games: {g}\nAccounts: {a}\nReviews: {r}", mods: "Mods", main: "Main", installMods: "How to install mods", availableMods: "Available Mods", writeReview: "Write Review", friends: "Friends", achievements: "Achievements", noNotifs: "No notifications", inbox: "Inbox", markRead: "Mark as read", instructions: "Instructions", officialTooltip: "Official game license",
         visits: "Total Visits", currentSession: "Current Session", totalTime: "Total", rating: "Rating", close: "Close", keepOpen: "Do not close this tab to track playtime!",
         fragmentPlus: "Fragment Plus",
         autoDetect: "Auto-Detect Paths",
-        autoDetectHint: "Create a folder named <b>Fragment</b> on your selected drive and unpack games there.",
+        autoDetectHint: "Create a folder named <b>Fragment</b> on your selected drive and unpack games there. <b>Do not change game folder names!</b>",
         libLocation: "Library Location:",
         driveC: "Drive C",
         driveD: "Drive D",
@@ -1427,16 +1515,24 @@ const translations={
         autoDisabled: "Auto-Detect Disabled",
         autoDetectActive: "Auto-Detect Active",
         pass: "Fragment Pass",
-        passReward: "Награда",
+        passReward: "Reward",
         coopModalTitle: "Co-op Warning",
         coopModalBody: "<b>Launch Issue</b><br><br>Windows Defender (or other AV) often blocks Steam API DLLs for online fixes.<br><br><b>Fix:</b><br>1. Go to Windows Security → Virus & threat protection → Protection history.<br>2. Find the blocked threat (usually 'HackTool:Win32/GameHack...').<br>3. Select Actions → Allow on device / Restore.",
-        understood: "Understood"
+        understood: "Understood",
+        yourCountry: "Your Country",
+        locationError: "Location Error (VPN?)",
+        updateAvailable: "Update Available!",
+        newVersion: "New version:",
+        refresh: "Refresh",
+        generalSettings: "General Settings",
+        plusSettings: "Fragment Plus",
+        launchProtection: "Launch Protection"
     },
     ru:{main:"Главная",library:"Библиотека",profile:"Профиль",settings:"Настройки",chat:"Чат",faq:"FAQ",search:"Поиск игр и аккаунтов...",login:"Логин",password:"Пароль",loginBtn:"Войти",logout:"Выйти",theme:"Тема",dark:"Темная",light:"Светлая",neon:"Неон (Бета)",liquid:"Жидкое Стекло (New)",interfaceStyle:"Стиль интерфейса",standard:"Стандартный",cosmic:"Космический стиль",fontFamily:"Шрифт",default:"По умолчанию",monospace:"Моноширинный",rounded:"Округлый",interfaceSize:"Размер интерфейса",compact:"Компактный",normal:"Обычный",large:"Большой",titleStyle:"Стиль названия игр",outlined:"Белый с черным контуром",gradient:"Градиент",customColor:"Свой цвет",customTitleColor:"Свой цвет названия",backup:"Резервное копирование",backupDesc:"Безопасно сохраните данные",export:"Экспорт",import:"Импорт",addToLibrary:"Добавить в библиотеку",removeFromLibrary:"Удалить",download:"Скачать",launch:"Запустить",launchInstructions:"Инструкция по запуску",launchStep1:"1. Откройте командную строку (Win + R, введите 'cmd')",launchStep2:"2. Скопируйте команду ниже:",launchStep3:"3. Вставьте в командную строку и нажмите Enter",copyCommand:"Копировать команду",commandCopied:"Команда скопирована!",description:"Описание",screenshots:"Скриншоты",systemReq:"Системные требования",minimum:"Минимальные",recommended:"Рекомендуемые",reviews:"Отзывы",hoursPlayed:"часов сыграно",addTime:"Добавить время",removeTime:"Убрать время",launchSetup:"Настройка запуска",desktopShortcut:"Ярлык на рабочем столе",manualPath:"Ручной путь",desktopStep1:"ПКМ на рабочем столе",desktopStep2:"Создать → Ярлык",desktopStep3:"Обзор для .exe",desktopStep4:"Назовите и готово!",manualStep1:"Откройте проводник",manualStep2:"Найдите папку игры",manualStep3:"Shift + ПКМ на .exe",manualStep4:'"Копировать как путь"',manualStep5:"Вставьте ниже",gamePath:"Путь к игре:",cancel:"Отмена",save:"Сохранить",minutes:"Минуты",loggedIn:"Вход выполнен!",loggedOut:"Выход выполнен",invalid:"Неверно!",saved:"Сохранено!",exported:"Экспортировано!",imported:"Импортировано! Перезагрузка...",invalidFile:"Неверный файл!",empty:"Пусто",nothingFound:"Ничего не найдено",game:"Игра",account:"Аккаунт",created:"Создан",userProfile:"Профиль пользователя",contact:"Связаться",totalPlaytime:"Всего наиграно",devModeOn:"Вы активировали режим разработчика",devModeOff:"Вы отключили режим разработчика",randomGame:"Случайная игра",changeAvatar:"Изменить аватарку",changeAvatarDesc:"Нажмите кнопку ниже чтобы изменить аватарку через бота",openBot:"Открыть бота",soundVolume:"Громкость звука",libraryStats:"{count} игр в библиотеке",chartTitle:"Активность (14 дней)",recentTitle:"Недавняя активность",notesTitle:"Заметки к игре",notesPlaceholder:"Напишите здесь свои стратегии, ключи или мысли...",saveNote:"Сохранить заметку",lastPlayed:"Последний запуск: {date}",needLogin:"Вам нужно войти",installApp:"Установить приложение",install:"Установить", launcherStats: "Статистика лаунчера", statsMsg: "Игр: {g}\nАккаунтов: {a}\nОтзывов: {r}", mods: "Моды", main: "Главная", installMods: "Как установить моды", availableMods: "Доступные моды", writeReview: "Написать отзыв", friends: "Друзья", achievements: "Достижения", noNotifs: "Нет уведомлений", inbox: "Ящик", markRead: "Прочитано", instructions: "Инструкция", officialTooltip: "Официальная лицензия игры",
         visits: "Посещений", currentSession: "Текущая сессия", totalTime: "Всего", rating: "Оценка", close: "Закрыть", keepOpen: "Не закрывайте вкладку для учета времени!",
         fragmentPlus: "Fragment Plus",
         autoDetect: "Авто-определение путей",
-        autoDetectHint: "Создайте папку <b>Fragment</b> на выбранном диске и распаковывайте игры туда.",
+        autoDetectHint: "Создайте папку <b>Fragment</b> на выбранном диске и распаковывайте игры туда. <b>Не меняйте названия папок с играми!</b>",
         libLocation: "Расположение библиотеки:",
         driveC: "Диск C",
         driveD: "Диск D",
@@ -1447,7 +1543,15 @@ const translations={
         passReward: "Награда",
         coopModalTitle: "Предупреждение Co-op",
         coopModalBody: "<b>Проблема с запуском</b><br><br>Защитник Windows (или другой антивирус) часто блокирует файлы Steam API для онлайн фиксов.<br><br><b>Решение:</b><br>1. Зайдите в Безопасность Windows → Защита от вирусов → Журнал защиты.<br>2. Найдите заблокированную угрозу (обычно 'HackTool:Win32/GameHack...').<br>3. Выберите Действия → Разрешить / Восстановить.",
-        understood: "Понятно"
+        understood: "Понятно",
+        yourCountry: "Ваша страна",
+        locationError: "Ошибка локации (VPN?)",
+        updateAvailable: "Вышло обновление!",
+        newVersion: "Новая версия:",
+        refresh: "Обновить",
+        generalSettings: "Основные настройки",
+        plusSettings: "Fragment Plus",
+        launchProtection: "Защита запуска"
     }
 };
 
@@ -1552,6 +1656,8 @@ function loadData(){
         if (lastSeenVersion !== CURRENT_VERSION) {
             document.getElementById('updateModal').style.display = 'flex';
         }
+        
+        // Safety check for critical DOM elements
         if (document.querySelector('.pass-header') === null) {
              document.getElementById('updateBanner').style.display = 'flex';
         }
@@ -1568,6 +1674,8 @@ function loadData(){
 
         autoDetectEnabled = localStorage.getItem('autoDetectEnabled') === 'true';
         gameDrive = localStorage.getItem('gameDrive') || 'C';
+        launchProtectionEnabled = localStorage.getItem('launchProtection') !== 'false';
+        
         const savedFilters = localStorage.getItem('filterSettings');
         if(savedFilters) filterSettings = JSON.parse(savedFilters);
 
@@ -1592,6 +1700,7 @@ function loadData(){
         document.getElementById('customColorPicker').value = localStorage.getItem('customTitleColor')||'#ffffff';
         
         document.getElementById('autoDetectToggle').checked = autoDetectEnabled;
+        document.getElementById('launchProtectionToggle').checked = launchProtectionEnabled;
         updateDriveButtons();
         
         // Removed selectNameColor init
@@ -1601,6 +1710,7 @@ function loadData(){
         checkAuth();
         renderGames();
         updateUI();
+        fetchLocation(); // New Geolocation Function
         
         if (!history.state) {
             safeHistoryReplace({page: 'main'}, '', '#main');
@@ -1617,6 +1727,41 @@ function loadData(){
         }
     }
 }
+
+async function fetchLocation() {
+    try {
+        const response = await fetch('http://ip-api.com/json/');
+        // Fallback for HTTPS pages blocking HTTP content
+        if (!response.ok) throw new Error('API error');
+        
+        const data = await response.json();
+        if (data.status === 'success') {
+            const countryName = data.country;
+            const countryCode = data.countryCode;
+            const flag = countryCode.toUpperCase().replace(/./g, char => String.fromCodePoint(char.charCodeAt(0) + 127397));
+            
+            const t = translations[currentLang] || translations['en'];
+            document.getElementById('locationFooter').innerHTML = `${t.yourCountry}: ${flag} ${countryName}`;
+        }
+    } catch (e) {
+        const t = translations[currentLang] || translations['en'];
+        document.getElementById('locationFooter').textContent = t.locationError;
+        console.warn('Location fetch failed (Mixed content?):', e);
+    }
+}
+
+// Auto-Update Polling
+async function checkForUpdates() {
+    try {
+        const r = await fetch(location.href, {cache: "no-store"});
+        const text = await r.text();
+        const match = text.match(/const CURRENT_VERSION = '([^']+)';/);
+        if(match && match[1] !== CURRENT_VERSION) {
+           document.getElementById('updateBanner').style.display = 'flex';
+        }
+    } catch(e) {}
+}
+setInterval(checkForUpdates, 30000);
 
 function checkPassword(input, encrypted) {
     const arr = encrypted.split(' ').map(Number);
@@ -1674,10 +1819,16 @@ function checkAuth(){
 
         document.getElementById('notifBtn').style.display = 'flex';
         
+        // Logic for Fragment Plus Section Blur
+        const plusContent = document.getElementById('plusSettingsContent');
+        const plusOverlay = document.getElementById('buyPlusOverlay');
+        
         if(u.prime) {
-            document.getElementById('plusSettings').style.display = 'block';
+            plusContent.classList.remove('locked');
+            plusOverlay.style.display = 'none';
         } else {
-            document.getElementById('plusSettings').style.display = 'none';
+            plusContent.classList.add('locked');
+            plusOverlay.style.display = 'flex';
             if(autoDetectEnabled) {
                 autoDetectEnabled = false;
                 localStorage.setItem('autoDetectEnabled', 'false');
@@ -1764,7 +1915,9 @@ function checkAuth(){
         document.getElementById('profileLoginPrompt').style.display='block';
         document.getElementById('logoutGroup').style.display='none';
         document.getElementById('notifBtn').style.display = 'none';
-        document.getElementById('plusSettings').style.display = 'none';
+        // Lock settings for no user
+        document.getElementById('plusSettingsContent').classList.add('locked');
+        document.getElementById('buyPlusOverlay').style.display = 'flex';
     }
 }
 
@@ -2062,6 +2215,11 @@ function toggleAutoDetect() {
     autoDetectEnabled = document.getElementById('autoDetectToggle').checked;
     localStorage.setItem('autoDetectEnabled', autoDetectEnabled);
     updateDriveButtons();
+}
+
+function toggleLaunchProtection() {
+    launchProtectionEnabled = document.getElementById('launchProtectionToggle').checked;
+    localStorage.setItem('launchProtection', launchProtectionEnabled);
 }
 
 function selectDrive(drive) {
@@ -2411,6 +2569,25 @@ function switchGameTab(tab) {
     }
 }
 
+function switchSettingsTab(tab) {
+    const general = document.getElementById('settingsGeneral');
+    const plus = document.getElementById('settingsPlus');
+    const btnGeneral = document.getElementById('tabGeneral');
+    const btnPlus = document.getElementById('tabPlus');
+    
+    if (tab === 'general') {
+        general.classList.add('active');
+        plus.classList.remove('active');
+        btnGeneral.classList.add('active');
+        btnPlus.classList.remove('active');
+    } else {
+        general.classList.remove('active');
+        plus.classList.add('active');
+        btnGeneral.classList.remove('active');
+        btnPlus.classList.add('active');
+    }
+}
+
 function addToLibrary(){const lib=safeGet('library', []);const i=lib.indexOf(currentGame);i>-1?lib.splice(i,1):lib.push(currentGame);localStorage.setItem('library',JSON.stringify(lib));showGame(currentGame, false)}
 
 function updateRecentGames(id) {
@@ -2663,13 +2840,32 @@ function toggleLaunchMode() {
 }
 
 function closeLaunchModal(){
-    document.getElementById('launchModal').style.display='none';
-    if(launchTimer) {
+    // Launch Protection: Confirm before closing active session
+    if(launchTimer && launchProtectionEnabled) {
+        const t = translations[currentLang] || translations['en'];
+        const confirmClose = confirm("Game is running! Closing this window will stop playtime tracking. Are you sure?");
+        if (!confirmClose) return;
+        
         clearInterval(launchTimer);
         launchTimer = null;
         checkAuth(); // Refresh stats
+    } else if (launchTimer) {
+        // If disabled, just stop timer without confirm
+        clearInterval(launchTimer);
+        launchTimer = null;
+        checkAuth();
     }
+    document.getElementById('launchModal').style.display='none';
 }
+
+// Window Close Protection
+window.addEventListener('beforeunload', (e) => {
+    if (launchTimer && launchProtectionEnabled) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
+
 function copyLaunchCommand(){const command=document.getElementById('launchCommand').textContent;navigator.clipboard.writeText(command).then(()=>{const btn=document.getElementById('copyCommandBtn');const pBtn=document.getElementById('persistentCopyBtn');const originalText=btn.textContent;const t=translations[currentLang]||translations['en'];btn.textContent=t.commandCopied;pBtn.textContent=t.commandCopied;setTimeout(()=>{btn.textContent=originalText;pBtn.textContent=originalText;},2000)})}
 function openNotes() {const notes = safeGet('gameNotes', {});document.getElementById('gameNotesInput').value = notes[currentGame] || '';document.getElementById('notesModal').style.display = 'flex';}
 function closeNotesModal() { document.getElementById('notesModal').style.display = 'none'; }
@@ -2818,9 +3014,12 @@ document.addEventListener('click',e=>{
     if(!document.querySelector('.search-container').contains(e.target)){document.getElementById('searchResults').style.display='none'}
     if(!document.querySelector('.notif-container').contains(e.target)){document.getElementById('notifDropdown').style.display='none'}
     if(e.target.classList.contains('modal')){
+        // Special case for updateModal - do NOT close on click outside
+        if(e.target.id === 'updateModal') return;
+        
         e.target.style.display = 'none';
         if(e.target.id === 'accountViewModal') currentViewAccount = null;
-        if(e.target.id === 'launchModal' && launchTimer) { clearInterval(launchTimer); launchTimer = null; checkAuth(); }
+        if(e.target.id === 'launchModal') closeLaunchModal(); // Use safe close
     }
 });
 function toggleSidebar(){const sb = document.getElementById('sidebar');const overlay = document.querySelector('.sidebar-overlay');if(sb.classList.contains('open')) {sb.classList.remove('open');overlay.style.display = 'none';} else {sb.classList.add('open');overlay.style.display = 'block';}}
@@ -2855,13 +3054,17 @@ function openViewTelegram(){if(currentViewAccount?.telegram)window.open(currentV
 function viewAvatar(src){document.getElementById('avatarViewerImg').src=src;document.getElementById('avatarViewer').style.display='flex'}
 function closeAvatarViewer(){document.getElementById('avatarViewer').style.display='none'}
 function openSupportLink(){window.open('https://t.me/ouForgeSupport', '_blank');}
-function changeLanguage(){currentLang=document.getElementById('languageSelect').value;localStorage.setItem('language',currentLang);updateUI();updateSettingsLabels();checkAuth();renderFAQ();}
+function changeLanguage(){currentLang=document.getElementById('languageSelect').value;localStorage.setItem('language',currentLang);updateUI();updateSettingsLabels();checkAuth();renderFAQ();fetchLocation();}
 function changeVolume(){const val = document.getElementById('volumeSlider').value;localStorage.setItem('soundVolume', val);masterVolume = val / 100;updateSettingsLabels();}
 function changeSoundType() {currentSoundType = document.getElementById('soundSelect').value;localStorage.setItem('soundType', currentSoundType);playSound('click');}
-function updateSettingsLabels(){const t=translations[currentLang]||translations['en'];document.querySelectorAll('.settings-group label').forEach((label, i) => {if(i===2)label.textContent=t.theme;if(i===3)label.textContent=t.interfaceStyle;if(i===4)label.textContent=t.fontFamily;if(i===5)label.textContent=t.interfaceSize;if(i===6)label.textContent=t.soundVolume + ': ' + (masterVolume*100).toFixed(0) + '%';if(i===8)label.textContent=t.titleStyle;if(i===9)label.textContent=t.customTitleColor;});}
+function updateSettingsLabels(){const t=translations[currentLang]||translations['en'];document.querySelectorAll('.settings-group label').forEach((label, i) => {if(i===2)label.textContent=t.theme;if(i===3)label.textContent=t.interfaceStyle;if(i===4)label.textContent=t.fontFamily;if(i===5)label.textContent=t.interfaceSize;if(i===6)label.textContent=t.soundVolume + ': ' + (masterVolume*100).toFixed(0) + '%';if(i===8)label.textContent=t.titleStyle;if(i===9)label.textContent=t.customTitleColor;});
+document.getElementById('tabGeneral').textContent = t.generalSettings;
+document.getElementById('tabPlus').textContent = t.plusSettings;
+document.getElementById('launchProtectionLabel').textContent = t.launchProtection;
+}
 function updateUI(){
     const t=translations[currentLang]||translations['en'];
-    document.querySelectorAll('.sidebar-item')[0].textContent=t.main;document.querySelectorAll('.sidebar-item')[1].textContent=t.library;document.querySelectorAll('.sidebar-item')[2].textContent=t.profile;document.querySelectorAll('.sidebar-item')[3].textContent=t.faq;document.querySelectorAll('.sidebar-item')[4].textContent=t.settings;document.querySelectorAll('.sidebar-item')[5].textContent=t.chat;document.querySelectorAll('.sidebar-item')[6].innerHTML='🎫 ' + t.pass;document.getElementById('searchInput').placeholder=t.search;document.querySelector('.random-game-btn').innerHTML=`🎲 ${t.randomGame}`;updateSettingsLabels();const logoutBtn=document.querySelector('#logoutGroup .btn');if(logoutBtn)logoutBtn.textContent=t.logout;document.querySelector('.backup-title').innerHTML=`<span style="cursor:pointer" onclick="handleBackupClick(event)">💾</span> ${t.backup}`;document.querySelector('.backup-section p').textContent=t.backupDesc;const backupBtns=document.querySelectorAll('.backup-btn');if(backupBtns[0])backupBtns[0].innerHTML=`📥 ${t.export}`;if(backupBtns[1])backupBtns[1].innerHTML=`📤 ${t.import}`;document.getElementById('exeModalTitle').textContent=t.launchSetup;document.getElementById('method1Title').textContent=`🖥️ ${t.desktopShortcut}`;document.getElementById('method2Title').textContent=`📂 ${t.manualPath}`;document.getElementById('exePathLabel').textContent=t.gamePath;document.getElementById('exeCancelBtn').textContent=t.cancel;document.getElementById('exeSaveBtn').textContent=t.save;document.getElementById('desktopStep1').textContent=t.desktopStep1;document.getElementById('desktopStep2').textContent=t.desktopStep2;document.getElementById('desktopStep3').textContent=t.desktopStep3;document.getElementById('desktopStep4').textContent=t.desktopStep4;document.getElementById('manualStep1').textContent=t.manualStep1;document.getElementById('manualStep2').textContent=t.manualStep2;document.getElementById('manualStep3').textContent=t.manualStep3;document.getElementById('manualStep4').textContent=t.manualStep4;document.getElementById('manualStep5').textContent=t.manualStep5;document.getElementById('chartTitle').textContent=t.chartTitle;document.getElementById('recentTitle').textContent=t.recentTitle;document.getElementById('profTitle').textContent=t.profile;document.getElementById('libTitle').textContent=t.library;document.getElementById('settTitle').textContent=t.settings;document.getElementById('notesTitle').textContent=t.notesTitle;document.getElementById('gameNotesInput').placeholder=t.notesPlaceholder;document.getElementById('saveNoteBtn').textContent=t.saveNote;document.getElementById('descTitleText').textContent=t.description;document.getElementById('screenTitle').textContent=t.screenshots;document.getElementById('reqTitle').textContent=t.systemReq;
+    document.querySelectorAll('.sidebar-item')[0].firstChild.textContent=t.main + ' ';document.querySelectorAll('.sidebar-item')[1].firstChild.textContent=t.library + ' ';document.querySelectorAll('.sidebar-item')[2].firstChild.textContent=t.profile + ' ';document.querySelectorAll('.sidebar-item')[3].firstChild.textContent=t.faq + ' ';document.querySelectorAll('.sidebar-item')[4].firstChild.textContent=t.settings + ' ';document.querySelectorAll('.sidebar-item')[5].firstChild.textContent=t.chat + ' ';document.querySelectorAll('.sidebar-item')[6].innerHTML='🎫 ' + t.pass;document.getElementById('searchInput').placeholder=t.search;document.querySelector('.random-game-btn').innerHTML=`🎲 ${t.randomGame}`;updateSettingsLabels();const logoutBtn=document.querySelector('#logoutGroup .btn');if(logoutBtn)logoutBtn.textContent=t.logout;document.querySelector('.backup-title').innerHTML=`<span style="cursor:pointer" onclick="handleBackupClick(event)">💾</span> ${t.backup}`;document.querySelector('.backup-section p').textContent=t.backupDesc;const backupBtns=document.querySelectorAll('.backup-btn');if(backupBtns[0])backupBtns[0].innerHTML=`📥 ${t.export}`;if(backupBtns[1])backupBtns[1].innerHTML=`📤 ${t.import}`;document.getElementById('exeModalTitle').textContent=t.launchSetup;document.getElementById('method1Title').textContent=`🖥️ ${t.desktopShortcut}`;document.getElementById('method2Title').textContent=`📂 ${t.manualPath}`;document.getElementById('exePathLabel').textContent=t.gamePath;document.getElementById('exeCancelBtn').textContent=t.cancel;document.getElementById('exeSaveBtn').textContent=t.save;document.getElementById('desktopStep1').textContent=t.desktopStep1;document.getElementById('desktopStep2').textContent=t.desktopStep2;document.getElementById('desktopStep3').textContent=t.desktopStep3;document.getElementById('desktopStep4').textContent=t.desktopStep4;document.getElementById('manualStep1').textContent=t.manualStep1;document.getElementById('manualStep2').textContent=t.manualStep2;document.getElementById('manualStep3').textContent=t.manualStep3;document.getElementById('manualStep4').textContent=t.manualStep4;document.getElementById('manualStep5').textContent=t.manualStep5;document.getElementById('chartTitle').textContent=t.chartTitle;document.getElementById('recentTitle').textContent=t.recentTitle;document.getElementById('profTitle').textContent=t.profile;document.getElementById('libTitle').textContent=t.library;document.getElementById('settTitle').textContent=t.settings;document.getElementById('notesTitle').textContent=t.notesTitle;document.getElementById('gameNotesInput').placeholder=t.notesPlaceholder;document.getElementById('saveNoteBtn').textContent=t.saveNote;document.getElementById('descTitleText').textContent=t.description;document.getElementById('screenTitle').textContent=t.screenshots;document.getElementById('reqTitle').textContent=t.systemReq;
     
     const revLabel = document.getElementById('reviewsLabel');
     if(revLabel) revLabel.textContent = t.reviews;
@@ -2946,7 +3149,7 @@ function showDevStats() {
 }
 function findUser(nickname) {return accounts.find(a => a.nickname === nickname);}
 function openReviewLink() { window.open('https://forms.google.com', '_blank'); }
-function closeUpdateModal() {localStorage.setItem('lastSeenVersion', CURRENT_VERSION);document.getElementById('updateModal').style.display = 'none';}
+function closeUpdateModal() {localStorage.setItem('lastSeenVersion', CURRENT_VERSION);document.getElementById('updateModal').style.display = 'none';document.getElementById('updateBanner').style.display = 'none';}
 function navigateTo(page, gameId = null) {if (page === 'game' && gameId) {showGame(gameId, true);} else {showPage(page, true);}}
 window.addEventListener('popstate', function(event) {if (event.state) {if (event.state.page === 'game' && event.state.gameId) {showGame(event.state.gameId, false);} else if (event.state.page) {showPage(event.state.page, false);}} else {showPage('main', false);}});
 window.addEventListener('visibilitychange', () => {if(document.visibilityState === 'visible') {loadData();}});
